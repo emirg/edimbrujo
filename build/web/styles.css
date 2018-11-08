@@ -1,0 +1,19 @@
+*{
+    position: relative;
+    color: #333;
+}
+
+body{
+    background-color: #dadada;
+}
+
+.container{
+    padding-top: 20px;
+    margin: 0px auto;
+    width: 80%;
+}
+
+input{
+    padding: 5px 15px;
+}
+
