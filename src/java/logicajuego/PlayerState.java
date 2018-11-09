@@ -18,19 +18,16 @@ public class PlayerState extends State {
     private int vida;
     private int daño;
     private int velocidad;
-    private int posX;
-    private int posY;
-    private int id;
+    private String id;
 
     public PlayerState(String equipo, String nombre, int vida, int daño,
-            int velocidad, int posX, int posY, int id) {
+            int velocidad, int posX, int posY, String id) {
+        super(posX, posY);
         this.equipo = equipo;
         this.nombre = nombre;
         this.vida = vida;
         this.daño = daño;
         this.velocidad = velocidad;
-        this.posX = posX;
-        this.posY = posY;
         this.id = id;
         nombreEstado = "player";
     }
@@ -75,41 +72,25 @@ public class PlayerState extends State {
         this.velocidad = velocidad;
     }
 
-    public int getPosX() {
-        return posX;
-    }
-
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
-
-    public int getPosY() {
-        return posY;
-    }
-
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
-
     @Override
     public void createState(State player) {
-        PlayerState old = new PlayerState(equipo, nombre, vida, daño, velocidad, posX, posY, id);
+        PlayerState old = new PlayerState(equipo, nombre, vida, daño, velocidad, x, y, id);
         record.add(old);
         this.equipo = ((PlayerState) player).getEquipo();
         this.nombre = ((PlayerState) player).getNombre();
         this.vida = ((PlayerState) player).getVida();
         this.daño = ((PlayerState) player).getDaño();
         this.velocidad = ((PlayerState) player).getVelocidad();
-        this.posX = ((PlayerState) player).getPosX();
-        this.posY = ((PlayerState) player).getPosY();
+        x = ((PlayerState) player).getX();
+        y = ((PlayerState) player).getY();
     }
 
     @Override
     public State next(LinkedList<State> states, LinkedList<Action> actions) {
-        State newState = new PlayerState(equipo, nombre, vida, daño, velocidad, posX, posY, id);
+        State newState = new PlayerState(equipo, nombre, vida, daño, velocidad, x, y, id);
         for (Action action : actions) {
             //si el pj ejecuta accion moverse
-            if (action.getPlayerID() == id) {
+            if (action.getPlayerID().equals(id)) {
                 if (action.getName().equals("mover")) {
                     //si se mueve, entonces hay que ver que no caiga ningun personaje o ataque
                     for (State state : states) {
@@ -117,14 +98,18 @@ public class PlayerState extends State {
                             //verificar si el ataque cae acá
                         } else if (state.equals("personaje")) {
                             //verificar si el personaje se mueve aca
-                        } else {
-                            newState = new Cell(posX, posY);
                         }
                     }
                 }
             }
         }
         return newState;
+    }
+
+    @Override
+    public String toJSON() {
+        String res = "{\"posx\":\"" + x + "\", \"posy\":\"" + y + "\", \"id\":\"" + id + "\"}";
+        return res;
     }
 
     public State ejecutarAccion(State st) {

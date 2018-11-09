@@ -1,28 +1,13 @@
 package logicajuego;
 
-import java.util.LinkedList;
-
-public class Cell extends State {
+public class Cell {
 
     private int x;
     private int y;
 
     public Cell(int x, int y) {
-        record = new LinkedList<>();
         this.x = x;
         this.y = y;
-    }
-
-    @Override
-    public void createState(State cell) {
-        record.add(new Cell(x, y));
-        this.x = ((Cell) cell).getX();
-        this.y = ((Cell) cell).getY();
-    }
-
-    @Override
-    public State next(LinkedList<State> states, LinkedList<Action> actions) {
-        return new Cell(x, y);
     }
 
     public int getX() {

@@ -2,17 +2,17 @@ package logicajuego;
 
 public class Player {
 
-    public int id;
+    private String id;
 
-    public Player(int id) {
+    public Player(String id) {
         this.id = id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

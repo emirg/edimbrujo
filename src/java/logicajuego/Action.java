@@ -4,9 +4,9 @@ public class Action {
 
     private String name;
 
-    private int playerID;
+    private String playerID;
 
-    public Action(String name, int playerID) {
+    public Action(String name, String playerID) {
         this.name = name;
         this.playerID = playerID;
     }
@@ -15,11 +15,11 @@ public class Action {
         this.name = name;
     }
 
-    public int getPlayerID() {
+    public String getPlayerID() {
         return playerID;
     }
 
-    public void setPlayerID(int playerID) {
+    public void setPlayerID(String playerID) {
         this.playerID = playerID;
     }
 

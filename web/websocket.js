@@ -7,11 +7,14 @@ function onMessage(event) {
     lblAccion.innerHTML = data.cell.x + " " + data.cell.y + " " + data.cell.jugador;
 }
 
+
 function sendAccion() {
+    socket.onopen = function(event){
     var accion = document.getElementById("txtAccion");
     console.log("presiona");
     socket.send("{'accion':'" + accion.value + "'}");
     console.log("envia accion");
+    }
 }
 
 
