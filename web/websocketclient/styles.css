@@ -17,3 +17,42 @@ input{
     padding: 5px 15px;
 }
 
+#game{
+    position: relative;
+}
+
+#controller{
+    position: relative;
+}
+
+#terrain{
+    position: relative;
+    top: 0px;
+    left: 0px;
+    z-index: 0;
+    display: block;
+    background: white;
+}
+
+#players{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+}
+
+.wall{
+    width: 20px;
+    height: 20px;
+    position:absolute;
+    border: 1px solid black;
+}
+
+.player{
+    width: 20px;
+    height: 20px;
+    position:absolute;
+    background: red;
+    border-radius: 20px;
+}
+

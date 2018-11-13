@@ -5,10 +5,13 @@
         <group>
             <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Game.java</file>
             <file>file:/C:/Users/Martin/Desktop/Edimbrujo/web/websocketclient/index.html</file>
+            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Lobby.java</file>
+            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/web/websocketclient/styles.css</file>
             <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Map.java</file>
             <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/websocketserver/ServerSender.java</file>
             <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/websocketserver/ServerReceiver.java</file>
             <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Player.java</file>
+            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/StaticState.java</file>
             <file>file:/C:/Users/Martin/Desktop/Edimbrujo/web/websocketclient/client.js</file>
         </group>
     </open-files>

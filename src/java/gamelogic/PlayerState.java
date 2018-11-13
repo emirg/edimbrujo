@@ -11,7 +11,8 @@ import java.util.LinkedList;
  *
  * @author Martin
  */
-public class PlayerState extends State {
+public class PlayerState {
+}/* extends State {
 
     private String equipo;
     private String nombre;
@@ -20,7 +21,7 @@ public class PlayerState extends State {
     private int velocidad;
     private String id;
 
-    /*public PlayerState(String equipo, String nombre, int vida, int daño,
+    public PlayerState(String equipo, String nombre, int vida, int daño,
             int velocidad, int posX, int posY, String id) {
         super(posX, posY);
         this.equipo = equipo;
@@ -127,5 +128,6 @@ public class PlayerState extends State {
                 break;
         }
         return res;
-    }*/
+    }
 }
+*/

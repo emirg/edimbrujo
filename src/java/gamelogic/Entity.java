@@ -1,8 +1,8 @@
 package gamelogic;
 
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.json.simple.JSONObject;
 
 public class Entity extends State {
 
@@ -50,8 +50,13 @@ public class Entity extends State {
     }
 
     @Override
-    public String toString() {
-        return ("E(" + x + "," + y + ")");
+    public JSONObject toJSON() {
+        JSONObject jsonEntity = new JSONObject();
+        JSONObject jsonAttrs = new JSONObject();
+        jsonAttrs.put("x", x);
+        jsonAttrs.put("y", y);
+        jsonEntity.put("Entity", jsonAttrs);
+        return jsonEntity;
     }
 
 }

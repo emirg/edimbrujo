@@ -2,6 +2,8 @@ package gamelogic;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Player extends Entity {
 
@@ -34,31 +36,33 @@ public class Player extends Entity {
     public State next(LinkedList<State> states, HashMap<String, Action> actions) {
         hasChanged = false;
         Action action = actions.get(id);
-        System.out.println("ACTIONS: " + actions);
         int newX = x;
         int newY = y;
+        boolean newLeave = leave;
         if (action != null) {
-            System.out.println("ACTION: " + action.getName());
+            hasChanged = true;
             switch (action.getName()) {
                 case "up":
-                    newY = y + 1;
-                    hasChanged = true;
+                    newY = y - 1;
                     break;
                 case "down":
-                    newY = y - 1;
-                    hasChanged = true;
+                    newY = y + 1;
                     break;
                 case "left":
                     newX = x - 1;
-                    hasChanged = true;
                     break;
                 case "right":
                     newX = x + 1;
-                    hasChanged = true;
+                    break;
+                case "enter":
+                    newLeave = false;
+                    break;
+                case "leave":
+                    newLeave = true;
                     break;
             }
         }
-        Player newPlayer = new Player(id, leave, newX, newY);
+        Player newPlayer = new Player(id, newLeave, newX, newY);
         return newPlayer;
     }
 
@@ -77,8 +81,15 @@ public class Player extends Entity {
     }
 
     @Override
-    public String toString() {
-        return ("P(" + id + "," + x + "," + y + "," + leave + ")");
+    public JSONObject toJSON() {
+        JSONObject jsonPlayer = new JSONObject();
+        JSONObject jsonAttrs = new JSONObject();
+        jsonAttrs.put("id", id);
+        jsonAttrs.put("leave", leave);
+        jsonAttrs.put("x", x);
+        jsonAttrs.put("y", y);
+        jsonPlayer.put("Player", jsonAttrs);
+        return jsonPlayer;
     }
 
 }

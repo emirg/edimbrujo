@@ -2,6 +2,7 @@ package gamelogic;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.json.simple.JSONObject;
 
 public abstract class State {
 
@@ -38,7 +39,7 @@ public abstract class State {
 
     @Override
     public String toString() {
-        return "State";
+        return toJSON().toString();
     }
 
     @Override
@@ -47,4 +48,5 @@ public abstract class State {
         return null;
     }
 
+    public abstract JSONObject toJSON();
 }

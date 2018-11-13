@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Game implements Runnable {
 
@@ -44,7 +46,7 @@ public class Game implements Runnable {
         LinkedList<State> nextStates;
         while (!endGame) {
             try {
-                Thread.sleep(1000); //time per frame
+                Thread.sleep(60); //time per frame
                 readActions();
                 readPlayers();
                 nextStates = new LinkedList<>();
@@ -66,13 +68,13 @@ public class Game implements Runnable {
 
     public void init() {
         //TODO crear estados dinamicos y estaticos
-        HashMap<Point, Boolean> walls = new HashMap<>();
+        HashMap<Point, Integer> cells = new HashMap<>();
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
-                walls.put(new Point(x, y), false);
+                cells.put(new Point(x, y), 0);
             }
         }
-        staticStates.add(new gamelogic.Map(walls));
+        staticStates.add(new gamelogic.Map(cells));
     }
 
     public void readActions() {
@@ -108,21 +110,30 @@ public class Game implements Runnable {
     }
 
     private void createStaticState() {
-        gameStaticState = "";
+        JSONObject jsonStaticStates = new JSONObject();
+        int i = 0;
         for (StaticState staticState : staticStates) {
-            gameStaticState += staticState.toString();
+            jsonStaticStates.put(i + "", staticState.toJSON());
+            i++;
         }
+        gameStaticState = jsonStaticStates.toString();
     }
 
     private void createState() {
-        gameState = "";
-        gameFullState = "";
+        JSONObject jsonFullStates = new JSONObject();
+        JSONObject jsonStates = new JSONObject();
+        int i = 0;
+        int j = 0;
         for (State state : states) {
-            gameFullState += state.toString();
+            jsonFullStates.put(i + "", state.toJSON());
             if (state.hasChanged()) {
-                gameState += state.toString();
+                jsonStates.put(j + "", state.toJSON());
+                j++;
             }
+            i++;
         }
+        gameFullState = jsonFullStates.toString();
+        gameState = jsonStates.toString();
     }
 
     public boolean isEndGame() {

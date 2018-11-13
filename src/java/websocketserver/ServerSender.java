@@ -18,8 +18,6 @@ public class ServerSender implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println(lobby);
-            System.out.println("ENTRO RUN SENDER");
             //envia estados estaticos por unica vez
             String staticStates = lobby.getStaticState();
             session.getAsyncRemote().sendText(staticStates);
@@ -29,12 +27,13 @@ public class ServerSender implements Runnable {
             session.getAsyncRemote().sendText(fullStates);
             System.out.println("Send full states to player " + session.getId());
             //repite hasta que el juego termina
-            while (!lobby.isEndGame()) {
+            while (!lobby.isEndGame() && session.isOpen()) {
                 //envia los estados que cambiaron en cada ciclo del juego
                 String states = lobby.getState();
-                session.getAsyncRemote().sendText(states);
-                System.out.println("Send state changes to player " + session.getId());
-                //String estado = "{\"cell\":{\"x\":1,\"y\":1,\"jugador\":\"" + i + "\"}}";//juego.getEstado();
+                if (session.isOpen()) {
+                    session.getAsyncRemote().sendText(states);
+                    System.out.println("Send state changes to player " + session.getId());
+                }//String estado = "{\"cell\":{\"x\":1,\"y\":1,\"jugador\":\"" + i + "\"}}";//juego.getEstado();
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(ServerSender.class.getName()).log(Level.SEVERE, null, ex);

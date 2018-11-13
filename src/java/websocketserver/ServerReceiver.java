@@ -24,6 +24,7 @@ public class ServerReceiver {
         //sessions.add(session);
         lobby = Lobby.startGame();
         lobby.addPlayer(session.getId());
+        lobby.addAction(session.getId(), "enter");
         ServerSender serverSender = new ServerSender(session, lobby);
         Thread threadServerSender = new Thread(serverSender);
         threadServerSender.start();
@@ -41,6 +42,7 @@ public class ServerReceiver {
     @OnClose
     public void playerExit(Session session) {
         System.out.println("Player " + session.getId() + " leave the game.");
+        lobby.addAction(session.getId(), "leave");
         //sessions.remove(session);
     }
 

@@ -25,9 +25,4 @@ public abstract class StaticState extends State {
         //do nothing
     }
 
-    @Override
-    public String toString() {
-        return "StaticState";
-    }
-
 }

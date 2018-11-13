@@ -2,35 +2,36 @@ package gamelogic;
 
 import java.awt.Point;
 import java.util.HashMap;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Map extends StaticState {
 
-    private HashMap<Point, Boolean> walls;
+    private HashMap<Point, Integer> cells;
 
-    public Map(HashMap<Point, Boolean> walls) {
-        this.walls = walls;
+    public Map(HashMap<Point, Integer> cells) {
+        this.cells = cells;
     }
 
     public boolean canWalk(Point xy) {
-        return walls.get(xy);
+        return (cells.get(xy) == 0);
     }
 
     @Override
-    public String toString() {
-        String map = "";
-        for (java.util.Map.Entry<Point, Boolean> entry : walls.entrySet()) {
-            Point key = entry.getKey();
-            Boolean value = entry.getValue();
-            if (value) {
-                map += "W";
-            } else {
-                map += "F";
-            }
-            /*if (key.getX() == 10) {
-                map += "\n";
-            }*/
+    public JSONObject toJSON() {
+        JSONObject jsonMap = new JSONObject();
+        JSONArray jsonCells = new JSONArray();
+        for (java.util.Map.Entry<Point, Integer> cell : cells.entrySet()) {
+            Point key = cell.getKey();
+            Integer value = cell.getValue();
+            JSONObject jsonCell = new JSONObject();
+            jsonCell.put("val", value);
+            jsonCell.put("x", key.x);
+            jsonCell.put("y", key.y);
+            jsonCells.add(jsonCell);
         }
-        return map;
+        jsonMap.put("Map", jsonCells);
+        return jsonMap;
     }
 
 }

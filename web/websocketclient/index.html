@@ -5,13 +5,17 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script type="text/javascript" src="client.js" ></script>
+        <script type="text/javascript" src="../libs/jquery.js" ></script>
         <link rel="stylesheet" type="text/css" href="styles.css" />
     </head>
     <body>
         <h1>Edimbrujo</h1>
-        <div id="game"></div>
+        <div id="game">
+            <div id="terrain"></div>
+            <div id="players"></div>
+        </div>
         <div id="controller">
-            <select id="action">
+           <select id="action">
                 <option value="up">Mover arriba</option>
                 <option value="down">Mover abajo</option>
                 <option value="left">Mover izquierda</option>
