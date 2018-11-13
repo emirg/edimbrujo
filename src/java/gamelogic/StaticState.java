@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public abstract class StaticState extends State {
 
     @Override
-    public State next(LinkedList<State> states, HashMap<String, Action> actions) {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         return this;
     }
 

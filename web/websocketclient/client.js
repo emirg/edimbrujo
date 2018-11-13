@@ -1,6 +1,10 @@
 window.onload = function () {
 //crea el socket para recivir estados del servidor (llama @OnOpen en servidor)
-    var socket = new WebSocket("ws://localhost:8080/edimbrujo/GameWebSocket");
+    var page = document.createElement('a');
+    page.href = window.location.href;
+    //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
+    var url = "ws://" + page.hostname + ":8080";
+    var socket = new WebSocket(url + "/Edimbrujo/GameWebSocket");
     //var game = document.getElementById("game");
     var terrain = document.getElementById("terrain");
     //terrain.innerHTML = "TERRAIN<br>";
@@ -76,6 +80,58 @@ window.onload = function () {
         socket.send(actionValue);
     });
 
+    var Key = {
+        _pressed: {},
+
+        LEFT: 37,
+        UP: 38,
+        RIGHT: 39,
+        DOWN: 40,
+
+        isDown: function (keyCode) {
+            return this._pressed[keyCode];
+        },
+
+        onKeydown: function (event) {
+            this._pressed[event.keyCode] = true;
+        },
+
+        onKeyup: function (event) {
+            delete this._pressed[event.keyCode];
+        }
+    };
+
+    window.addEventListener('keyup', function (event) {
+        Key.onKeyup(event);
+    }, false);
+    window.addEventListener('keydown', function (event) {
+        Key.onKeydown(event);
+    }, false);
+
+    window.setInterval(function () {
+        updateKeyboard();
+    }, 100);
+
+    function updateKeyboard() {
+        if (Key.isDown(Key.UP) && Key.isDown(Key.LEFT)) {
+            socket.send("upleft");
+        } else if (Key.isDown(Key.UP) && Key.isDown(Key.RIGHT)) {
+            socket.send("upright");
+        } else if (Key.isDown(Key.DOWN) && Key.isDown(Key.LEFT)) {
+            socket.send("downleft");
+        } else if (Key.isDown(Key.DOWN) && Key.isDown(Key.RIGHT)) {
+            socket.send("downright");
+        } else if (Key.isDown(Key.UP)) {
+            socket.send("up");
+        } else if (Key.isDown(Key.LEFT)) {
+            socket.send("left");
+        } else if (Key.isDown(Key.DOWN)) {
+            socket.send("down");
+        } else if (Key.isDown(Key.RIGHT)) {
+            socket.send("right");
+        }
+    }
+
     /*$('body').on('keypress', function (e) {
      if (e.which === 38) {
      socket.send("up");
@@ -87,61 +143,4 @@ window.onload = function () {
      socket.send("right");
      }
      });*/
-
-    //keyboard input with customisable repeat (set to 0 for no key repeat)
-    function KeyboardController(keys, repeat) {
-        //lookup of key codes to timer ID, or null for no repeat
-        var timers = {};
-
-        //when key is pressed and we don't already think it's pressed, call the
-        //key action callback and set a timer to generate another one after a delay
-        document.onkeydown = function (event) {
-            var key = (event || window.event).keyCode;
-            if (!(key in keys))
-                return true;
-            if (!(key in timers)) {
-                timers[key] = null;
-                keys[key]();
-                if (repeat !== 0)
-                    timers[key] = setInterval(keys[key], repeat);
-            }
-            return false;
-        };
-
-        //cancel timeout and mark key as released on keyup
-        document.onkeyup = function (event) {
-            var key = (event || window.event).keyCode;
-            if (key in timers) {
-                if (timers[key] !== null)
-                    clearInterval(timers[key]);
-                delete timers[key];
-            }
-        };
-
-        //when window is unfocused we may not get key events. To prevent this
-        //causing a key to 'get stuck down', cancel all held keys
-        window.onblur = function () {
-            for (key in timers)
-                if (timers[key] !== null)
-                    clearInterval(timers[key]);
-            timers = {};
-        };
-    }
-    ;
-    then:
-            //arrow key movement. Repeat key five times a second
-            KeyboardController({
-                37: function () {
-                    socket.send("left");
-                },
-                38: function () {
-                    socket.send("up");
-                },
-                39: function () {
-                    socket.send("right");
-                },
-                40: function () {
-                    socket.send("down");
-                }
-            }, 200);
 }

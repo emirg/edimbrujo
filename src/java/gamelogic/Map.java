@@ -14,7 +14,7 @@ public class Map extends StaticState {
     }
 
     public boolean canWalk(Point xy) {
-        return (cells.get(xy) == 0);
+        return cells.containsKey(xy);
     }
 
     @Override

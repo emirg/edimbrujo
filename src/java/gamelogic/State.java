@@ -18,7 +18,7 @@ public abstract class State {
         return hasChanged;
     }
 
-    public State next(LinkedList<State> states, HashMap<String, Action> actions) {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         //TODO in concrete class
         hasChanged = false;
         return this;

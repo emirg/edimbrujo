@@ -1,5 +1,6 @@
 package gamelogic;
 
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.json.simple.JSONArray;
@@ -33,7 +34,7 @@ public class Player extends Entity {
     }
 
     @Override
-    public State next(LinkedList<State> states, HashMap<String, Action> actions) {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         hasChanged = false;
         Action action = actions.get(id);
         int newX = x;
@@ -54,12 +55,32 @@ public class Player extends Entity {
                 case "right":
                     newX = x + 1;
                     break;
+                case "upleft":
+                    newY = y - 1;
+                    newX = x - 1;
+                    break;
+                case "upright":
+                    newY = y - 1;
+                    newX = x + 1;
+                    break;
+                case "downleft":
+                    newY = y + 1;
+                    newX = x - 1;
+                    break;
+                case "downright":
+                    newY = y + 1;
+                    newX = x + 1;
+                    break;
                 case "enter":
                     newLeave = false;
                     break;
                 case "leave":
                     newLeave = true;
                     break;
+            }
+            if (!((Map) staticStates.get(0)).canWalk(new Point(newX, newY))) {
+                newX = x;
+                newY = y;
             }
         }
         Player newPlayer = new Player(id, newLeave, newX, newY);

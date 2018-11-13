@@ -46,12 +46,12 @@ public class Game implements Runnable {
         LinkedList<State> nextStates;
         while (!endGame) {
             try {
-                Thread.sleep(60); //time per frame
+                Thread.sleep(100); //time per frame (10 fps)
                 readActions();
                 readPlayers();
                 nextStates = new LinkedList<>();
                 for (State state : states) {
-                    nextStates.add(state.next(states, actions));
+                    nextStates.add(state.next(states, staticStates, actions));
                 }
                 for (int i = 0; i < states.size(); i++) {
                     states.get(i).createState(nextStates.get(i));

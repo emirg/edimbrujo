@@ -31,7 +31,7 @@ public class Entity extends State {
     }
 
     @Override
-    public State next(LinkedList<State> states, HashMap<String, Action> actions) {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         hasChanged = false;
         Entity newEntity = new Entity(x, y);
         return newEntity;
