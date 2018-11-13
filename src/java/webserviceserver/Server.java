@@ -11,24 +11,25 @@ import javax.jws.soap.SOAPBinding.Style;
 @SOAPBinding(style = Style.DOCUMENT)
 public interface Server {
 
-    //Este metodo devuelve un hash que va a representar a su jugador.
+    //Este metodo devuelve un hash que va a representar a su session.
     @WebMethod
-    String init(String roll, String nombre);
+    void receiveAction(String action,String session);
 
     //Este ataque es para los personajes de rango melee.
     @WebMethod
-    State atack(int direccion, String hash);
+    void playerEnter(String rol);
 
     //Este ataque es para los personajes de rango no melee.
     @WebMethod
-    State rangeAtack(int direccion, String hash);
-
-    //Movimiento.
+    void playerExit(String juego);
+    
     @WebMethod
-    State move(int direccion, String hash);
-
-    //Esta accion es solo para el curandero/clerigo.
+    String getFullState();
+    
     @WebMethod
-    State heal(String hashJugadorObjectivo, String hash);
+    String getState();
+    
+      
+
 
 }
