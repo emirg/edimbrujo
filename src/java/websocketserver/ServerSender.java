@@ -32,7 +32,7 @@ public class ServerSender implements Runnable {
                 String states = lobby.getState();
                 if (session.isOpen()) {
                     session.getAsyncRemote().sendText(states);
-                    System.out.println("Send state changes to player " + session.getId());
+                    //System.out.println("Send state changes to player " + session.getId());
                 }//String estado = "{\"cell\":{\"x\":1,\"y\":1,\"jugador\":\"" + i + "\"}}";//juego.getEstado();
             }
         } catch (InterruptedException ex) {

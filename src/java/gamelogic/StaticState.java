@@ -5,11 +5,20 @@ import java.util.LinkedList;
 
 public abstract class StaticState extends State {
 
+    public StaticState(String name) {
+        super(name);
+    }
+    
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         return this;
     }
 
+    @Override
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+        return null;
+    }
+    
     @Override
     public void createState(State newState) {
         //do nothing

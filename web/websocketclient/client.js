@@ -69,6 +69,25 @@ window.onload = function () {
                     }
                     //players.innerHTML += gameState[i]["Player"]["id"] + "," + gameState[i]["Player"]["x"] + "," + gameState[i]["Player"]["y"] + "<br>";
                 }
+                if (typeof gameState[i]["Arrow"] !== "undefined") {
+                    console.log(gameState[i]["Arrow"]);
+                    var id = gameState[i]["Arrow"]["id"];
+                    //var leave = gameState[i]["Arrow"]["leave"];
+                    var x = gameState[i]["Arrow"]["x"];
+                    var y = gameState[i]["Arrow"]["y"];
+                    arrow = document.getElementById("arrow" + id);
+                    if (arrow === null) {
+                        players.innerHTML += "<div id='arrow" + id + "' class='arrow'></div>";
+                        arrow = document.getElementById("arrow" + id);
+                        arrow.style.background = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+                    }
+                    arrow.style.left = x * $(".arrow").width() + "px";
+                    arrow.style.top = y * $(".arrow").height() + "px";
+                    if (leave) {
+                        $("#arrow" + id).remove();
+                    }
+                    //players.innerHTML += gameState[i]["Player"]["id"] + "," + gameState[i]["Player"]["x"] + "," + gameState[i]["Player"]["y"] + "<br>";
+                }
                 i++;
             }
         }
@@ -87,6 +106,7 @@ window.onload = function () {
         UP: 38,
         RIGHT: 39,
         DOWN: 40,
+        FIRE: 32,
 
         isDown: function (keyCode) {
             return this._pressed[keyCode];
@@ -113,7 +133,9 @@ window.onload = function () {
     }, 100);
 
     function updateKeyboard() {
-        if (Key.isDown(Key.UP) && Key.isDown(Key.LEFT)) {
+        if (Key.isDown(Key.FIRE)) {
+            socket.send("fire");
+        } else if (Key.isDown(Key.UP) && Key.isDown(Key.LEFT)) {
             socket.send("upleft");
         } else if (Key.isDown(Key.UP) && Key.isDown(Key.RIGHT)) {
             socket.send("upright");

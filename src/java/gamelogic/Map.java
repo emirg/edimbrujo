@@ -9,7 +9,8 @@ public class Map extends StaticState {
 
     private HashMap<Point, Integer> cells;
 
-    public Map(HashMap<Point, Integer> cells) {
+    public Map(HashMap<Point, Integer> cells, String name) {
+        super(name);
         this.cells = cells;
     }
 

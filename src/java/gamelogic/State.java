@@ -6,16 +6,25 @@ import org.json.simple.JSONObject;
 
 public abstract class State {
 
+    protected String name;
     private LinkedList<State> record;
+    private LinkedList<String> events;
     protected boolean hasChanged;
 
-    public State() {
+    public State(String name) {
+        this.name = name;
         record = new LinkedList<>();
+        events = new LinkedList<>();
         hasChanged = false;
     }
 
     public boolean hasChanged() {
         return hasChanged;
+    }
+
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+        //TODO in concrete class
+        return null;
     }
 
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
@@ -27,6 +36,14 @@ public abstract class State {
     public void createState(State newState) {
         record.add((State) this.clone());
         this.setState(newState);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public State getState(int numState) {
@@ -49,4 +66,17 @@ public abstract class State {
     }
 
     public abstract JSONObject toJSON();
+
+    public void addEvent(String event) {
+        events.add(event);
+    }
+
+    public LinkedList<String> getEvents() {
+        return events;
+    }
+
+    public void clearEvents() {
+        events.clear();
+    }
+
 }

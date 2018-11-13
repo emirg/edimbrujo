@@ -9,7 +9,8 @@ public class Entity extends State {
     protected int x;
     protected int y;
 
-    public Entity(int x, int y) {
+    public Entity(int x, int y, String name) {
+        super(name);
         this.x = x;
         this.y = y;
     }
@@ -31,9 +32,14 @@ public class Entity extends State {
     }
 
     @Override
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+        return null;
+    }
+
+    @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         hasChanged = false;
-        Entity newEntity = new Entity(x, y);
+        Entity newEntity = new Entity(x, y, name);
         return newEntity;
     }
 
@@ -45,7 +51,7 @@ public class Entity extends State {
 
     @Override
     protected Object clone() {
-        Entity clon = new Entity(x, y);
+        Entity clon = new Entity(x, y, name);
         return clon;
     }
 

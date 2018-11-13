@@ -11,8 +11,8 @@ public class Player extends Entity {
     private String id;
     private boolean leave;
 
-    public Player(String id, boolean leave, int x, int y) {
-        super(x, y);
+    public Player(String id, boolean leave, int x, int y, String name) {
+        super(x, y, name);
         this.id = id;
         this.leave = leave;
     }
@@ -31,6 +31,24 @@ public class Player extends Entity {
 
     public void setLeave(boolean leave) {
         this.leave = leave;
+    }
+
+    @Override
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+        Action action = actions.get(id);
+        LinkedList<State> nstates = new LinkedList<>();
+        if (action != null) {
+            hasChanged = true;
+            switch (action.getName()) {
+                case "fire":
+                    //int posX = Integer.parseInt(action.getParameter("x"));
+                    //int posY = Integer.parseInt(action.getParameter("y"));
+                    Arrow a = new Arrow(id, x, y, 1, 1, "Arrow");
+                    nstates.add(a);
+                    break;
+            }
+        }
+        return nstates;
     }
 
     @Override
@@ -83,7 +101,18 @@ public class Player extends Entity {
                 newY = y;
             }
         }
-        Player newPlayer = new Player(id, newLeave, newX, newY);
+        LinkedList<String> events = getEvents();
+        if (!events.isEmpty()) {
+            hasChanged = true;
+            for (String event : events) {
+                switch (event) {
+                    case "hit":
+                        newLeave = true;
+                        break;
+                }
+            }
+        }
+        Player newPlayer = new Player(id, newLeave, newX, newY, name);
         return newPlayer;
     }
 
@@ -97,7 +126,7 @@ public class Player extends Entity {
 
     @Override
     protected Object clone() {
-        Player clon = new Player(id, leave, x, y);
+        Player clon = new Player(id, leave, x, y, name);
         return clon;
     }
 

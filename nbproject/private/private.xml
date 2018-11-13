@@ -3,16 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Game.java</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/web/websocketclient/index.html</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Lobby.java</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/web/websocketclient/styles.css</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Map.java</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/websocketserver/ServerSender.java</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/websocketserver/ServerReceiver.java</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/Player.java</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/src/java/gamelogic/StaticState.java</file>
-            <file>file:/C:/Users/Martin/Desktop/Edimbrujo/web/websocketclient/client.js</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/StaticState.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/Player.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/State.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/Game.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/Action.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/Lobby.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/Map.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/web/websocketclient/client.js</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/Arrow.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/websocketserver/ServerReceiver.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/gamelogic/Entity.java</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/web/websocketclient/styles.css</file>
+            <file>file:/C:/Users/Martin-NoteBook/Desktop/Edimbrujo/src/java/websocketserver/ServerSender.java</file>
         </group>
     </open-files>
 </project-private>

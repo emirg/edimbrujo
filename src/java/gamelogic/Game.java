@@ -44,17 +44,27 @@ public class Game implements Runnable {
         init();
         createStaticState();
         LinkedList<State> nextStates;
+        LinkedList<State> newStates;
         while (!endGame) {
             try {
                 Thread.sleep(100); //time per frame (10 fps)
                 readActions();
                 readPlayers();
+                newStates = new LinkedList<>();
+                for (State state : states) {
+                    LinkedList<State> s = state.generate(states, staticStates, actions);
+                    if (s != null) {
+                        newStates.addAll(s);
+                    }
+                }
+                states.addAll(newStates);
                 nextStates = new LinkedList<>();
                 for (State state : states) {
                     nextStates.add(state.next(states, staticStates, actions));
                 }
                 for (int i = 0; i < states.size(); i++) {
                     states.get(i).createState(nextStates.get(i));
+                    states.get(i).clearEvents();
                 }
                 createState();
                 lobby.stateReady();
@@ -74,7 +84,7 @@ public class Game implements Runnable {
                 cells.put(new Point(x, y), 0);
             }
         }
-        staticStates.add(new gamelogic.Map(cells));
+        staticStates.add(new gamelogic.Map(cells, "Map"));
     }
 
     public void readActions() {
@@ -95,7 +105,7 @@ public class Game implements Runnable {
                 Random random = new Random();
                 int x = random.nextInt(9);
                 int y = random.nextInt(9);
-                Player player = new Player(sessionId, false, x, y);
+                Player player = new Player(sessionId, false, x, y, "Player");
                 states.add(player);
                 players.put(sessionId, player);
             }
