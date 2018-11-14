@@ -41,10 +41,10 @@ window.onload = function () {
                         xMax = x > xMax ? x : xMax;
                         y = gameState[i]["Map"][j]["y"];
                         yMax = y > yMax ? x : yMax;
-                        terrain.innerHTML += "<div id='cell" + x + "_" + y + "' class='wall'></div>";
+                        terrain.innerHTML += "<div id='cell" + x + "_" + y + "' class='wall"+gameState[i]["Map"][j]["val"]+"'></div>";
                         cell = document.getElementById("cell" + x + "_" + y);
-                        cell.style.left = x * $(".wall").width() + "px";
-                        cell.style.top = y * $(".wall").height() + "px";
+                        cell.style.left = x * $(".wall"+gameState[i]["Map"][j]["val"]).width() + "px";
+                        cell.style.top = y * $(".wall"+gameState[i]["Map"][j]["val"]).height() + "px";
                         j++;
                     }
                     terrain.style.width = xMax * $(".wall").width() + $(".wall").width() + "px";

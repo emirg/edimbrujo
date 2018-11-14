@@ -8,14 +8,20 @@ import org.json.simple.JSONObject;
 public class Map extends StaticState {
 
     private HashMap<Point, Integer> cells;
+    private int ancho;
+    private int alto;
 
-    public Map(HashMap<Point, Integer> cells, String name) {
+    public Map(HashMap<Point, Integer> cells, String name, int ancho, int alto) {
         super(name);
         this.cells = cells;
+        this.ancho = ancho;
+        this.alto = alto;
     }
 
     public boolean canWalk(Point xy) {
-        return cells.containsKey(xy);
+        boolean res;
+        res = (cells.containsKey(xy) && cells.get(xy)==1);
+        return res;
     }
 
     @Override
@@ -35,4 +41,21 @@ public class Map extends StaticState {
         return jsonMap;
     }
 
+    public int getAncho() {
+        return ancho;
+    }
+
+    public void setAncho(int ancho) {
+        this.ancho = ancho;
+    }
+
+    public int getAlto() {
+        return alto;
+    }
+
+    public void setAlto(int alto) {
+        this.alto = alto;
+    }
+
+    
 }

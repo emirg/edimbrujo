@@ -41,11 +41,20 @@ input{
     z-index: 1;
 }
 
-.wall{
+.wall0{
     width: 20px;
     height: 20px;
     position:absolute;
     border: 1px solid black;
+    background: black;
+}
+
+.wall1{
+    width: 20px;
+    height: 20px;
+    position:absolute;
+    border: 1px solid black;
+    background: white;
 }
 
 .player{

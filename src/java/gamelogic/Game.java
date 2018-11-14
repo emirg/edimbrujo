@@ -1,6 +1,10 @@
 package gamelogic;
 
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -78,13 +82,8 @@ public class Game implements Runnable {
 
     public void init() {
         //TODO crear estados dinamicos y estaticos
-        HashMap<Point, Integer> cells = new HashMap<>();
-        for (int x = 0; x < 10; x++) {
-            for (int y = 0; y < 10; y++) {
-                cells.put(new Point(x, y), 0);
-            }
-        }
-        staticStates.add(new gamelogic.Map(cells, "Map"));
+        File map = new File("C:\\Users\\Martin\\Desktop\\Edimbrujo\\src\\java\\files\\map.csv");
+        loadMap(map);
     }
 
     public void readActions() {
@@ -102,9 +101,14 @@ public class Game implements Runnable {
             String sessionId = playerSended.getKey();
             //String player = playerSended.getValue();
             if (players.get(sessionId) == null) {
+                gamelogic.Map map = (gamelogic.Map)staticStates.get(0);
+                int x;
+                int y;
+                do {
                 Random random = new Random();
-                int x = random.nextInt(9);
-                int y = random.nextInt(9);
+                x = random.nextInt(map.getAncho()+1);
+                y = random.nextInt(map.getAlto()+1);
+                }while(!map.canWalk(new Point(x, y)));
                 Player player = new Player(sessionId, false, x, y, "Player");
                 states.add(player);
                 players.put(sessionId, player);
@@ -146,7 +150,27 @@ public class Game implements Runnable {
         gameState = jsonStates.toString();
     }
 
-    public boolean isEndGame() {
+    private void loadMap(File fileMap) {
+        try {
+            String linea;
+            HashMap<Point, Integer> cells = new HashMap<>();
+            BufferedReader buffer = new BufferedReader(new FileReader(fileMap));
+            int y = 0;
+            int x = 0;
+            while ((linea = buffer.readLine()) != null) {
+                String[] cols = linea.split(",");
+                for (x = 0; x < cols.length; x++) {
+                    cells.put(new Point(x, y), Integer.parseInt(cols[x]));
+                }
+                y++;
+            }
+            staticStates.add(new gamelogic.Map(cells, "Map",x ,y));
+        } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public  boolean isEndGame() {
         return endGame;
     }
 
