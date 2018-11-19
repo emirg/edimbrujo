@@ -9,12 +9,13 @@ import org.json.simple.JSONObject;
 public class Player extends Entity {
 
     private String id;
-    private boolean leave;
+    private int cantArrow;
 
     public Player(String id, boolean leave, int x, int y, String name) {
         super(x, y, name);
         this.id = id;
         this.leave = leave;
+        cantArrow = 0;
     }
 
     public String getId() {
@@ -43,7 +44,8 @@ public class Player extends Entity {
                 case "fire":
                     //int posX = Integer.parseInt(action.getParameter("x"));
                     //int posY = Integer.parseInt(action.getParameter("y"));
-                    Arrow a = new Arrow(id, x, y, 1, 1, "Arrow");
+                    Arrow a = new Arrow(id, cantArrow, x, y, 1, 1, "Arrow");
+                    cantArrow++;
                     nstates.add(a);
                     break;
             }
@@ -114,6 +116,47 @@ public class Player extends Entity {
         }
         Player newPlayer = new Player(id, newLeave, newX, newY, name);
         return newPlayer;
+    }
+
+    public Point posFutura(HashMap<String, Action> actions) {
+        Point p;
+        Action acc = actions.get(id);
+        int newY = y;
+        int newX = x;
+        if (acc != null) {
+            switch (acc.getName()) {
+                case "up":
+                    newY = y - 1;
+                    break;
+                case "down":
+                    newY = y + 1;
+                    break;
+                case "left":
+                    newX = x - 1;
+                    break;
+                case "right":
+                    newX = x + 1;
+                    break;
+                case "upleft":
+                    newY = y - 1;
+                    newX = x - 1;
+                    break;
+                case "upright":
+                    newY = y - 1;
+                    newX = x + 1;
+                    break;
+                case "downleft":
+                    newY = y + 1;
+                    newX = x - 1;
+                    break;
+                case "downright":
+                    newY = y + 1;
+                    newX = x + 1;
+                    break;
+            }
+        }
+        p = new Point(newX, newY);
+        return p;
     }
 
     @Override

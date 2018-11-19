@@ -10,12 +10,22 @@ public abstract class State {
     private LinkedList<State> record;
     private LinkedList<String> events;
     protected boolean hasChanged;
+    protected boolean destroy;
 
     public State(String name) {
         this.name = name;
         record = new LinkedList<>();
         events = new LinkedList<>();
         hasChanged = false;
+        destroy = false;
+    }
+
+    public boolean isDestroy() {
+        return destroy;
+    }
+
+    public void setDestroy(boolean destroy) {
+        this.destroy = destroy;
     }
 
     public boolean hasChanged() {

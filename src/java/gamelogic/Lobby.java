@@ -25,7 +25,7 @@ public class Lobby {
     }
 
     public synchronized void addAction(String sessionId, String action) {
-        game.getActionsSended().put(sessionId, action);
+        game.addAction(sessionId, action);
     }
 
     public synchronized void addPlayer(String sessionId) {

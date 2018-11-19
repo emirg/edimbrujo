@@ -10,12 +10,14 @@ public class Arrow extends Entity {
     private int xVelocity;
     private int yVelocity;
     private String id;
+    private int nroArrow;
 
-    public Arrow(String id, int x, int y, int xVelocity, int yVelocity, String name) {
+    public Arrow(String id, int nroA, int x, int y, int xVelocity, int yVelocity, String name) {
         super(x, y, name);
         this.xVelocity = xVelocity;
         this.yVelocity = yVelocity;
         this.id = id;
+        nroArrow = nroA;
     }
 
     public String getId() {
@@ -48,10 +50,12 @@ public class Arrow extends Entity {
         int newX = x + xVelocity;
         int newY = y + yVelocity;
         for (State state : states) {
-            if (state.getName().equals("Player")) {
-                Player player = (Player) state;
-                if (player.getX() == newX && player.getY() == newY) {
+            if (state.getName().equals("Player") && !((Player) state).isLeave()) {
+                Point posF = ((Player) state).posFutura(actions);
+                if (posF.x == newX && posF.y == newY) {
                     state.addEvent("hit");
+                    destroy = true;
+                    leave = true;
                 }
             }
         }
@@ -64,10 +68,13 @@ public class Arrow extends Entity {
         int newX = x + xVelocity;
         int newY = y + yVelocity;
         if (!((Map) staticStates.get(0)).canWalk(new Point(newX, newY))) {
+            //si llega a una pared
             newX = x;
             newY = y;
+            destroy = true;
+            leave = true;
         }
-        Arrow newArrow = new Arrow(id, newX, newY, xVelocity, yVelocity, name);
+        Arrow newArrow = new Arrow(id, nroArrow, newX, newY, xVelocity, yVelocity, name);
         return newArrow;
     }
 
@@ -82,21 +89,22 @@ public class Arrow extends Entity {
 
     @Override
     protected Object clone() {
-        Arrow clon = new Arrow(id, x, y, xVelocity, yVelocity, name);
+        Arrow clon = new Arrow(id, nroArrow, x, y, xVelocity, yVelocity, name);
         return clon;
     }
 
     @Override
     public JSONObject toJSON() {
-        JSONObject jsonPlayer = new JSONObject();
+        JSONObject jsonArrow = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
-        jsonAttrs.put("id", id);
+        jsonAttrs.put("id", id+"_"+nroArrow);
         jsonAttrs.put("x", x);
         jsonAttrs.put("y", y);
         jsonAttrs.put("xVelocity", x);
         jsonAttrs.put("yVelocity", y);
-        jsonPlayer.put("Arrow", jsonAttrs);
-        return jsonPlayer;
+        jsonAttrs.put("leave", leave);
+        jsonArrow.put("Arrow", jsonAttrs);
+        return jsonArrow;
     }
 
 }

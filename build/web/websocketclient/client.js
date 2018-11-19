@@ -72,7 +72,7 @@ window.onload = function () {
                 if (typeof gameState[i]["Arrow"] !== "undefined") {
                     console.log(gameState[i]["Arrow"]);
                     var id = gameState[i]["Arrow"]["id"];
-                    //var leave = gameState[i]["Arrow"]["leave"];
+                    var leave = gameState[i]["Arrow"]["leave"];
                     var x = gameState[i]["Arrow"]["x"];
                     var y = gameState[i]["Arrow"]["y"];
                     arrow = document.getElementById("arrow" + id);

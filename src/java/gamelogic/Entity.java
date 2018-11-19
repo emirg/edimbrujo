@@ -8,11 +8,14 @@ public class Entity extends State {
 
     protected int x;
     protected int y;
+    protected boolean leave;
+
 
     public Entity(int x, int y, String name) {
         super(name);
         this.x = x;
         this.y = y;
+        leave = false;
     }
 
     public int getX() {

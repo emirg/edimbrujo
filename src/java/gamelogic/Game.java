@@ -72,6 +72,16 @@ public class Game implements Runnable {
                 }
                 createState();
                 lobby.stateReady();
+                int i = 0;
+                while (i < states.size()) {
+                    if (states.get(i).isDestroy()) {
+                        System.out.println("se remueve " + states.get(i).getName());
+                        states.remove(i);
+                        nextStates.remove(i);
+                    } else {
+                        i++;
+                    }
+                }
                 //System.out.println("STATIC: " + gameStaticState);
                 //System.out.println("DYNAMIC: " + gameFullState);
             } catch (InterruptedException ex) {
@@ -101,14 +111,14 @@ public class Game implements Runnable {
             String sessionId = playerSended.getKey();
             //String player = playerSended.getValue();
             if (players.get(sessionId) == null) {
-                gamelogic.Map map = (gamelogic.Map)staticStates.get(0);
+                gamelogic.Map map = (gamelogic.Map) staticStates.get(0);
                 int x;
                 int y;
                 do {
-                Random random = new Random();
-                x = random.nextInt(map.getAncho()+1);
-                y = random.nextInt(map.getAlto()+1);
-                }while(!map.canWalk(new Point(x, y)));
+                    Random random = new Random();
+                    x = random.nextInt(map.getAncho() + 1);
+                    y = random.nextInt(map.getAlto() + 1);
+                } while (!map.canWalk(new Point(x, y)));
                 Player player = new Player(sessionId, false, x, y, "Player");
                 states.add(player);
                 players.put(sessionId, player);
@@ -164,13 +174,25 @@ public class Game implements Runnable {
                 }
                 y++;
             }
-            staticStates.add(new gamelogic.Map(cells, "Map",x ,y));
+            staticStates.add(new gamelogic.Map(cells, "Map", x, y));
+
         } catch (IOException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Game.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public  boolean isEndGame() {
+    public void addAction(String sid, String action) {
+        Player p = players.get(sid);
+        if (p != null) {
+            if (!p.isLeave()) {
+                //si existe el player y no salio ni murio, entonces puede hacer accion
+                actionsSended.put(sid, action);
+            }
+        }
+    }
+
+    public boolean isEndGame() {
         return endGame;
     }
 
