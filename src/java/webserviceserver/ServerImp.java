@@ -31,12 +31,12 @@ public class ServerImp {
     @Path("/enter")
     public String playerEnter(@QueryParam("rol") String rol) {
         lobby = Lobby.startGame();
-        lobby.addPlayer("una session");
-        lobby.addAction("un session", "enter");
         SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[20];
-        random.nextBytes(bytes);
-        return bytes.toString();
+        rol = rol + random.nextInt(1000000000);
+        //    String session = bytes.toString();
+        lobby.addPlayer(rol);
+        lobby.addAction(rol, "enter");
+        return rol;
     }
 
     @GET
@@ -54,33 +54,79 @@ public class ServerImp {
 
     @GET
     @Path("/action")
-    public void receiveAction(@QueryParam("action") String action, @QueryParam("session") String session) {
+    public String receiveAction(@QueryParam("action") String action, @QueryParam("session") String session) {
+        System.out.println(action + " del jugador" + session);
+
         lobby = Lobby.startGame();
-        lobby.addAction(session, action);
+        if (action.equalsIgnoreCase("fire")) {
+            String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + 1 + "\"},{\"name\": \"y\", \"value\": \"" + 1 + "\"}]}";
+            System.out.println(fire);
+            lobby.addAction(session, fire);
+
+        } else {
+            lobby.addAction(session, action);
+
+        }
+        return "okey";
     }
 
     @GET
-    @Path("/getFullState")
-    public String getFullState() {
+    @Path("/actionFire")
+    public String rangeAtack(@QueryParam("x") String x, @QueryParam("y") String y, @QueryParam("session") String session) {
+
+        lobby = Lobby.startGame();
+        String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
+        System.out.println(fire);
+        lobby.addAction(session, fire);
+return "okey";
+
+    }
+
+
+    @GET
+        @Path("/getFullState")
+        public String getFullState() throws InterruptedException {
         lobby = Lobby.startGame();
         String state = "error";
         try {
             state = lobby.getFullState();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ServerImp.class.getName()).log(Level.SEVERE, null, ex);
+        
+
+} catch (InterruptedException ex) {
+            Logger.getLogger(ServerImp.class
+.getName()).log(Level.SEVERE, null, ex);
+        }
+        return state;
+    }
+    
+    @GET
+        @Path("/getFullStaticState")
+        public String getFullStaticState() {
+        lobby = Lobby.startGame();
+        String state = "error";
+        try {
+            state = lobby.getStaticState();
+        
+
+} catch (InterruptedException ex) {
+            Logger.getLogger(ServerImp.class
+.getName()).log(Level.SEVERE, null, ex);
         }
         return state;
     }
 
     @GET
-    @Path("/getState")
-    public String getState() {
+        @Path("/getState")
+        public String getState() {
         lobby = Lobby.startGame();
         String state = "error";
         try {
             state = lobby.getState();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ServerImp.class.getName()).log(Level.SEVERE, null, ex);
+        
+
+} catch (InterruptedException ex) {
+            Logger.getLogger(ServerImp.class
+.getName()).log(Level.SEVERE, null, ex);
         }
         return state;
     }
