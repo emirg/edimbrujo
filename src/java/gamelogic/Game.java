@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -14,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Game implements Runnable {
 
@@ -52,20 +55,24 @@ public class Game implements Runnable {
         while (!endGame) {
             try {
                 Thread.sleep(100); //time per frame (10 fps)
-                readActions();
                 readPlayers();
+                readActions();
+                //se realizan las comunicaciones a traves de eventos y 
+                //se generan nuevos estados que seran computados
                 newStates = new LinkedList<>();
                 for (State state : states) {
-                    LinkedList<State> s = state.generate(states, staticStates, actions);
-                    if (s != null) {
-                        newStates.addAll(s);
+                    LinkedList<State> newState = state.generate(states, staticStates, actions);
+                    if (newState != null) {
+                        newStates.addAll(newState);
                     }
                 }
                 states.addAll(newStates);
+                //se generan los estados siguientes incluyendo los generados
                 nextStates = new LinkedList<>();
                 for (State state : states) {
                     nextStates.add(state.next(states, staticStates, actions));
                 }
+                //se crean los nuevos estados con los calculados anteriormente
                 for (int i = 0; i < states.size(); i++) {
                     states.get(i).createState(nextStates.get(i));
                     states.get(i).clearEvents();
@@ -75,9 +82,8 @@ public class Game implements Runnable {
                 int i = 0;
                 while (i < states.size()) {
                     if (states.get(i).isDestroy()) {
-                        System.out.println("se remueve " + states.get(i).getName());
+                        System.out.println("State " + states.get(i).getName() + " is removed.");
                         states.remove(i);
-                        nextStates.remove(i);
                     } else {
                         i++;
                     }
@@ -91,18 +97,40 @@ public class Game implements Runnable {
     }
 
     public void init() {
-        //TODO crear estados dinamicos y estaticos
-        File map = new File("C:\\Users\\Martin\\Desktop\\Edimbrujo\\src\\java\\files\\map.csv");
-        loadMap(map);
+        try {
+            //TODO crear estados dinamicos y estaticos
+            File map = new File(this.getClass().getClassLoader().getResource("files/map.csv").toURI());
+            loadMap(map);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void readActions() {
         actions.clear();
+        JSONParser parser = new JSONParser();
         for (Map.Entry<String, String> actionSend : actionsSended.entrySet()) {
             String sessionId = actionSend.getKey();
             String action = actionSend.getValue();
-            actions.put(sessionId, new Action(sessionId, action));
-            actionsSended.remove(sessionId);
+            Action newAction = null;
+            try {
+                JSONObject jsonAction = (JSONObject) parser.parse(action);
+                String actionName = (String) jsonAction.get("name");
+                newAction = new Action(sessionId, actionName);
+
+                JSONArray jsonParameters = (JSONArray) jsonAction.get("parameters");
+                if (jsonParameters != null) {
+                    for (int i = 0; i < jsonParameters.size(); i++) {
+                        JSONObject parameter = (JSONObject) jsonParameters.get(i);
+                        newAction.putParameter((String) parameter.get("name"), (String) parameter.get("value"));
+                    }
+                }
+            } catch (Exception ex) {
+                newAction = new Action(sessionId, action);
+            } finally {
+                actions.put(sessionId, newAction);
+                actionsSended.remove(sessionId);
+            }
         }
     }
 
@@ -110,16 +138,16 @@ public class Game implements Runnable {
         for (Map.Entry<String, String> playerSended : playersSended.entrySet()) {
             String sessionId = playerSended.getKey();
             //String player = playerSended.getValue();
-            if (players.get(sessionId) == null) {
+            if (!players.containsKey(sessionId)) {
                 gamelogic.Map map = (gamelogic.Map) staticStates.get(0);
                 int x;
                 int y;
                 do {
                     Random random = new Random();
-                    x = random.nextInt(map.getAncho() + 1);
-                    y = random.nextInt(map.getAlto() + 1);
+                    x = random.nextInt(map.getWidth() + 1);
+                    y = random.nextInt(map.getHeight() + 1);
                 } while (!map.canWalk(new Point(x, y)));
-                Player player = new Player(sessionId, false, x, y, "Player");
+                Player player = new Player(sessionId, 0, false, false, x, y, "Player", false);
                 states.add(player);
                 players.put(sessionId, player);
             }
@@ -127,7 +155,7 @@ public class Game implements Runnable {
         for (Map.Entry<String, Player> player : players.entrySet()) {
             String sessionId = player.getKey();
             Player playerState = player.getValue();
-            if (playersSended.get(sessionId) == null) {
+            if (!playersSended.containsKey(sessionId)) {
                 playerState.setLeave(true);
             }
         }
@@ -174,7 +202,7 @@ public class Game implements Runnable {
                 }
                 y++;
             }
-            staticStates.add(new gamelogic.Map(cells, "Map", x, y));
+            staticStates.add(new gamelogic.Map(cells, x, y, "Map"));
 
         } catch (IOException ex) {
             Logger.getLogger(Game.class
@@ -182,14 +210,37 @@ public class Game implements Runnable {
         }
     }
 
-    public void addAction(String sid, String action) {
-        Player p = players.get(sid);
-        if (p != null) {
-            if (!p.isLeave()) {
-                //si existe el player y no salio ni murio, entonces puede hacer accion
-                actionsSended.put(sid, action);
+    public void addAction(String sessionId, String action) {
+        //Player player = players.get(sessionId);
+        //if (players.containsKey(sessionId)) {
+        //    if (!player.isLeave()) {
+        //si existe el player y no salio ni murio, entonces puede hacer accion
+
+        if (actionsSended.containsKey(sessionId)) {
+            String actualAction = actionsSended.get(sessionId);
+            JSONParser parser = new JSONParser();
+            int actualPriority = 0;
+            try {
+                JSONObject jsonAction = (JSONObject) parser.parse(actualAction);
+                actualPriority = Integer.parseInt((String) jsonAction.get("priority"));
+            } catch (Exception ex) {
+                actualPriority = 0;
             }
+            int newPriority = 0;
+            try {
+                JSONObject jsonAction = (JSONObject) parser.parse(action);
+                newPriority = Integer.parseInt((String) jsonAction.get("priority"));
+            } catch (Exception ex) {
+                newPriority = 0;
+            }
+            if (newPriority > actualPriority) {
+                actionsSended.put(sessionId, action);
+            }
+        } else {
+            actionsSended.put(sessionId, action);
         }
+        //    }
+        //}
     }
 
     public boolean isEndGame() {

@@ -12,12 +12,12 @@ public abstract class State {
     protected boolean hasChanged;
     protected boolean destroy;
 
-    public State(String name) {
+    public State(String name, boolean destroy) {
         this.name = name;
-        record = new LinkedList<>();
-        events = new LinkedList<>();
-        hasChanged = false;
-        destroy = false;
+        this.record = new LinkedList<>();
+        this.events = new LinkedList<>();
+        this.hasChanged = false;
+        this.destroy = destroy;
     }
 
     public boolean isDestroy() {
@@ -44,7 +44,7 @@ public abstract class State {
     }
 
     public void createState(State newState) {
-        record.add((State) this.clone());
+        //record.add((State) this.clone());
         this.setState(newState);
     }
 
@@ -61,7 +61,8 @@ public abstract class State {
     }
 
     public void setState(State newState) {
-        //TODO in concrete class
+        name = newState.name;
+        destroy = newState.destroy;
     }
 
     @Override
@@ -69,13 +70,20 @@ public abstract class State {
         return toJSON().toString();
     }
 
+    public JSONObject toJSON() {
+        JSONObject jsonState = new JSONObject();
+        JSONObject jsonAttrs = new JSONObject();
+        jsonAttrs.put("name", name);
+        jsonAttrs.put("destroy", destroy);
+        jsonState.put("State", jsonAttrs);
+        return jsonState;
+    }
+
     @Override
     protected Object clone() {
         //TODO in concrete class
         return null;
     }
-
-    public abstract JSONObject toJSON();
 
     public void addEvent(String event) {
         events.add(event);

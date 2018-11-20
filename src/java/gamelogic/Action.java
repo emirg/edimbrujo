@@ -11,6 +11,7 @@ public class Action {
     public Action(String id, String name) {
         this.id = id;
         this.name = name;
+        this.parameters = new HashMap<>();
     }
 
     public String getId() {

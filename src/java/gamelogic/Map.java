@@ -8,25 +8,42 @@ import org.json.simple.JSONObject;
 public class Map extends StaticState {
 
     private HashMap<Point, Integer> cells;
-    private int ancho;
-    private int alto;
+    private int width;
+    private int height;
 
-    public Map(HashMap<Point, Integer> cells, String name, int ancho, int alto) {
+    public Map(HashMap<Point, Integer> cells, int width, int height, String name) {
         super(name);
         this.cells = cells;
-        this.ancho = ancho;
-        this.alto = alto;
+        this.width = width;
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public boolean canWalk(Point xy) {
         boolean res;
-        res = (cells.containsKey(xy) && cells.get(xy)==1);
+        res = (cells.containsKey(xy) && cells.get(xy) == 1);
         return res;
     }
 
     @Override
     public JSONObject toJSON() {
         JSONObject jsonMap = new JSONObject();
+        JSONObject jsonAttrs = new JSONObject();
         JSONArray jsonCells = new JSONArray();
         for (java.util.Map.Entry<Point, Integer> cell : cells.entrySet()) {
             Point key = cell.getKey();
@@ -37,25 +54,11 @@ public class Map extends StaticState {
             jsonCell.put("y", key.y);
             jsonCells.add(jsonCell);
         }
-        jsonMap.put("Map", jsonCells);
+        jsonAttrs.put("cells", jsonCells);
+        jsonAttrs.put("width", width);
+        jsonAttrs.put("height", height);
+        jsonMap.put("Map", jsonAttrs);
         return jsonMap;
     }
 
-    public int getAncho() {
-        return ancho;
-    }
-
-    public void setAncho(int ancho) {
-        this.ancho = ancho;
-    }
-
-    public int getAlto() {
-        return alto;
-    }
-
-    public void setAlto(int alto) {
-        this.alto = alto;
-    }
-
-    
 }

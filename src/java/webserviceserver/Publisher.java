@@ -14,6 +14,6 @@ import javax.xml.ws.Endpoint;
 public class Publisher {
 
     public static void main(String[] arg) {
-        Endpoint.publish("http://webServerEdimbrujo/ws/ServerCentral", new ServerImp());
+        //Endpoint.publish("http://webServerEdimbrujo/ws/ServerCentral", new ServerImp());
     }
 }

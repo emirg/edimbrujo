@@ -8,14 +8,11 @@ public class Entity extends State {
 
     protected int x;
     protected int y;
-    protected boolean leave;
 
-
-    public Entity(int x, int y, String name) {
-        super(name);
+    public Entity(int x, int y, String name, boolean destroy) {
+        super(name, destroy);
         this.x = x;
         this.y = y;
-        leave = false;
     }
 
     public int getX() {
@@ -42,19 +39,20 @@ public class Entity extends State {
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         hasChanged = false;
-        Entity newEntity = new Entity(x, y, name);
+        Entity newEntity = new Entity(x, y, name, destroy);
         return newEntity;
     }
 
     @Override
     public void setState(State newEntity) {
-        this.x = ((Entity) newEntity).getX();
-        this.y = ((Entity) newEntity).getY();
+        super.setState(newEntity);
+        x = ((Entity) newEntity).x;
+        y = ((Entity) newEntity).y;
     }
 
     @Override
     protected Object clone() {
-        Entity clon = new Entity(x, y, name);
+        Entity clon = new Entity(x, y, name, destroy);
         return clon;
     }
 
@@ -62,6 +60,7 @@ public class Entity extends State {
     public JSONObject toJSON() {
         JSONObject jsonEntity = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
+        jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("x", x);
         jsonAttrs.put("y", y);
         jsonEntity.put("Entity", jsonAttrs);
