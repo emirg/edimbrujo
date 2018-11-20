@@ -6,40 +6,61 @@
 package webserviceserver;
 
 import gamelogic.Lobby;
+import java.security.SecureRandom;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Stateless;
 import javax.jws.WebService;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 
 /**
  *
  * @author joan
  */
-@WebService(endpointInterface = "webserviceserver.ServerImp")
-public class ServerImp implements Server {
+@Stateless
+@Path("/server")
+public class ServerImp {
 
     private Lobby lobby;
     int session;
 
-    @Override
-    public void playerEnter(String rol) {
+    @GET
+    @Path("/enter")
+    public String playerEnter(@QueryParam("rol") String rol) {
         lobby = Lobby.startGame();
         lobby.addPlayer("una session");
         lobby.addAction("un session", "enter");
+        SecureRandom random = new SecureRandom();
+        byte bytes[] = new byte[20];
+        random.nextBytes(bytes);
+        return bytes.toString();
     }
 
-    @Override
-    public void playerExit(String session) {
+    @GET
+    @Path("/test")
+    public String test() {
+        return "prueba";
+    }
+
+    @GET
+    @Path("/exit")
+    public void playerExit(@QueryParam("session") String session) {
         lobby = Lobby.startGame();
         lobby.addAction(session, "leave");
     }
 
-    @Override
-    public void receiveAction(String action,String session) {
+    @GET
+    @Path("/action")
+    public void receiveAction(@QueryParam("action") String action, @QueryParam("session") String session) {
         lobby = Lobby.startGame();
         lobby.addAction(session, action);
     }
 
-    @Override
+    @GET
+    @Path("/getFullState")
     public String getFullState() {
         lobby = Lobby.startGame();
         String state = "error";
@@ -51,7 +72,8 @@ public class ServerImp implements Server {
         return state;
     }
 
-    @Override
+    @GET
+    @Path("/getState")
     public String getState() {
         lobby = Lobby.startGame();
         String state = "error";
