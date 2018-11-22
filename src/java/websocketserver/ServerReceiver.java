@@ -35,7 +35,7 @@ public class ServerReceiver {
     public void recieveAction(String action, Session session) {
         //cada vez recive una accion de un jugador la agrega 
         //al buffer de acciones del juego
-        System.out.println("Player " + session.getId() + " send action: " + action);
+        //System.out.println("Player " + session.getId() + " send action: " + action);
         lobby.addAction(session.getId(), action);
     }
 

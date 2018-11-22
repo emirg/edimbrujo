@@ -3,54 +3,30 @@ package gamelogic;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
-import org.json.simple.JSONArray;
+import java.util.Random;
 import org.json.simple.JSONObject;
 
 public class Player extends Entity {
 
     protected String id;
-    protected int cantArrow;
+    protected int countProjectile;
     protected boolean dead;
     protected boolean leave;
+    protected int team;
+    protected int role;
+    protected int health;
+    protected int healthMax;
 
-    public Player(String id, int cantArrow, boolean dead, boolean leave, int x, int y, String name, boolean destroy) {
+    public Player(String id, int countProjectile, boolean dead, boolean leave, int team, int role, int health, int healthMax, int x, int y, String name, boolean destroy) {
         super(x, y, name, destroy);
         this.id = id;
-        this.cantArrow = cantArrow;
+        this.countProjectile = countProjectile;
         this.dead = dead;
         this.leave = leave;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public boolean isLeave() {
-        return leave;
-    }
-
-    public void setLeave(boolean leave) {
-        this.leave = leave;
-    }
-
-    public int getCantArrow() {
-        return cantArrow;
-    }
-
-    public void setCantArrow(int cantArrow) {
-        this.cantArrow = cantArrow;
-    }
-
-    public boolean isDead() {
-        return dead;
-    }
-
-    public void setDead(boolean dead) {
-        this.dead = dead;
+        this.team = team;
+        this.role = role;
+        this.health = health;
+        this.healthMax = healthMax;
     }
 
     @Override
@@ -80,18 +56,23 @@ public class Player extends Entity {
                             } else {
                                 yVelocity = 0;
                             }
-                            Projectile projectile = new Projectile(xVelocity, yVelocity, id, cantArrow, x, y, "Projectile", false);
+                            Projectile projectile = new Projectile(id, countProjectile, team, xVelocity, yVelocity, x, y, "Projectile", false);
                             newStates.add(projectile);
                         }
                         break;
                 }
             }
         }
+        Point myFuturePosition = futurePosition(actions);
         for (State state : states) {
-            if (state != this && state.getName().equals("Player") && !((Player) state).isDead() && !((Player) state).isLeave()) {
-                Point myFuturePosition = futurePosition(actions);
+            if (state != this && state.getName().equals("Player") && !((Player) state).dead && !((Player) state).leave) {
                 Point otherFuturePosition = ((Player) state).futurePosition(actions);
                 if (myFuturePosition.x == otherFuturePosition.x && myFuturePosition.y == otherFuturePosition.y) {
+                    this.addEvent("collide");
+                }
+            } else if (state != this && state.getName().equals("Tower")) {
+                Tower tower = (Tower) state;
+                if (myFuturePosition.x == tower.x && myFuturePosition.y == tower.y) {
                     this.addEvent("collide");
                 }
             }
@@ -105,9 +86,12 @@ public class Player extends Entity {
         Action action = actions.get(id);
         int newX = x;
         int newY = y;
-        int newCantArrow = cantArrow;
+        int newCountProjectile = countProjectile;
         boolean newLeave = leave;
         boolean newDead = dead;
+        int newRole = role;
+        int newHealth = health;
+        boolean newDestroy = destroy;
         if (action != null) {
             hasChanged = true;
             //System.out.println("ACTION: " + action.getName());
@@ -142,7 +126,7 @@ public class Player extends Entity {
                         newX = x + 1;
                         break;
                     case "fire":
-                        newCantArrow = cantArrow + 1;
+                        newCountProjectile = countProjectile + 1;
                         break;
                 }
             }
@@ -165,17 +149,50 @@ public class Player extends Entity {
             for (String event : events) {
                 switch (event) {
                     case "hit":
-                        newDead = true;
+                        newHealth = health - 10;
+                        if (newHealth <= 0) {
+                            newDead = true;
+                        }
                         System.out.println("Player " + id + " has been killed.");
                         break;
                     case "collide":
                         newX = x;
                         newY = y;
                         break;
+                    case "spawn":
+                        System.out.println("Player " + id + " spawn in game.");
+                        break;
+                    case "respawn":
+                        System.out.println("Player " + id + " respawn in game.");
+                        Random random = new Random();
+                        LinkedList<Spawn> spawns = new LinkedList<>();
+                        if (role == 0) {
+                            for (StaticState staticState : staticStates) {
+                                if (staticState.name.equals("SpawnDefence")) {
+                                    spawns.add((Spawn) staticState);
+                                }
+                            }
+                        } else {
+                            for (StaticState staticState : staticStates) {
+                                if (staticState.name.equals("SpawnAttack")) {
+                                    spawns.add((Spawn) staticState);
+                                }
+                            }
+                        }
+                        Spawn spawn = spawns.get(random.nextInt(spawns.size()));
+                        newX = spawn.x;
+                        newY = spawn.y;
+                        newDead = false;
+                        newHealth = healthMax;
+                        break;
+                    case "despawn":
+                        newDestroy = true;
+                        System.out.println("Player " + id + " despawn of the game.");
+                        break;
                 }
             }
         }
-        Player newPlayer = new Player(id, newCantArrow, newDead, newLeave, newX, newY, name, destroy);
+        Player newPlayer = new Player(id, newCountProjectile, newDead, newLeave, team, newRole, newHealth, healthMax, newX, newY, name, newDestroy);
         return newPlayer;
     }
 
@@ -224,14 +241,18 @@ public class Player extends Entity {
     public void setState(State newPlayer) {
         super.setState(newPlayer);
         id = ((Player) newPlayer).id;
-        cantArrow = ((Player) newPlayer).cantArrow;
+        countProjectile = ((Player) newPlayer).countProjectile;
         dead = ((Player) newPlayer).dead;
         leave = ((Player) newPlayer).leave;
+        team = ((Player) newPlayer).team;
+        role = ((Player) newPlayer).role;
+        health = ((Player) newPlayer).health;
+        healthMax = ((Player) newPlayer).healthMax;
     }
 
     @Override
     protected Object clone() {
-        Player clon = new Player(id, cantArrow, dead, leave, x, y, name, destroy);
+        Player clon = new Player(id, countProjectile, dead, leave, team, role, health, healthMax, x, y, name, destroy);
         return clon;
     }
 
@@ -241,8 +262,13 @@ public class Player extends Entity {
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("id", id);
+        jsonAttrs.put("countProjectile", countProjectile);
         jsonAttrs.put("dead", dead);
         jsonAttrs.put("leave", leave);
+        jsonAttrs.put("team", team);
+        jsonAttrs.put("role", role);
+        jsonAttrs.put("health", health);
+        jsonAttrs.put("healthMax", healthMax);
         jsonPlayer.put("Player", jsonAttrs);
         return jsonPlayer;
     }

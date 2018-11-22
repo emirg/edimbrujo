@@ -1,4 +1,5 @@
 var socket;
+var socketID = "";
 
 window.onload = function () {
 //crea el socket para recivir estados del servidor (llama @OnOpen en servidor)
@@ -10,29 +11,25 @@ window.onload = function () {
     var game = document.getElementById("game");
     var terrain = document.getElementById("terrain");
     //terrain.innerHTML = "TERRAIN<br>";
-    var players = document.getElementById("players");
+    var entities = document.getElementById("entities");
     //players.innerHTML = "PLAYERS<br>";
+    var ready = document.getElementById("ready");
     //var sendAction = document.getElementById("sendAction");
-    var action = document.getElementById("action");
+    //var action = document.getElementById("action");
     socket.onmessage = stateUpdate;
 
-    function fire(x, y) {
-        if (mouseDown == 1) {
-            socket.send('{"name": "fire", "priority": "1","parameters": [{"name": "x", "value": "' + x + '"},{"name": "y", "value": "' + y + '"}]}');
-        }
-    }
-
-//actualiza la vista del juego cuando recive un nuevo estado desde el servidor
+    //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
     function stateUpdate(event) {
+        //console.log(socket);
         //console.log(event.data);
         var gameState = JSON.parse(event.data);
         //var gameState = event.data;
-        /*console.log(gameState);
-         console.log(gameState["0"]);
-         console.log(gameState["0"]["Map"]);
-         console.log(gameState["0"]["Player"]);*/
         if (typeof gameState !== "undefined") {
             //console.log(gameState);
+            if (gameState["id"] !== "undefined" && socketID === "") {
+                socketID = gameState["id"];
+                //console.log(socketID);
+            }
             var i = 0;
             while (typeof gameState[i] !== "undefined") {
                 //console.log(gameState[i]);
@@ -50,7 +47,7 @@ window.onload = function () {
                         y = gameState[i]["Map"]["cells"][j]["y"];
                         val = gameState[i]["Map"]["cells"][j]["val"];
                         if (gameState[i]["Map"]["cells"][j]["val"] == 1) {
-                            terrain.innerHTML += "<div id='cell" + x + "_" + y + "' onmousedown='fire(" + x + "," + y + ")' class='cell wall" + val + "'></div>";
+                            terrain.innerHTML += "<div id='cell" + x + "_" + y + "' class='cell wall" + val + "'></div>";
                             cell = document.getElementById("cell" + x + "_" + y);
                             cell.style.left = x * ($(".cell").width() + 2) + "px";
                             cell.style.top = y * ($(".cell").height() + 2) + "px";
@@ -61,65 +58,151 @@ window.onload = function () {
                     game.style.width = width * ($(".cell").width() + 2) + "px";
                     terrain.style.height = height * ($(".cell").height() + 2) + "px";
                     game.style.height = height * ($(".cell").height() + 2) + "px";
-                }
-                if (typeof gameState[i]["Player"] !== "undefined") {
+                } else if (typeof gameState[i]["Player"] !== "undefined") {
                     console.log(gameState[i]["Player"]);
                     var id = gameState[i]["Player"]["id"];
+                    var destroy = gameState[i]["Player"]["super"]["Entity"]["super"]["State"]["destroy"];
                     var leave = gameState[i]["Player"]["leave"];
                     var dead = gameState[i]["Player"]["dead"];
+                    var health = gameState[i]["Player"]["health"];
+                    var healthMax = gameState[i]["Player"]["healthMax"];
                     var x = gameState[i]["Player"]["super"]["Entity"]["x"];
                     var y = gameState[i]["Player"]["super"]["Entity"]["y"];
-                    player = document.getElementById("player" + id);
+                    var team = gameState[i]["Player"]["team"];
+                    var player = document.getElementById("player" + id);
                     if (player === null) {
-                        players.innerHTML += "<div id='player" + id + "' class='player'></div>";
+                        entities.innerHTML += "<div id='player" + id + "' class='player'><div id='player" + id + "-healthbar' class='healthbar'></div>";
                         player = document.getElementById("player" + id);
-                        player.style.backgroundColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
                     }
                     player.style.left = x * ($(".cell").width() + 2) + 1 + "px";
                     player.style.top = y * ($(".cell").height() + 2) + 1 + "px";
+                    playerHealthbar = document.getElementById("player" + id + "-healthbar");
+                    playerHealthbar.style.width = health * 12 / healthMax + "px";
                     if (dead) {
                         player.style.zIndex = "1";
                         player.style.backgroundImage = "url('images/blood.png')";
                         player.style.backgroundColor = "rgba(0,0,0,0)";
+                    } else {
+                        player.style.zIndex = "2";
+                        player.style.backgroundImage = "url('images/brujo.png')";
+                        if (id === socketID) {
+                            player.style.backgroundColor = "green";
+                        } else {
+                            player.style.backgroundColor = $(".team" + team).css("color");//"#" + ((1 << 24) * Math.random() | 0).toString(16);
+                        }
                     }
                     if (leave) {
                         player.style.display = "none";
                     } else {
                         player.style.display = "block";
                     }
+                    if (destroy) {
+                        $("#player" + id).remove();
+                    }
                     //players.innerHTML += gameState[i]["Player"]["id"] + "," + gameState[i]["Player"]["x"] + "," + gameState[i]["Player"]["y"] + "<br>";
-                }
-                if (typeof gameState[i]["Projectile"] !== "undefined") {
-                    console.log(gameState[i]["Projectile"]);
+                } else if (typeof gameState[i]["Projectile"] !== "undefined") {
+                    //console.log(gameState[i]["Projectile"]);
                     var id = gameState[i]["Projectile"]["id"];
+                    var number = gameState[i]["Projectile"]["number"];
                     var destroy = gameState[i]["Projectile"]["super"]["Entity"]["super"]["State"]["destroy"];
                     var x = gameState[i]["Projectile"]["super"]["Entity"]["x"];
                     var y = gameState[i]["Projectile"]["super"]["Entity"]["y"];
                     var xVelocity = gameState[i]["Projectile"]["xVelocity"];
                     var yVelocity = gameState[i]["Projectile"]["yVelocity"];
-                    arrow = document.getElementById("arrow" + id);
-                    if (arrow === null) {
-                        players.innerHTML += "<div id='arrow" + id + "' class='arrow'></div>";
-                        arrow = document.getElementById("arrow" + id);
-                        //arrow.style.background = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+                    var team = gameState[i]["Projectile"]["team"];
+                    var projectile = document.getElementById("projectile" + id + "-" + number);
+                    if (projectile === null) {
+                        entities.innerHTML += "<div id='projectile" + id + "-" + number + "' class='arrow'></div>";
+                        projectile = document.getElementById("projectile" + id + "-" + number);
+                        if (id === socketID) {
+                            projectile.style.backgroundColor = "green";
+                        } else {
+                            projectile.style.backgroundColor = $(".team" + team).css("color");
+                        }
+
                     }
-                    arrow.style.left = x * ($(".cell").width() + 2) + 1 + $(".arrow").width() / 2 + "px";
-                    arrow.style.top = y * ($(".cell").height() + 2) + 1 + $(".arrow").height() / 2 + "px";
+                    projectile.style.left = x * ($(".cell").width() + 2) + 1 + $(".arrow").width() / 2 + "px";
+                    projectile.style.top = y * ($(".cell").height() + 2) + 1 + $(".arrow").height() / 2 + "px";
                     if (destroy) {
-                        $("#arrow" + id).remove();
+                        $("#projectile" + id + "-" + number).remove();
                     }
                     //players.innerHTML += gameState[i]["Player"]["id"] + "," + gameState[i]["Player"]["x"] + "," + gameState[i]["Player"]["y"] + "<br>";
+                } else if (typeof gameState[i]["Tower"] !== "undefined") {
+                    console.log(gameState[i]["Tower"]);
+                    var id = gameState[i]["Tower"]["id"];
+                    var destroy = gameState[i]["Tower"]["super"]["Entity"]["super"]["State"]["destroy"];
+                    var dead = gameState[i]["Tower"]["dead"];
+                    var team = gameState[i]["Tower"]["team"];
+                    var health = gameState[i]["Tower"]["health"];
+                    var healthMax = gameState[i]["Tower"]["healthMax"];
+                    var x = gameState[i]["Tower"]["super"]["Entity"]["x"];
+                    var y = gameState[i]["Tower"]["super"]["Entity"]["y"];
+                    var team = gameState[i]["Tower"]["team"];
+                    var tower = document.getElementById("tower" + id);
+                    if (tower === null) {
+                        entities.innerHTML += "<div id='tower" + id + "' class='tower'><div id='tower" + id + "-healthbar' class='healthbar'></div></div>";
+                        tower = document.getElementById("tower" + id);
+                        tower.style.backgroundColor = $(".team" + team).css("color");
+                    }
+                    tower.style.left = x * ($(".cell").width() + 2) + 1 + "px";
+                    tower.style.top = y * ($(".cell").height() + 2) + 1 + "px";
+                    towerHealthbar = document.getElementById("tower" + id + "-healthbar");
+                    towerHealthbar.style.width = health * 12 / healthMax + "px";
+                    if (dead) {
+                        tower.style.zIndex = "1";
+                        tower.style.backgroundImage = "url('images/blood.png')";
+                        tower.style.backgroundColor = "rgba(0,0,0,0)";
+                    }
+                    if (destroy) {
+                        $("#tower" + id).remove();
+                    }
+                } else if (typeof gameState[i]["Spawn"] !== "undefined") {
+                    var x = gameState[i]["Spawn"]["x"];
+                    var y = gameState[i]["Spawn"]["y"];
+                    terrain.innerHTML += "<div id='spawn" + x + "_" + y + "' class='cell spawn'></div>";
+                    spawn = document.getElementById("spawn" + x + "_" + y);
+                    spawn.style.left = x * ($(".cell").width() + 2) + "px";
+                    spawn.style.top = y * ($(".cell").height() + 2) + "px";
+                } else if (typeof gameState[i]["Match"] !== "undefined") {
+                    //console.log(gameState[i]["Match"]);
+                    var round = gameState[i]["Match"]["round"];
+                    document.getElementById("round").innerHTML = round;
+                    var countRounds = gameState[i]["Match"]["countRounds"];
+                    document.getElementById("countRounds").innerHTML = countRounds;
+                    var endGame = gameState[i]["Match"]["endGame"];
+                    var endRound = gameState[i]["Match"]["endRound"];
+                    var startGame = gameState[i]["Match"]["startGame"];
+                    var teamAttacker = gameState[i]["Match"]["teamAttacker"];
+                    var sizeTeam = gameState[i]["Match"]["sizeTeam"];
+                    var players = gameState[i]["Match"]["players"];
+                    var ready = gameState[i]["Match"]["ready"];
+                    var playersDOM = document.getElementById("players");
+                    playersDOM.innerHTML = "<tr><th>ID</th><th>Ready</th></tr>";
+                    for (var p = 0; p < players.length; p++) {
+                        var checked = ready[p] ? "checked" : "";
+                        playersDOM.innerHTML += "<tr><td>" + players[p] + "</td><td><input id='ready" + player + "' type='checkbox' disabled " + checked + "/></td></tr>";
+                    }
+                    var teamPoints = gameState[i]["Match"]["teamPoints"];
+                    var teamPointsDOM = document.getElementById("teamPoints");
+                    teamPointsDOM.innerHTML = "";
+                    for (var p = 0; p < teamPoints.length; p++) {
+                        teamPointsDOM.innerHTML += "<span class='team" + p + "'>" + teamPoints[p] + "</span> ";
+                    }
                 }
                 i++;
             }
         }
     }
 
-    //evento al presionar el boton de Enviar Accion
+//evento al presionar el boton de Enviar Accion
     /*sendAction.addEventListener("click", function () {
      var actionValue = action.options[action.selectedIndex].value;
      socket.send(actionValue);
      });*/
+
+    ready.addEventListener("click", function () {
+        socket.send("ready");
+    });
 
     var Key = {
         _pressed: {},
@@ -129,6 +212,20 @@ window.onload = function () {
         RIGHT: 39,
         DOWN: 40,
         FIRE: 32,
+        ALTLEFT: 65,
+        ALTUP: 87,
+        ALTRIGHT: 68,
+        ALTDOWN: 83,
+
+        areDown: function (keyCodes) {
+            var pressed = false;
+            var i = 0;
+            while (!pressed && i < keyCodes.length) {
+                pressed = this._pressed[keyCodes[i]];
+                i++;
+            }
+            return pressed;
+        },
 
         isDown: function (keyCode) {
             return this._pressed[keyCode];
@@ -155,21 +252,21 @@ window.onload = function () {
     }, 100);
 
     function updateKeyboard() {
-        if (Key.isDown(Key.UP) && Key.isDown(Key.LEFT)) {
+        if (Key.areDown([Key.UP, Key.ALTUP]) && Key.areDown([Key.LEFT, Key.ALTLEFT])) {
             socket.send("upleft");
-        } else if (Key.isDown(Key.UP) && Key.isDown(Key.RIGHT)) {
+        } else if (Key.areDown([Key.UP, Key.ALTUP]) && Key.areDown([Key.RIGHT, Key.ALTRIGHT])) {
             socket.send("upright");
-        } else if (Key.isDown(Key.DOWN) && Key.isDown(Key.LEFT)) {
+        } else if (Key.areDown([Key.DOWN, Key.ALTDOWN]) && Key.areDown([Key.LEFT, Key.ALTLEFT])) {
             socket.send("downleft");
-        } else if (Key.isDown(Key.DOWN) && Key.isDown(Key.RIGHT)) {
+        } else if (Key.areDown([Key.DOWN, Key.ALTDOWN]) && Key.areDown([Key.RIGHT, Key.ALTRIGHT])) {
             socket.send("downright");
-        } else if (Key.isDown(Key.UP)) {
+        } else if (Key.areDown([Key.UP, Key.ALTUP])) {
             socket.send("up");
-        } else if (Key.isDown(Key.LEFT)) {
+        } else if (Key.areDown([Key.LEFT, Key.ALTLEFT])) {
             socket.send("left");
-        } else if (Key.isDown(Key.DOWN)) {
+        } else if (Key.areDown([Key.DOWN, Key.ALTDOWN])) {
             socket.send("down");
-        } else if (Key.isDown(Key.RIGHT)) {
+        } else if (Key.areDown([Key.RIGHT, Key.ALTRIGHT])) {
             socket.send("right");
         }
         if (Key.isDown(Key.FIRE)) {
@@ -188,6 +285,13 @@ window.onload = function () {
      socket.send("right");
      }
      });*/
+
+    game.addEventListener('mousedown', function (e) {
+        //var gameStyle = window.getComputedStyle(game);
+        var x = parseInt((e.x - game.offsetLeft + $("#game").width() / 2) / ($(".cell").width() + 2)) - 1;//gameStyle.getPropertyValue("left");
+        var y = parseInt((e.y - game.offsetTop) / ($(".cell").height() + 2)) - 2;//gameStyle.getPropertyValue("top");
+        fire(x, y);
+    }, false);
 
 }
 

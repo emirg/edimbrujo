@@ -55,7 +55,7 @@ public class Game implements Runnable {
         while (!endGame) {
             try {
                 Thread.sleep(100); //time per frame (10 fps)
-                readPlayers();
+                //readPlayers();
                 readActions();
                 //se realizan las comunicaciones a traves de eventos y 
                 //se generan nuevos estados que seran computados
@@ -82,7 +82,7 @@ public class Game implements Runnable {
                 int i = 0;
                 while (i < states.size()) {
                     if (states.get(i).isDestroy()) {
-                        System.out.println("State " + states.get(i).getName() + " is removed.");
+                        //System.out.println("State " + states.get(i).getName() + " is removed.");
                         states.remove(i);
                     } else {
                         i++;
@@ -101,6 +101,10 @@ public class Game implements Runnable {
             //TODO crear estados dinamicos y estaticos
             File map = new File(this.getClass().getClassLoader().getResource("files/map.csv").toURI());
             loadMap(map);
+            //match spawnea players cuando todos hicieron ready
+            states.add(new Match(1, 2, true, false, false, 0, 4, new LinkedList<String>(),
+                    new LinkedList<String>(), new LinkedList<String>(), new LinkedList<Integer>(), "Match", false));
+            createSpawns();
         } catch (URISyntaxException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -128,6 +132,7 @@ public class Game implements Runnable {
             } catch (Exception ex) {
                 newAction = new Action(sessionId, action);
             } finally {
+                System.out.println("Player " + sessionId + " do action: " + newAction.getName());
                 actions.put(sessionId, newAction);
                 actionsSended.remove(sessionId);
             }
@@ -135,20 +140,10 @@ public class Game implements Runnable {
     }
 
     public void readPlayers() {
-        for (Map.Entry<String, String> playerSended : playersSended.entrySet()) {
+        /*for (Map.Entry<String, String> playerSended : playersSended.entrySet()) {
             String sessionId = playerSended.getKey();
             //String player = playerSended.getValue();
             if (!players.containsKey(sessionId)) {
-                gamelogic.Map map = (gamelogic.Map) staticStates.get(0);
-                int x;
-                int y;
-                do {
-                    Random random = new Random();
-                    x = random.nextInt(map.getWidth() + 1);
-                    y = random.nextInt(map.getHeight() + 1);
-                } while (!map.canWalk(new Point(x, y)));
-                Player player = new Player(sessionId, 0, false, false, x, y, "Player", false);
-                states.add(player);
                 players.put(sessionId, player);
             }
         }
@@ -158,7 +153,7 @@ public class Game implements Runnable {
             if (!playersSended.containsKey(sessionId)) {
                 playerState.setLeave(true);
             }
-        }
+        }*/
     }
 
     private void createStaticState() {
@@ -208,6 +203,20 @@ public class Game implements Runnable {
             Logger.getLogger(Game.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void createSpawns() {
+        staticStates.add(new Spawn(15, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(18, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(21, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(24, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(15, 7, "SpawnDefence"));
+        staticStates.add(new Spawn(17, 7, "SpawnDefence"));
+        staticStates.add(new Spawn(19, 7, "SpawnDefence"));
+        staticStates.add(new Spawn(21, 7, "SpawnDefence"));
+        staticStates.add(new Spawn(19, 5, "SpawnTower"));
+        staticStates.add(new Spawn(9, 20, "SpawnTower"));
+        staticStates.add(new Spawn(29, 20, "SpawnTower"));
     }
 
     public void addAction(String sessionId, String action) {

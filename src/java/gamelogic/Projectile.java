@@ -7,40 +7,18 @@ import org.json.simple.JSONObject;
 
 public class Projectile extends Entity {
 
+    protected String id;
+    protected int number;
+    protected int team;
     protected int xVelocity;
     protected int yVelocity;
-    protected String id;
-    protected int nroArrow;
 
-    public Projectile(int xVelocity, int yVelocity, String id, int nroArrow, int x, int y, String name, boolean destroy) {
+    public Projectile(String id, int number, int team, int xVelocity, int yVelocity, int x, int y, String name, boolean destroy) {
         super(x, y, name, destroy);
-        this.xVelocity = xVelocity;
-        this.yVelocity = yVelocity;
         this.id = id;
-        this.nroArrow = nroArrow;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public int getxVelocity() {
-        return xVelocity;
-    }
-
-    public void setxVelocity(int xVelocity) {
+        this.number = number;
+        this.team = team;
         this.xVelocity = xVelocity;
-    }
-
-    public int getyVelocity() {
-        return yVelocity;
-    }
-
-    public void setyVelocity(int yVelocity) {
         this.yVelocity = yVelocity;
     }
 
@@ -50,14 +28,20 @@ public class Projectile extends Entity {
         //int newX = x + xVelocity;
         //int newY = y + yVelocity;
         for (State state : states) {
-            if (state.getName().equals("Player") && !((Player) state).isDead() && !((Player) state).isLeave()) {
+            if (state.getName().equals("Player") && !((Player) state).dead && !((Player) state).leave) {
                 Player player = ((Player) state);
                 //Point futurePosition = player.futurePosition(actions);
                 //int playerxVelocity = futurePosition.x - player.x;
                 //int playeryVelocity = futurePosition.y - player.y;
-                if (x == player.x && y == player.y && id != player.id) {
+                if (x == player.x && y == player.y && team != player.team) {
                     //        || (futurePosition.x == newX && futurePosition.y == newY)
                     //        || ()) {
+                    state.addEvent("hit");
+                    this.addEvent("collide");
+                }
+            } else if (state.getName().equals("Tower") && !((Tower) state).dead) {
+                Tower tower = ((Tower) state);
+                if (x == tower.x && y == tower.y && team != tower.team) {
                     state.addEvent("hit");
                     this.addEvent("collide");
                 }
@@ -89,22 +73,23 @@ public class Projectile extends Entity {
                 }
             }
         }
-        Projectile newArrow = new Projectile(xVelocity, yVelocity, id, nroArrow, newX, newY, name, newDestroy);
+        Projectile newArrow = new Projectile(id, number, team, xVelocity, yVelocity, newX, newY, name, newDestroy);
         return newArrow;
     }
 
     @Override
     public void setState(State newProjectile) {
         super.setState(newProjectile);
+        id = ((Projectile) newProjectile).id;
+        number = ((Projectile) newProjectile).number;
+        team = ((Projectile) newProjectile).team;
         xVelocity = ((Projectile) newProjectile).xVelocity;
         yVelocity = ((Projectile) newProjectile).yVelocity;
-        id = ((Projectile) newProjectile).id;
-        nroArrow = ((Projectile) newProjectile).nroArrow;
     }
 
     @Override
     protected Object clone() {
-        Projectile clon = new Projectile(xVelocity, yVelocity, id, nroArrow, x, y, name, destroy);
+        Projectile clon = new Projectile(id, number, team, xVelocity, yVelocity, x, y, name, destroy);
         return clon;
     }
 
@@ -113,7 +98,9 @@ public class Projectile extends Entity {
         JSONObject jsonArrow = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
-        jsonAttrs.put("id", id + "_" + nroArrow);
+        jsonAttrs.put("id", id);
+        jsonAttrs.put("number", number);
+        jsonAttrs.put("team", team);
         jsonAttrs.put("xVelocity", x);
         jsonAttrs.put("yVelocity", y);
         jsonArrow.put("Projectile", jsonAttrs);

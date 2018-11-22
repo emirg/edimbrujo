@@ -18,6 +18,8 @@ public class ServerSender implements Runnable {
     @Override
     public void run() {
         try {
+            //envia la identidad con la que se representara en el juego
+            session.getAsyncRemote().sendText("{\"id\":\"" + session.getId() + "\"}");
             //envia estados estaticos por unica vez
             String staticStates = lobby.getStaticState();
             session.getAsyncRemote().sendText(staticStates);
