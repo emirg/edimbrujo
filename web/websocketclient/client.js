@@ -150,7 +150,7 @@ window.onload = function () {
                     towerHealthbar.style.width = health * 12 / healthMax + "px";
                     if (dead) {
                         tower.style.zIndex = "1";
-                        tower.style.backgroundImage = "url('images/blood.png')";
+                        tower.style.backgroundImage = "url('images/rubble.png')";
                         tower.style.backgroundColor = "rgba(0,0,0,0)";
                     }
                     if (destroy) {

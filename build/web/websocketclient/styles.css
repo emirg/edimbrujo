@@ -73,7 +73,7 @@ input{
 }
 
 .wall1{
-    background: white;
+    background: antiquewhite;
 }
 
 .spawn{
@@ -118,11 +118,12 @@ input{
     width: 10px;
     height: 10px;
     position: absolute;
-    /*background-image: url('images/brujo.png');*/
+    background-image: url('images/tower.png');
     background-repeat: no-repeat;
     background-size: 10px 10px;
     background-color: black;
     box-shadow:  0px 0px 2px 2px black;
+    border-radius: 10px;
 }
 
 .team0{

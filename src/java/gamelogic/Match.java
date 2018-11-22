@@ -1,5 +1,6 @@
 package gamelogic;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
@@ -67,27 +68,34 @@ public class Match extends State {
         }
 
         //spawnea a los jugadores en las posiciones de spawn
+        LinkedList<String> spawnPlayers = playingPlayers;
+        if (playingPlayers.isEmpty()) {
+            spawnPlayers = ready;
+            //mezcla a los jugadores para formar aleatoriamente los equipos
+            //en caso de haber mas de sizeTeam*2 jugadores permitira que se elijan jugadores al azar entre los de la sala
+            Collections.shuffle(spawnPlayers);
+        }
         boolean attack = teamAttacker == 0;
         int i = 0;
         int j = 0;
-        LinkedList<String> spawnPlayers = playingPlayers;
-        if (playingPlayers.isEmpty()) {
-            spawnPlayers = players;
-        }
+        int maxCant = 0;
         for (String player : spawnPlayers) {
-            Player newPlayer;
-            if (attack) {
-                newPlayer = new Player(player, 0, false, false, teamAttacker, 1, 100, 100, spawnsAttack.get(i).x, spawnsAttack.get(i).y, "Player", false);
-                newStates.add(newPlayer);
-                newPlayer.addEvent("spawn");
-                i++;
-            } else {
-                newPlayer = new Player(player, 0, false, false, 1 - teamAttacker, 0, 100, 100, spawnsDefence.get(j).x, spawnsDefence.get(j).y, "Player", false);
-                newStates.add(newPlayer);
-                newPlayer.addEvent("spawn");
-                j++;
+            if (maxCant < sizeTeam * 2) {
+                Player newPlayer;
+                if (attack) {
+                    newPlayer = new Player(player, 0, false, false, teamAttacker, 1, 100, 100, spawnsAttack.get(i).x, spawnsAttack.get(i).y, "Player", false);
+                    newStates.add(newPlayer);
+                    newPlayer.addEvent("spawn");
+                    i++;
+                } else {
+                    newPlayer = new Player(player, 0, false, false, 1 - teamAttacker, 0, 100, 100, spawnsDefence.get(j).x, spawnsDefence.get(j).y, "Player", false);
+                    newStates.add(newPlayer);
+                    newPlayer.addEvent("spawn");
+                    j++;
+                }
+                attack = !attack;
+                maxCant++;
             }
-            attack = !attack;
         }
         //spawnea a las torres en las posiciones de spawn
         Tower towerMain = new Tower("towerMain", 0, false, 1 - teamAttacker, 400, 400, spawnsTower.get(0).x, spawnsTower.get(0).y, "Tower", false);
@@ -99,6 +107,20 @@ public class Match extends State {
         Tower towerRight = new Tower("towerRight", 0, false, 1 - teamAttacker, 200, 200, spawnsTower.get(2).x, spawnsTower.get(2).y, "Tower", false);
         newStates.add(towerRight);
         towerRight.addEvent("spawn");
+    }
+
+    public boolean teamsReady() {
+        boolean teamsReady = false;
+        int playerReadys = 0;
+        int i = 0;
+        while (i < players.size()) {
+            playerReadys += ready.contains(players.get(i)) ? 1 : 0;
+            i++;
+        }
+        if (playerReadys >= sizeTeam * 2) {
+            teamsReady = true;
+        }
+        return teamsReady;
     }
 
     public boolean allReady() {
@@ -131,7 +153,7 @@ public class Match extends State {
     @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         LinkedList<State> newStates = new LinkedList<>();
-        if (allReady() && !startGame) {
+        if ((allReady() || teamsReady()) && !startGame) {
             reset(states);
             spawn(staticStates, newStates);
             addEvent("start");
@@ -224,7 +246,23 @@ public class Match extends State {
                         //newEndGame = false;
                         newRound = 1;
                         //newReady = new LinkedList<>();
-                        newPlayingPlayers.addAll(players);
+                        //permite agregar a playingPlayers unicamente los elegidos aleatoriamente
+                        LinkedList<String> playersStates = new LinkedList<>();
+                        for (State state : states) {
+                            if (state.getName().equals("Player")) {
+                                Player player = (Player) state;
+                                playersStates.add(player.id);
+                                newPlayingPlayers.add(player.id);
+                            }
+                        }
+                        //aca les quita el ready a aquellos que quedaron afuera
+                        for (String player : players) {
+                            if (!playersStates.contains(player)) {
+                                newReady.remove(player);
+                            }
+                        }
+
+                        //newPlayingPlayers.addAll(players);
                         newTeamPoints = new LinkedList<>();
                         newTeamPoints.add(0);
                         newTeamPoints.add(0);
