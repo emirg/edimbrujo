@@ -23,7 +23,7 @@ function preload() {
     //game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON);
     //game.load.spritesheet('tileset', 'assets/map/tilesheet.png',32,32);
     //game.load.image('sprite','assets/sprites/sprite.png');
-    this.load.image('mapa', 'mapa_solo.jpeg');
+    this.load.image('mapa', 'images/mapa_solo.jpeg');
 }
 
 function create() {
