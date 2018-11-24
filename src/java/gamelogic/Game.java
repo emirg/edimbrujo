@@ -204,14 +204,14 @@ public class Game implements Runnable {
     }
 
     private void createSpawns() {
-        staticStates.add(new Spawn(15, 35, "SpawnAttack"));
-        staticStates.add(new Spawn(18, 35, "SpawnAttack"));
-        staticStates.add(new Spawn(21, 35, "SpawnAttack"));
-        staticStates.add(new Spawn(24, 35, "SpawnAttack"));
-        staticStates.add(new Spawn(15, 7, "SpawnDefence"));
-        staticStates.add(new Spawn(17, 7, "SpawnDefence"));
-        staticStates.add(new Spawn(19, 7, "SpawnDefence"));
-        staticStates.add(new Spawn(21, 7, "SpawnDefence"));
+        staticStates.add(new Spawn(16, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(19, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(22, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(25, 35, "SpawnAttack"));
+        staticStates.add(new Spawn(16, 9, "SpawnDefence"));
+        staticStates.add(new Spawn(18, 9, "SpawnDefence"));
+        staticStates.add(new Spawn(20, 9, "SpawnDefence"));
+        staticStates.add(new Spawn(22, 9, "SpawnDefence"));
         staticStates.add(new Spawn(19, 5, "SpawnTower"));
         staticStates.add(new Spawn(9, 20, "SpawnTower"));
         staticStates.add(new Spawn(29, 20, "SpawnTower"));

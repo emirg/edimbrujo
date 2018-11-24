@@ -98,13 +98,13 @@ public class Match extends State {
             }
         }
         //spawnea a las torres en las posiciones de spawn
-        Tower towerMain = new Tower("towerMain", 0, false, 1 - teamAttacker, 400, 400, spawnsTower.get(0).x, spawnsTower.get(0).y, "Tower", false);
+        Tower towerMain = new Tower("towerMain", 0, false, 1 - teamAttacker, 400, 400, 3, 3, spawnsTower.get(0).x, spawnsTower.get(0).y, "Tower", false);
         newStates.add(towerMain);
         towerMain.addEvent("spawn");
-        Tower towerLeft = new Tower("towerLeft", 0, false, 1 - teamAttacker, 200, 200, spawnsTower.get(1).x, spawnsTower.get(1).y, "Tower", false);
+        Tower towerLeft = new Tower("towerLeft", 0, false, 1 - teamAttacker, 200, 200, 3, 3, spawnsTower.get(1).x, spawnsTower.get(1).y, "Tower", false);
         newStates.add(towerLeft);
         towerLeft.addEvent("spawn");
-        Tower towerRight = new Tower("towerRight", 0, false, 1 - teamAttacker, 200, 200, spawnsTower.get(2).x, spawnsTower.get(2).y, "Tower", false);
+        Tower towerRight = new Tower("towerRight", 0, false, 1 - teamAttacker, 200, 200, 3, 3, spawnsTower.get(2).x, spawnsTower.get(2).y, "Tower", false);
         newStates.add(towerRight);
         towerRight.addEvent("spawn");
     }

@@ -72,8 +72,15 @@ public class Player extends Entity {
                 }
             } else if (state != this && state.getName().equals("Tower")) {
                 Tower tower = (Tower) state;
-                if (myFuturePosition.x == tower.x && myFuturePosition.y == tower.y) {
-                    this.addEvent("collide");
+                LinkedList<Point> areaTower = tower.getArea();
+                int i = 0;
+                boolean collide = false;
+                while (i < areaTower.size() && !collide) {
+                    if (areaTower.get(i).x == myFuturePosition.x && areaTower.get(i).y == myFuturePosition.y) {
+                        collide = true;
+                        this.addEvent("collide");
+                    }
+                    i++;
                 }
             }
         }

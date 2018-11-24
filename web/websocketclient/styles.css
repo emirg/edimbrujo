@@ -45,13 +45,27 @@ input{
     margin: 15px;
 }
 
+#game2{
+    display: block;
+    margin: auto;
+    visibility: hidden;
+}
+
+#jueguito{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+    display: block;
+}
+
 #terrain{
     position: relative;
     top: 0px;
     left: 0px;
     z-index: 0;
     display: block;
-    background-color: black;
+    visibility: hidden
 }
 
 #entities{
@@ -62,8 +76,8 @@ input{
 }
 
 .cell{
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
     position: absolute;
     border: 1px solid gray;
 }
@@ -80,6 +94,17 @@ input{
     background: yellow;
 }
 
+.name{
+    z-index: 3;
+    position: relative;
+    top:-15px;
+    width:12px;
+    left:-2px;
+    height:2px;
+    color: white;
+    font-size: 15px;
+}
+
 .healthbar{
     z-index: 3;
     position: relative;
@@ -94,12 +119,12 @@ input{
 
 .player{
     z-index: 2;
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
     position: absolute;
     background-image: url('images/brujo.png');
     background-repeat: no-repeat;
-    background-size: 10px 10px;
+    background-size: 20px 20px;
     background-color: black;
     border-radius: 10px;
 }
@@ -114,16 +139,20 @@ input{
 }
 
 .tower{
-    z-index: 2;
-    width: 10px;
-    height: 10px;
+    z-index: 4;
+    width: 60px;
+    height: 60px;
     position: absolute;
     background-image: url('images/tower.png');
     background-repeat: no-repeat;
-    background-size: 10px 10px;
+    background-size: 60px 60px;
     background-color: black;
     box-shadow:  0px 0px 2px 2px black;
-    border-radius: 10px;
+    border-radius: 30px;
+}
+
+.team {
+    color: black;
 }
 
 .team0{

@@ -41,9 +41,18 @@ public class Projectile extends Entity {
                 }
             } else if (state.getName().equals("Tower") && !((Tower) state).dead) {
                 Tower tower = ((Tower) state);
-                if (x == tower.x && y == tower.y && team != tower.team) {
-                    state.addEvent("hit");
-                    this.addEvent("collide");
+                if (team != tower.team) {
+                    LinkedList<Point> areaTower = tower.getArea();
+                    int i = 0;
+                    boolean hit = false;
+                    while (i < areaTower.size() && !hit) {
+                        if (areaTower.get(i).x == x && areaTower.get(i).y == y) {
+                            hit = true;
+                            state.addEvent("hit");
+                            this.addEvent("collide");
+                        }
+                        i++;
+                    }
                 }
             }
         }

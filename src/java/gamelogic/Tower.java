@@ -1,5 +1,6 @@
 package gamelogic;
 
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
@@ -13,8 +14,10 @@ public class Tower extends Entity {
     protected int team;
     protected int health;
     protected int healthMax;
+    protected int width;
+    protected int height;
 
-    public Tower(String id, int countProjectile, boolean dead, int team, int health, int healthMax, int x, int y, String name, boolean destroy) {
+    public Tower(String id, int countProjectile, boolean dead, int team, int health, int healthMax, int width, int height, int x, int y, String name, boolean destroy) {
         super(x, y, name, destroy);
         this.id = id;
         this.countProjectile = countProjectile;
@@ -22,6 +25,23 @@ public class Tower extends Entity {
         this.team = team;
         this.health = health;
         this.healthMax = healthMax;
+        this.width = width;
+        this.height = height;
+    }
+
+    public LinkedList<Point> getArea() {
+        LinkedList<Point> area = new LinkedList<>();
+        int cellX = x - width / 2;
+        int cellY = y - height / 2;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                area.add(new Point(cellX, cellY));
+                cellY++;
+            }
+            cellY = y - height / 2;
+            cellX++;
+        }
+        return area;
     }
 
     @Override
@@ -29,7 +49,7 @@ public class Tower extends Entity {
         LinkedList<State> newStates = new LinkedList<>();
         if (!dead) {
             Random random = new Random();
-            if (random.nextInt(100) <= 10) {
+            if (random.nextInt(100) <= 40) { //porcentaje de que la torre dispare
                 int xVelocity = 0;
                 int yVelocity = 0;
                 do {
@@ -77,8 +97,7 @@ public class Tower extends Entity {
                 }
             }
         }
-        Tower newTower = new Tower(id, newCountProjectile, newDead, team, newHealth, healthMax, x, y, name, newDestroy
-        );
+        Tower newTower = new Tower(id, newCountProjectile, newDead, team, newHealth, healthMax, width, height, x, y, name, newDestroy);
         return newTower;
     }
 
@@ -91,11 +110,13 @@ public class Tower extends Entity {
         team = ((Tower) newTower).team;
         health = ((Tower) newTower).health;
         healthMax = ((Tower) newTower).healthMax;
+        width = ((Tower) newTower).width;
+        height = ((Tower) newTower).height;
     }
 
     @Override
     protected Object clone() {
-        Tower clon = new Tower(id, countProjectile, dead, team, health, healthMax, x, y, name, destroy);
+        Tower clon = new Tower(id, countProjectile, dead, team, health, healthMax, width, height, x, y, name, destroy);
         return clon;
     }
 
@@ -110,6 +131,8 @@ public class Tower extends Entity {
         jsonAttrs.put("team", team);
         jsonAttrs.put("health", health);
         jsonAttrs.put("healthMax", healthMax);
+        jsonAttrs.put("width", width);
+        jsonAttrs.put("height", height);
         jsonTower.put("Tower", jsonAttrs);
         return jsonTower;
     }
