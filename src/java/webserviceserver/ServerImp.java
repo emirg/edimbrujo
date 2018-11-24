@@ -78,10 +78,19 @@ public class ServerImp {
         String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
         System.out.println(fire);
         lobby.addAction(session, fire);
-return "okey";
+        return "okey";
 
     }
 
+    @GET
+    @Path("/ready")
+    public String ready(@QueryParam("session") String session){
+        
+        lobby = Lobby.startGame();
+        lobby.addAction(session, "ready");
+        return "okey";
+        
+    }
 
     @GET
         @Path("/getFullState")
