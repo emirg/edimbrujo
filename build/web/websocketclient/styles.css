@@ -12,14 +12,12 @@ input{
     padding: 5px 15px;
 }
 
-#game{
+#scene{
     position: relative;
     top:0px;
-    left:50%;
-    -ms-transform: translateX(-50%);
-    transform: translateX(-50%);
-    width: 1px;
-    height: 1px;
+    width: 880px;
+    height: 880px;
+    margin: auto;
 }
 
 #match{
@@ -45,13 +43,7 @@ input{
     margin: 15px;
 }
 
-#game2{
-    display: block;
-    margin: auto;
-    visibility: hidden;
-}
-
-#jueguito{
+#map{
     position: absolute;
     top: 0px;
     left: 0px;
@@ -92,6 +84,7 @@ input{
 
 .spawn{
     background: yellow;
+    pointer-events: none;
 }
 
 .name{
@@ -103,6 +96,7 @@ input{
     height:2px;
     color: white;
     font-size: 15px;
+    pointer-events: none;
 }
 
 .healthbar{
@@ -115,6 +109,7 @@ input{
     background-color: green;
     border: 1px solid aquamarine;
     border-radius: 1px;
+    pointer-events: none;
 }
 
 .player{
@@ -127,6 +122,7 @@ input{
     background-size: 20px 20px;
     background-color: black;
     border-radius: 10px;
+    pointer-events: none;
 }
 
 .arrow{
@@ -136,6 +132,7 @@ input{
     position: absolute;
     background: black;
     border-radius: 5px;
+    pointer-events: none;
 }
 
 .tower{
@@ -149,6 +146,7 @@ input{
     background-color: black;
     box-shadow:  0px 0px 2px 2px black;
     border-radius: 30px;
+    pointer-events: none;
 }
 
 .team {

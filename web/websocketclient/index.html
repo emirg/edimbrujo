@@ -2,32 +2,29 @@
 <html>
     <head>
         <title>Edimbrujo</title>
-                <link rel="stylesheet" type="text/css" href="styles.css" />
-
-                <script src="phaser.min.js"></script>
-
+        <link rel="shortcut icon" href="../edimbrujo.png" />
+        <link rel="stylesheet" type="text/css" href="styles.css" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script type="text/javascript" src="client.js"></script>
         <script type="text/javascript" src="../libs/jquery.js" ></script>
-            <!--script src="//cdn.jsdelivr.net/npm/phaser@3.12.0/dist/phaser.min.js"></script-->
-        <link rel="shortcut icon" href="../edimbrujo.png" />
+        <script type="text/javascript" src="../libs/phaser.js"></script>
+        <script type="text/javascript" src="client_phaser.js"></script>
     </head>
     <body>
         <h1>Edimbrujo</h1>
-        <div id="game2">
-            <div id="jueguito"></div>
+        <div id="scene">
+            <div id="map"></div>
             <div id="terrain"></div>
             <div id="entities"></div>
         </div>
         <div id="controller">
-           <!--<select id="action">
-                <option value="up">Mover arriba</option>
-                <option value="down">Mover abajo</option>
-                <option value="left">Mover izquierda</option>
-                <option value="right">Mover derecha</option>
-            </select>
-            <button id="sendAction" type="button">Enviar Accion</button>-->
+            <!--<select id="action">
+                 <option value="up">Mover arriba</option>
+                 <option value="down">Mover abajo</option>
+                 <option value="left">Mover izquierda</option>
+                 <option value="right">Mover derecha</option>
+             </select>
+             <button id="sendAction" type="button">Enviar Accion</button>-->
         </div>
         <div id="match">
             <h2>Ronda <span id="round">N</span>/<span id="countRounds">N</span></h2>
