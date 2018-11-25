@@ -1,7 +1,6 @@
 var socket;
 var socketID = "";
 
-
 var config = {
     type: Phaser.AUTO,
     width: 880,
@@ -185,17 +184,21 @@ window.onload = function () {
                     if (tower === null) {
                         entities.innerHTML += "<div id='tower" + id + "' class='tower'><div id='tower" + id + "-healthbar' class='healthbar'></div></div>";
                         tower = document.getElementById("tower" + id);
-                        tower.style.backgroundColor = $(".team" + team).css("color");
+                        //tower.style.backgroundColor = $(".team" + team).css("color");
                     }
                     tower.style.left = x * ($(".cell").width() + 2) + 1 - (Math.floor(width / 2) * $(".cell").width()) + "px";
-                    tower.style.top = y * ($(".cell").height() + 2) + 1 - (Math.floor(height / 2) * $(".cell").width()) + "px";
+                    tower.style.top = -60 + y * ($(".cell").height() + 2) + 1 - (Math.floor(height / 2) * $(".cell").width()) + "px";
                     towerHealthbar = document.getElementById("tower" + id + "-healthbar");
                     towerHealthbar.style.width = health * width * 24 / healthMax + "px";
                     towerHealthbar.style.left = -8 + "px";
                     if (dead) {
-                        tower.style.zIndex = "1";
-                        tower.style.backgroundImage = "url('images/rubble.png')";
-                        tower.style.backgroundColor = "rgba(0,0,0,0)";
+                        //tower.style.zIndex = "1";
+                        //tower.style.removeProperty('backgroundImage');
+                        tower.style.backgroundImage = "url('images/mapa_2018/torre_rota.png')";
+                        tower.style.backgroundSize ="100% 50%";
+                        tower.style.marginTop = "45px";
+                        //tower.style.backgroundSize ="100% 50%";
+                        //tower.style.marginTop = "45px";
                     }
                     if (destroy) {
                         $("#tower" + id).remove();
