@@ -83,6 +83,7 @@ window.onload = function () {
                             cell = document.getElementById("cell" + x + "_" + y);
                             cell.style.left = x * ($(".cell").width() + 2) + "px";
                             cell.style.top = y * ($(".cell").height() + 2) + "px";
+                            cell.style.visibility = "hidden";
                         }
                         j++;
                     }
@@ -152,12 +153,13 @@ window.onload = function () {
                     var team = gameState[i]["Projectile"]["team"];
                     var projectile = document.getElementById("projectile" + id + "-" + number);
                     if (projectile === null) {
-                        entities.innerHTML += "<div id='projectile" + id + "-" + number + "' class='arrow'></div>";
+                        entities.innerHTML += "<div id='projectile" + id + "-" + number + "' class='arrow'><div id='projectileTeam" + id + "-" + number + "'class='arrowteam'></div></div>";
                         projectile = document.getElementById("projectile" + id + "-" + number);
+                        var projectileTeam = document.getElementById("projectileTeam" + id + "-" + number);
                         if (id === socketID) {
-                            projectile.style.backgroundColor = "green";
+                            projectileTeam.style.backgroundColor = "green";
                         } else {
-                            projectile.style.backgroundColor = $(".team" + team).css("color");
+                            projectileTeam.style.backgroundColor = $(".team" + team).css("color");
                         }
 
                     }

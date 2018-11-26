@@ -44,21 +44,63 @@ public class Tower extends Entity {
         return area;
     }
 
+    private Player getClosestEnemy(LinkedList<State> states) {
+        Player closest = null;
+        int distance = Integer.MAX_VALUE;
+        for (State state : states) {
+            if (state.getName().equals("Player")) {
+                Player player = (Player) state;
+                if (!player.leave && !player.dead && player.team != team && distanceTo(player.x, player.y) < distance) {
+                    closest = player;
+                }
+            }
+        }
+        return closest;
+    }
+
+    private int distanceTo(int x, int y) {
+        return (int) Math.sqrt((y - this.y) * (y - this.y) + (x - this.x) * (x - this.x));
+    }
+
     @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
         LinkedList<State> newStates = new LinkedList<>();
         if (!dead) {
             Random random = new Random();
             if (random.nextInt(100) <= 40) { //porcentaje de que la torre dispare
-                int xVelocity = 0;
+                /*int xVelocity = 0;
                 int yVelocity = 0;
                 do {
                     xVelocity = random.nextInt(3) - 1;
                     yVelocity = random.nextInt(3) - 1;
-                } while (xVelocity == 0 && yVelocity == 0);
-                Projectile projectile = new Projectile(id, countProjectile, team, xVelocity, yVelocity, x, y, "Projectile", false);
-                newStates.add(projectile);
-                this.addEvent("fire");
+                } while (xVelocity == 0 && yVelocity == 0);*/
+                Player closestPlayer = getClosestEnemy(states);
+                if (closestPlayer != null) {
+                    int posX = closestPlayer.x;
+                    int posY = closestPlayer.y;
+                    if (posX != x || posY != y) {
+                        int xVelocity;
+                        int yVelocity;
+                        if (posX < x) {
+                            xVelocity = -1;
+                        } else if (posX > x) {
+                            xVelocity = 1;
+                        } else {
+                            xVelocity = 0;
+                        }
+                        if (posY < y) {
+                            yVelocity = -1;
+                        } else if (posY > y) {
+                            yVelocity = 1;
+                        } else {
+                            yVelocity = 0;
+                        }
+
+                        Projectile projectile = new Projectile(id, countProjectile, team, xVelocity, yVelocity, x, y, "Projectile", false);
+                        newStates.add(projectile);
+                        this.addEvent("fire");
+                    }
+                }
             }
         }
         return newStates;
