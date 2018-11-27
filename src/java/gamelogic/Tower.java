@@ -50,12 +50,20 @@ public class Tower extends Entity {
         for (State state : states) {
             if (state.getName().equals("Player")) {
                 Player player = (Player) state;
-                if (!player.leave && !player.dead && player.team != team && distanceTo(player.x, player.y) < distance) {
+                if (!player.leave && !player.dead && player.team != team && inLine(player.x, player.y) && distanceTo(player.x, player.y) < distance) {
                     closest = player;
                 }
             }
         }
         return closest;
+    }
+
+    private boolean inLine(int x, int y) {
+        boolean inLine = false;
+        if (this.x == x || this.y == y || Math.abs(this.x - x) == Math.abs(this.y - y)) {
+            inLine = true;
+        }
+        return inLine;
     }
 
     private int distanceTo(int x, int y) {
@@ -68,19 +76,13 @@ public class Tower extends Entity {
         if (!dead) {
             Random random = new Random();
             if (random.nextInt(100) <= 40) { //porcentaje de que la torre dispare
-                /*int xVelocity = 0;
-                int yVelocity = 0;
-                do {
-                    xVelocity = random.nextInt(3) - 1;
-                    yVelocity = random.nextInt(3) - 1;
-                } while (xVelocity == 0 && yVelocity == 0);*/
                 Player closestPlayer = getClosestEnemy(states);
+                int xVelocity = 0;
+                int yVelocity = 0;
                 if (closestPlayer != null) {
                     int posX = closestPlayer.x;
                     int posY = closestPlayer.y;
                     if (posX != x || posY != y) {
-                        int xVelocity;
-                        int yVelocity;
                         if (posX < x) {
                             xVelocity = -1;
                         } else if (posX > x) {
@@ -95,12 +97,16 @@ public class Tower extends Entity {
                         } else {
                             yVelocity = 0;
                         }
-
-                        Projectile projectile = new Projectile(id, countProjectile, team, xVelocity, yVelocity, x, y, "Projectile", false);
-                        newStates.add(projectile);
-                        this.addEvent("fire");
                     }
+                } else {
+                    do {
+                        xVelocity = random.nextInt(3) - 1;
+                        yVelocity = random.nextInt(3) - 1;
+                    } while (xVelocity == 0 && yVelocity == 0);
                 }
+                Projectile projectile = new Projectile(id, countProjectile, team, xVelocity, yVelocity, x, y, "Projectile", false);
+                newStates.add(projectile);
+                this.addEvent("fire");
             }
         }
         return newStates;
