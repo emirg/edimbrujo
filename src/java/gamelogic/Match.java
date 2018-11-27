@@ -200,6 +200,16 @@ public class Match extends State {
                 addEvent("end");
             }
         }
+        for (java.util.Map.Entry<String, Action> actionEntry : actions.entrySet()) {
+            String id = actionEntry.getKey();
+            Action action = actionEntry.getValue();
+            hasChanged = true;
+            switch (action.getName()) {
+                case "restart":
+                    reset(states);
+                    addEvent("end");
+            }
+        }
         return newStates;
     }
 
@@ -232,6 +242,11 @@ public class Match extends State {
                     newPlayers.remove(id);
                     newPlayingPlayers.remove(id);
                     newReady.remove(id);
+                    break;
+                case "restart":
+                    newPlayers.clear();
+                    newPlayingPlayers.clear();
+                    newReady.clear();
                     break;
             }
         }

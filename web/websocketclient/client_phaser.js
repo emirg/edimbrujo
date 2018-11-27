@@ -46,6 +46,7 @@ window.onload = function () {
     var terrain = document.getElementById("terrain");
     var entities = document.getElementById("entities");
     var ready = document.getElementById("ready");
+    var restart = document.getElementById("restart");
     var playerTeam = [];
     //var sendAction = document.getElementById("sendAction");
     //var action = document.getElementById("action");
@@ -266,6 +267,10 @@ window.onload = function () {
 
     ready.addEventListener("click", function () {
         socket.send("ready");
+    });
+    
+    restart.addEventListener("click", function () {
+        socket.send("restart");
     });
 
     var Key = {
