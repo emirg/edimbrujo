@@ -153,6 +153,7 @@ public class Player extends Entity {
         LinkedList<String> events = getEvents();
         if (!events.isEmpty()) {
             hasChanged = true;
+            boolean hasRespawn = false;
             for (String event : events) {
                 switch (event) {
                     case "hit":
@@ -163,14 +164,17 @@ public class Player extends Entity {
                         System.out.println("Player " + id + " has been killed.");
                         break;
                     case "collide":
-                        newX = x;
-                        newY = y;
+                        if (!hasRespawn) {
+                            newX = x;
+                            newY = y;
+                        }
                         break;
                     case "spawn":
                         System.out.println("Player " + id + " spawn in game.");
                         break;
                     case "respawn":
                         System.out.println("Player " + id + " respawn in game.");
+                        hasRespawn = true;
                         Random random = new Random();
                         LinkedList<Spawn> spawns = new LinkedList<>();
                         if (role == 0) {
