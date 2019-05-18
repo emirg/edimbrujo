@@ -3,7 +3,7 @@ const joystick = createJoystick(document.getElementById("joystickWrapper"));
 // setInterval(() => console.log(joystick.getPosition()), 16);
 
 function createJoystick(parent) {
-  const maxDiff = 100;
+  const maxDiff = 50;
   const stick = document.createElement("div");
   stick.classList.add("joystick");
 
