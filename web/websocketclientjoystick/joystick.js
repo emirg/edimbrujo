@@ -2,6 +2,11 @@ const joystick = createJoystick(document.getElementById("joystickWrapper"));
 
 // setInterval(() => console.log(joystick.getPosition()), 16);
 
+/* ¿Como mandar la información del joystick?
+ * Opcion 1: Calcular un "desiredVector", entonces el servidor al recibirlo calcularia el "steeringVector"
+ * Opcion 2: Enviar las coordenadas viejas y las nuevas del joystick, y que el servidor de alguna forma calcule la direccion de desplazamiento
+ */
+
 function createJoystick(parent) {
   const maxDiff = 50;
   const stick = document.createElement("div");
@@ -45,7 +50,8 @@ function createJoystick(parent) {
     const distance = Math.min(maxDiff, Math.hypot(xDiff, yDiff));
     const xNew = distance * Math.cos(angle);
     const yNew = distance * Math.sin(angle);
-    stick.style.transform = `translate3d(${xNew}px, ${yNew}px, 0px)`;
+    stick.style.transform = `translate3d(${xNew}px, ${yNew}px, 0px)`; // Actualizo la posicion
+    // console.log((xNew, yNew));
     currentPos = { x: xNew, y: yNew };
   }
 
