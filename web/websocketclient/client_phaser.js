@@ -61,6 +61,7 @@ function preload() {
     frameWidth: 32,
     frameHeight: 32
   });
+  this.load.spritesheet("explosion","assets/sprites/explosion.png",{frameWidth: 64,frameHeight: 64});
   
     
     //create a background and prepare loading bar
@@ -127,6 +128,8 @@ function create() {
 
 });
 
+
+
 //  Prepare some spritesheets and animations
 
 this.textures.addSpriteSheetFromAtlas('mine-sheet', { atlas: 'space', frame: 'mine', frameWidth: 64 });
@@ -134,6 +137,9 @@ this.textures.addSpriteSheetFromAtlas('asteroid1-sheet', { atlas: 'space', frame
 this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', { atlas: 'space', frame: 'asteroid2', frameWidth: 96 });
 this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', { atlas: 'space', frame: 'asteroid3', frameWidth: 96 });
 this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', { atlas: 'space', frame: 'asteroid4', frameWidth: 64 });
+this.textures.addSpriteSheetFromAtlas('explosion-sheet', { atlas: 'space', frame: 'asteroid1', frameWidth: 96 });
+
+
 
 this.anims.create({ key: 'mine-anim', frames: this.anims.generateFrameNumbers('mine-sheet', { start: 0, end: 15 }), frameRate: 20, repeat: -1 });
 this.anims.create({ key: 'asteroid1-anim', frames: this.anims.generateFrameNumbers('asteroid1-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
@@ -141,7 +147,7 @@ this.anims.create({ key: 'asteroid2-anim', frames: this.anims.generateFrameNumbe
 this.anims.create({ key: 'asteroid3-anim', frames: this.anims.generateFrameNumbers('asteroid3-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
 this.anims.create({ key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
 this.anims.create({key: 'efectoMoneda',frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 5 }),frameRate: 10,repeat: -1});
-
+this.anims.create({ key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 23 }), frameRate: 100, repeat: 1 });
 //world 2048*2048
 this.physics.world.setBounds(0,0,width,height);
 
@@ -216,6 +222,8 @@ naveAgente.setCollideWorldBounds(true);
 naveAgente.body.mass=400;
 
 
+
+
 emitter.startFollow(ship);
 
 // coins
@@ -233,6 +241,8 @@ this.anims.create({
 this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
 this.physics.add.collider(ship, naveAgente, hitShip, null, this);
+
+this.physics.add.collider(bullets, naveAgente, destroy, null, this);
 
 
 //camara
@@ -298,7 +308,7 @@ this.tweens.add({
 
     //  The score 
     scoreText = this.add.text(16, 16,"Score: 0").setScrollFactor(0).setFontSize(32).setColor('yellow');
-
+    
 }
 
 function update (time, delta)
@@ -312,14 +322,14 @@ function update (time, delta)
   this.physics.world.wrap(asteroide7, 0);
   this.physics.world.wrap(asteroide8, 0);
 
-  asteroide1.play('asteroid1-anim');
-  asteroide2.play('asteroid2-anim');
-  asteroide3.play('asteroid3-anim');
-  asteroide4.play('asteroid4-anim');
-  asteroide5.play('asteroid1-anim');
-  asteroide6.play('asteroid2-anim');
-  asteroide7.play('asteroid3-anim');
-  asteroide8.play('asteroid4-anim');
+  asteroide1.anims.play('asteroid1-anim',true);
+  asteroide2.anims.play('asteroid2-anim',true);
+  asteroide3.anims.play('asteroid3-anim',true);
+  asteroide4.anims.play('asteroid4-anim',true);
+  asteroide5.anims.play('asteroid1-anim',true);
+  asteroide6.anims.play('asteroid2-anim',true);
+  asteroide7.anims.play('asteroid3-anim',true);
+  asteroide8.anims.play('asteroid4-anim',true);
 
 
   coins.anims.play("efectoMoneda", true);
@@ -367,6 +377,7 @@ function update (time, delta)
 
     // acccion naves agente
     seek(naveAgente,ship);
+    naveAgente.destroy();
   }
 
 
@@ -394,6 +405,11 @@ function collectCoins(player, coins) {
       fontSize: "64px",
       fill: "red"
     });
+  }
+
+  function destroy(bullet, enemy){
+    this.add.sprite(enemy.x, enemy.y).play('explosion-anim');
+    enemy.disableBody(true, true);
   }
 
   function seek(pVehicle, pTarget) {
@@ -688,7 +704,7 @@ window.onload = function () {
     restart.addEventListener("click", function () {
         socket.send("restart");
     });
-
+/*
     var Key = {
         _pressed: {},
 
@@ -735,7 +751,8 @@ window.onload = function () {
     window.setInterval(function () {
         updateKeyboard();
     }, 100);
-
+    */
+/*
     function updateKeyboard() {
         if (Key.areDown([Key.UP, Key.ALTUP]) && Key.areDown([Key.LEFT, Key.ALTLEFT])) {
             socket.send("upleft");
@@ -758,6 +775,7 @@ window.onload = function () {
             fire(1, 1);
         }
     }
+    */
 
     //evento para fire 
     $(document).ready(function () {
@@ -771,40 +789,3 @@ window.onload = function () {
         });
     });
 }
-
-/*Game.create = function(){
- Game.playerMap = {};
- var testKey = game2.input.keyboard.addKey(Phaser.Keyboard.ENTER);
- testKey.onDown.add(Client.sendTest, this);
- var map = game2.add.tilemap('map');
- map.addTilesetImage('tilesheet', 'tileset'); // tilesheet is the key of the tileset in map's JSON file
- var layer;
- for(var i = 0; i < map.layers.length; i++) {
- layer = map.createLayer(i);
- }
- layer.inputEnabled = true; // Allows clicking on the map ; it's enough to do it on the last layer
- layer.events.onInputUp.add(Game.getCoordinates, this);
- Client.askNewPlayer();
- };
- 
- Game.getCoordinates = function(layer,pointer){
- Client.sendClick(pointer.worldX,pointer.worldY);
- };
- 
- Game.addNewPlayer = function(id,x,y){
- Game.playerMap[id] = game2.add.sprite(x,y,'sprite');
- };
- 
- Game.movePlayer = function(id,x,y){
- var player = Game.playerMap[id];
- var distance = Phaser.Math.distance(player.x,player.y,x,y);
- var tween = game2.add.tween(player);
- var duration = distance*10;
- tween.to({x:x,y:y}, duration);
- tween.start();
- };
- 
- Game.removePlayer = function(id){
- Game.playerMap[id].destroy();
- delete Game.playerMap[id];
- };*/
