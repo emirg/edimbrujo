@@ -51,8 +51,9 @@ function createJoystick(parent) {
     const xNew = distance * Math.cos(angle);
     const yNew = distance * Math.sin(angle);
     stick.style.transform = `translate3d(${xNew}px, ${yNew}px, 0px)`; // Actualizo la posicion
-    // console.log((xNew, yNew));
     currentPos = { x: xNew, y: yNew };
+    // var direccion = { x: xNew, y: yNew };
+    // socket.send(JSON.stringify(direccion));
   }
 
   function handleMouseUp(event) {
