@@ -9,7 +9,7 @@ var config = {
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 2048,
+        width: 4500,
         height: 2048,
     },
     physics: {
@@ -44,12 +44,12 @@ var lastFired = 0;
 var cursors;
 var fire;
 
-var width= 2048;
+var width= 4500;
 var height= 2048;
 var naveAgente;
 var cursors;
 var maxVelocity = 150;
-var maxVelocity1 = 800;
+var maxVelocity1 = 1300;
 var coins;
 var score = 0;
 var scoreText;
@@ -209,17 +209,17 @@ this.anims.create({ key: 'explosion-anim', frames: this.anims.generateFrameNumbe
 //world 2048*2048
 this.physics.world.setBounds(0,0,width,height);
 
-background = this.add.tileSprite(0, 0, 4000, 4000, 'background').setScrollFactor(0);
+background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
 
 //  Add our planets, etc
 
 this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
 //this.add.image(1024, 1246, 'space', 'brown-planet').setOrigin(0).setScrollFactor(0.6);
 this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-var galaxy = this.add.image(100 ,200, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+var galaxy = this.add.image(3500 ,1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
 //this.add.image(0, 0, 'space', 'gas-giant').setOrigin(0).setScrollFactor(0.6);
 //this.add.image(1600, 1000, 'space', 'brown-planet').setOrigin(0).setScrollFactor(0.6).setScale(0.8).setTint(0x882d2d);
-//this.add.image(1700, 200, 'space', 'purple-planet').setOrigin(0).setScrollFactor(0.6);
+//this.add.image(3500, 100, 'space', 'purple-planet').setOrigin(0).setScrollFactor(0.6);
 
 for (var i = 0; i < 6; i++)
 {
@@ -257,7 +257,31 @@ var emitter = particles.createEmitter({
     blendMode: 'ADD'
 });
 
-
+var emitter1 = particles.createEmitter({
+  frame: 'red',
+  speed: 100,
+  lifespan: {
+      onEmit: function (particle, key, t, value)
+      {
+          return Phaser.Math.Percent(listaNaves[0].body.speed, 0, 300) * 2000;
+      }
+  },
+  alpha: {
+      onEmit: function (particle, key, t, value)
+      {
+          return Phaser.Math.Percent(listaNaves[0].body.speed, 0, 300);
+      }
+  },
+  angle: {
+      onEmit: function (particle, key, t, value)
+      {
+          var v = Phaser.Math.Between(-10, 10);
+          return (listaNaves[0].angle - 180) + v;
+      }
+  },
+  scale: { start: 0.6, end: 0 },
+  blendMode: 'ADD'
+});
 
 bullets = this.physics.add.group({
     classType: Bullet,
@@ -297,7 +321,7 @@ for(var i=0;i<1;i++){
     nave.setDrag(0.99);
     nave.setMaxVelocity(maxVelocity1);
     nave.setCollideWorldBounds(true);
-    nave.body.mass=400;
+    nave.body.mass=350;
     nave.alive=true;
     nave.id=i;
     listaNaves [i]=nave;
@@ -306,6 +330,9 @@ for(var i=0;i<1;i++){
 //console.log(naveAgente.alive);
 
 
+if(listaNaves[0]){
+  emitter1.startFollow(listaNaves[0]);
+}
 
 
 emitter.startFollow(ship);
@@ -503,12 +530,12 @@ function collectCoins(player, coins) {
     scoreText.setText(text);
     var x =
       player.x < 400
-        ? Phaser.Math.Between(400, 800)
-        : Phaser.Math.Between(0, 400);
+        ? Phaser.Math.Between(100, 3000)
+        : Phaser.Math.Between(0, 1000);
     var y =
       player.y < 400
-        ? Phaser.Math.Between(400, 800)
-        : Phaser.Math.Between(0, 400);
+        ? Phaser.Math.Between(100, 3000)
+        : Phaser.Math.Between(0, 1000);
     coins.setPosition(x, y);
     //coins.setVisible(false);
   }
