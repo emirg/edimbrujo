@@ -129,7 +129,6 @@ function create() {
 });
 
 
-
 //  Prepare some spritesheets and animations
 
 this.textures.addSpriteSheetFromAtlas('mine-sheet', { atlas: 'space', frame: 'mine', frameWidth: 64 });
@@ -212,9 +211,11 @@ ship.setDrag(300);
 ship.setAngularDrag(400);
 ship.setMaxVelocity(600);
 ship.setCollideWorldBounds(true);
+//ship.setFrictionAir(0.15);
+ship.setMass(30);
+//ship.setFixedRotation();
 
-
-naveAgente = this.physics.add.image(600, 300,"ship");
+naveAgente = this.physics.add.sprite(600, 300,"ship");
 naveAgente.setDamping(true);
 naveAgente.setDrag(0.99);
 naveAgente.setMaxVelocity(maxVelocity1);
@@ -242,7 +243,7 @@ this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
 this.physics.add.collider(ship, naveAgente, hitShip, null, this);
 
-this.physics.add.collider(bullets, naveAgente, destroy, null, this);
+this.physics.add.collider(bullets, naveAgente, hitEnemy, null, this);
 
 
 //camara
@@ -377,7 +378,7 @@ function update (time, delta)
 
     // acccion naves agente
     seek(naveAgente,ship);
-    naveAgente.destroy();
+   
   }
 
 
@@ -396,6 +397,7 @@ function collectCoins(player, coins) {
         ? Phaser.Math.Between(400, 800)
         : Phaser.Math.Between(0, 400);
     coins.setPosition(x, y);
+    //coins.setVisible(false);
   }
 
   function hitShip(player, agente) {
@@ -407,9 +409,9 @@ function collectCoins(player, coins) {
     });
   }
 
-  function destroy(bullet, enemy){
-    this.add.sprite(enemy.x, enemy.y).play('explosion-anim');
-    enemy.disableBody(true, true);
+  function hitEnemy(bullet, naveAgente){
+    this.add.sprite(naveAgente.x, naveAgente.y).play('explosion-anim');
+    naveAgente.kill();
   }
 
   function seek(pVehicle, pTarget) {

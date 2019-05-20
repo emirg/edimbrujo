@@ -17,14 +17,14 @@ public class Player extends Entity {
     protected int health;
     protected int healthMax;
 
-    public Player(String id, int countProjectile, boolean dead, boolean leave, int team, int role, int health, int healthMax, int x, int y, String name, boolean destroy) {
+    public Player(String id, int countProjectile, boolean dead, boolean leave, int team, int health, int healthMax, int x, int y, String name, boolean destroy) {
         super(x, y, name, destroy);
         this.id = id;
         this.countProjectile = countProjectile;
         this.dead = dead;
         this.leave = leave;
         this.team = team;
-        this.role = role;
+        //this.role = role;
         this.health = health;
         this.healthMax = healthMax;
     }
