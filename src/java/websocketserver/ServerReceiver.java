@@ -1,6 +1,6 @@
 package websocketserver;
 
-import gamelogic.Lobby;
+import engine.Lobby;
 import javax.enterprise.context.ApplicationScoped;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -42,6 +42,7 @@ public class ServerReceiver {
     @OnClose
     public void playerExit(Session session) {
         System.out.println("Player " + session.getId() + " leave the game.");
+        lobby.removePlayer(session.getId());
         lobby.addAction(session.getId(), "leave");
         //sessions.remove(session);
     }

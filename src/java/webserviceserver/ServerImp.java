@@ -5,7 +5,7 @@
  */
 package webserviceserver;
 
-import gamelogic.Lobby;
+import engine.Lobby;
 import java.security.SecureRandom;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -34,7 +34,6 @@ public class ServerImp {
         SecureRandom random = new SecureRandom();
         rol = rol + random.nextInt(1000000000);
         //    String session = bytes.toString();
-        lobby.addPlayer(rol);
         lobby.addAction(rol, "enter");
         return rol;
     }

@@ -1,18 +1,24 @@
 package engine;
 
+import engine.Action;
+import phasergamelogic.*;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.UUID;
 import org.json.simple.JSONObject;
+import phasergamelogic.Player;
 
 public abstract class State {
 
-    protected String name;
+    public String id;
+    public String name;
     private LinkedList<State> record;
     private LinkedList<String> events;
-    protected boolean hasChanged;
-    protected boolean destroy;
+    public boolean hasChanged;
+    public boolean destroy;
 
-    public State(String name, boolean destroy) {
+    public State(String name, boolean destroy, String id) {
+        this.id = id == null ? UUID.randomUUID().toString() : id;
         this.name = name;
         this.record = new LinkedList<>();
         this.events = new LinkedList<>();
@@ -32,21 +38,28 @@ public abstract class State {
         return hasChanged;
     }
 
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
-            HashMap<String, Action> actions) {
-        // TODO in concrete class
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
+        //TODO in concrete class
         return null;
     }
 
-    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
-        // TODO in concrete class
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
+        //TODO in concrete class
         hasChanged = false;
         return this;
     }
 
     public void createState(State newState) {
-        // record.add((State) this.clone());
+        //record.add((State) this.clone());
         this.setState(newState);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -62,6 +75,7 @@ public abstract class State {
     }
 
     public void setState(State newState) {
+        id = newState.id;
         name = newState.name;
         destroy = newState.destroy;
     }
@@ -74,15 +88,34 @@ public abstract class State {
     public JSONObject toJSON() {
         JSONObject jsonState = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
+        jsonAttrs.put("id", id);
         jsonAttrs.put("name", name);
         jsonAttrs.put("destroy", destroy);
         jsonState.put("State", jsonAttrs);
         return jsonState;
     }
 
+    public JSONObject toJSON(String sessionId, LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions, JSONObject lastState) {
+        return lastState == null || hasChanged ? toJSON() : null;
+    }
+
+    protected JSONObject toJSONRemover() {
+        JSONObject jsonState = new JSONObject();
+        JSONObject jsonAttrs = new JSONObject();
+        jsonAttrs.put("id", id);
+        jsonState.put("Remove", jsonAttrs);
+        return jsonState;
+    }
+
+    protected boolean isJSONRemover(JSONObject json) {
+        return json.get("Remove") != null
+                && ((JSONObject) json.get("Remove")).get("id") != null
+                && ((JSONObject) json.get("Remove")).get("id").equals(id);
+    }
+
     @Override
     protected Object clone() {
-        // TODO in concrete class
+        //TODO in concrete class
         return null;
     }
 
