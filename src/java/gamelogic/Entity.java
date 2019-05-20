@@ -1,5 +1,8 @@
 package gamelogic;
 
+import engine.Action;
+import engine.State;
+import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.json.simple.JSONObject;
@@ -31,11 +34,13 @@ public class Entity extends State {
         this.y = y;
     }
 
+  
     @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, Action> actions) {
         return null;
     }
+
 
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {

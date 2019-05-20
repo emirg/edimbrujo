@@ -1,5 +1,6 @@
 package gamelogic;
 
+import engine.StaticState;
 import org.json.simple.JSONObject;
 
 public class Spawn extends StaticState {
