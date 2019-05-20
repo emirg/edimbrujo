@@ -17,7 +17,8 @@ public class Player extends Entity {
     protected int health;
     protected int healthMax;
 
-    public Player(String id, int countProjectile, boolean dead, boolean leave, int team, int role, int health, int healthMax, int x, int y, String name, boolean destroy) {
+    public Player(String id, int countProjectile, boolean dead, boolean leave, int team, int role, int health,
+            int healthMax, int x, int y, String name, boolean destroy) {
         super(x, y, name, destroy);
         this.id = id;
         this.countProjectile = countProjectile;
@@ -30,42 +31,45 @@ public class Player extends Entity {
     }
 
     @Override
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
+            HashMap<String, Action> actions) {
         Action action = actions.get(id);
         LinkedList<State> newStates = new LinkedList<>();
         if (action != null) {
             if (!dead) {
                 switch (action.getName()) {
-                    case "fire":
-                        int posX = Integer.parseInt(action.getParameter("x"));
-                        int posY = Integer.parseInt(action.getParameter("y"));
-                        if (posX != x || posY != y) {
-                            int xVelocity;
-                            int yVelocity;
-                            if (posX < x) {
-                                xVelocity = -1;
-                            } else if (posX > x) {
-                                xVelocity = 1;
-                            } else {
-                                xVelocity = 0;
-                            }
-                            if (posY < y) {
-                                yVelocity = -1;
-                            } else if (posY > y) {
-                                yVelocity = 1;
-                            } else {
-                                yVelocity = 0;
-                            }
-                            Projectile projectile = new Projectile(id, countProjectile, team, xVelocity, yVelocity, x, y, "Projectile", false);
-                            newStates.add(projectile);
+                case "fire":
+                    int posX = Integer.parseInt(action.getParameter("x"));
+                    int posY = Integer.parseInt(action.getParameter("y"));
+                    if (posX != x || posY != y) {
+                        int xVelocity;
+                        int yVelocity;
+                        if (posX < x) {
+                            xVelocity = -1;
+                        } else if (posX > x) {
+                            xVelocity = 1;
+                        } else {
+                            xVelocity = 0;
                         }
-                        break;
+                        if (posY < y) {
+                            yVelocity = -1;
+                        } else if (posY > y) {
+                            yVelocity = 1;
+                        } else {
+                            yVelocity = 0;
+                        }
+                        Projectile projectile = new Projectile(id, countProjectile, team, xVelocity, yVelocity, x, y,
+                                "Projectile", false);
+                        newStates.add(projectile);
+                    }
+                    break;
                 }
             }
         }
         Point myFuturePosition = futurePosition(actions);
         for (State state : states) {
-            if (state != this && state.getName().equals("Player") && !((Player) state).dead && !((Player) state).leave) {
+            if (state != this && state.getName().equals("Player") && !((Player) state).dead
+                    && !((Player) state).leave) {
                 Point otherFuturePosition = ((Player) state).futurePosition(actions);
                 if (myFuturePosition.x == otherFuturePosition.x && myFuturePosition.y == otherFuturePosition.y) {
                     this.addEvent("collide");
@@ -101,119 +105,9 @@ public class Player extends Entity {
         boolean newDestroy = destroy;
         if (action != null) {
             hasChanged = true;
-            //System.out.println("ACTION: " + action.getName());
+            // System.out.println("ACTION: " + action.getName());
             if (!dead) {
                 switch (action.getName()) {
-                    case "up":
-                        newY = y - 1;
-                        break;
-                    case "down":
-                        newY = y + 1;
-                        break;
-                    case "left":
-                        newX = x - 1;
-                        break;
-                    case "right":
-                        newX = x + 1;
-                        break;
-                    case "upleft":
-                        newY = y - 1;
-                        newX = x - 1;
-                        break;
-                    case "upright":
-                        newY = y - 1;
-                        newX = x + 1;
-                        break;
-                    case "downleft":
-                        newY = y + 1;
-                        newX = x - 1;
-                        break;
-                    case "downright":
-                        newY = y + 1;
-                        newX = x + 1;
-                        break;
-                    case "fire":
-                        newCountProjectile = countProjectile + 1;
-                        break;
-                }
-            }
-            switch (action.getName()) {
-                case "enter":
-                    newLeave = false;
-                    break;
-                case "leave":
-                    newLeave = true;
-                    break;
-            }
-            if (!((Map) staticStates.get(0)).canWalk(new Point(newX, newY))) {
-                newX = x;
-                newY = y;
-            }
-        }
-        LinkedList<String> events = getEvents();
-        if (!events.isEmpty()) {
-            hasChanged = true;
-            boolean hasRespawn = false;
-            for (String event : events) {
-                switch (event) {
-                    case "hit":
-                        newHealth = health - 10;
-                        if (newHealth <= 0) {
-                            newDead = true;
-                        }
-                        System.out.println("Player " + id + " has been killed.");
-                        break;
-                    case "collide":
-                        if (!hasRespawn) {
-                            newX = x;
-                            newY = y;
-                        }
-                        break;
-                    case "spawn":
-                        System.out.println("Player " + id + " spawn in game.");
-                        break;
-                    case "respawn":
-                        System.out.println("Player " + id + " respawn in game.");
-                        hasRespawn = true;
-                        Random random = new Random();
-                        LinkedList<Spawn> spawns = new LinkedList<>();
-                        if (role == 0) {
-                            for (StaticState staticState : staticStates) {
-                                if (staticState.name.equals("SpawnDefence")) {
-                                    spawns.add((Spawn) staticState);
-                                }
-                            }
-                        } else {
-                            for (StaticState staticState : staticStates) {
-                                if (staticState.name.equals("SpawnAttack")) {
-                                    spawns.add((Spawn) staticState);
-                                }
-                            }
-                        }
-                        Spawn spawn = spawns.get(random.nextInt(spawns.size()));
-                        newX = spawn.x;
-                        newY = spawn.y;
-                        newDead = false;
-                        newHealth = healthMax;
-                        break;
-                    case "despawn":
-                        newDestroy = true;
-                        System.out.println("Player " + id + " despawn of the game.");
-                        break;
-                }
-            }
-        }
-        Player newPlayer = new Player(id, newCountProjectile, newDead, newLeave, team, newRole, newHealth, healthMax, newX, newY, name, newDestroy);
-        return newPlayer;
-    }
-
-    public Point futurePosition(HashMap<String, Action> actions) {
-        Point position;
-        Action action = actions.get(id);
-        int newY = y;
-        int newX = x;
-        if (action != null) {
-            switch (action.getName()) {
                 case "up":
                     newY = y - 1;
                     break;
@@ -242,6 +136,117 @@ public class Player extends Entity {
                     newY = y + 1;
                     newX = x + 1;
                     break;
+                case "fire":
+                    newCountProjectile = countProjectile + 1;
+                    break;
+                }
+            }
+            switch (action.getName()) {
+            case "enter":
+                newLeave = false;
+                break;
+            case "leave":
+                newLeave = true;
+                break;
+            }
+            if (!((Map) staticStates.get(0)).canWalk(new Point(newX, newY))) {
+                newX = x;
+                newY = y;
+            }
+        }
+        LinkedList<String> events = getEvents();
+        if (!events.isEmpty()) {
+            hasChanged = true;
+            boolean hasRespawn = false;
+            for (String event : events) {
+                switch (event) {
+                case "hit":
+                    newHealth = health - 10;
+                    if (newHealth <= 0) {
+                        newDead = true;
+                    }
+                    System.out.println("Player " + id + " has been killed.");
+                    break;
+                case "collide":
+                    if (!hasRespawn) {
+                        newX = x;
+                        newY = y;
+                    }
+                    break;
+                case "spawn":
+                    System.out.println("Player " + id + " spawn in game.");
+                    break;
+                case "respawn":
+                    System.out.println("Player " + id + " respawn in game.");
+                    hasRespawn = true;
+                    Random random = new Random();
+                    LinkedList<Spawn> spawns = new LinkedList<>();
+                    if (role == 0) {
+                        for (StaticState staticState : staticStates) {
+                            if (staticState.name.equals("SpawnDefence")) {
+                                spawns.add((Spawn) staticState);
+                            }
+                        }
+                    } else {
+                        for (StaticState staticState : staticStates) {
+                            if (staticState.name.equals("SpawnAttack")) {
+                                spawns.add((Spawn) staticState);
+                            }
+                        }
+                    }
+                    Spawn spawn = spawns.get(random.nextInt(spawns.size()));
+                    newX = spawn.x;
+                    newY = spawn.y;
+                    newDead = false;
+                    newHealth = healthMax;
+                    break;
+                case "despawn":
+                    newDestroy = true;
+                    System.out.println("Player " + id + " despawn of the game.");
+                    break;
+                }
+            }
+        }
+        Player newPlayer = new Player(id, newCountProjectile, newDead, newLeave, team, newRole, newHealth, healthMax,
+                newX, newY, name, newDestroy);
+        return newPlayer;
+    }
+
+    public Point futurePosition(HashMap<String, Action> actions) {
+        Point position;
+        Action action = actions.get(id);
+        int newY = y;
+        int newX = x;
+        if (action != null) {
+            switch (action.getName()) {
+            case "up":
+                newY = y - 1;
+                break;
+            case "down":
+                newY = y + 1;
+                break;
+            case "left":
+                newX = x - 1;
+                break;
+            case "right":
+                newX = x + 1;
+                break;
+            case "upleft":
+                newY = y - 1;
+                newX = x - 1;
+                break;
+            case "upright":
+                newY = y - 1;
+                newX = x + 1;
+                break;
+            case "downleft":
+                newY = y + 1;
+                newX = x - 1;
+                break;
+            case "downright":
+                newY = y + 1;
+                newX = x + 1;
+                break;
             }
         }
         position = new Point(newX, newY);

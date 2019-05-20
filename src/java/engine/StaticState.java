@@ -1,4 +1,4 @@
-package gamelogic;
+package engine;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,13 +15,14 @@ public abstract class StaticState extends State {
     }
 
     @Override
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
+            HashMap<String, Action> actions) {
         return null;
     }
 
     @Override
     public void createState(State newState) {
-        //do nothing
+        // do nothing
     }
 
     @Override
@@ -31,7 +32,7 @@ public abstract class StaticState extends State {
 
     @Override
     public void setState(State newState) {
-        //do nothing
+        // do nothing
     }
 
 }

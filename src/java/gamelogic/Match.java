@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Random;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import engine.State;
 
 public class Match extends State {
 
@@ -21,7 +22,9 @@ public class Match extends State {
     protected LinkedList<String> ready;
     protected LinkedList<Integer> teamPoints;
 
-    public Match(int round, int countRounds, boolean endGame, boolean endRound, boolean startGame, int teamAttacker, int sizeTeam, LinkedList<String> players, LinkedList<String> playingPlayers, LinkedList<String> ready, LinkedList<Integer> teamPoints, String name, boolean destroy) {
+    public Match(int round, int countRounds, boolean endGame, boolean endRound, boolean startGame, int teamAttacker,
+            int sizeTeam, LinkedList<String> players, LinkedList<String> playingPlayers, LinkedList<String> ready,
+            LinkedList<Integer> teamPoints, String name, boolean destroy) {
         super(name, destroy);
         this.round = round;
         this.countRounds = countRounds;
@@ -37,7 +40,7 @@ public class Match extends State {
     }
 
     private void reset(LinkedList<State> states) {
-        //despawnea a todas las torres, proyectiles y jugadores en el mapa
+        // despawnea a todas las torres, proyectiles y jugadores en el mapa
         for (State state : states) {
             if (state.getName().equals("Tower")) {
                 Tower tower = (Tower) state;
@@ -53,7 +56,8 @@ public class Match extends State {
     }
 
     private void spawn(LinkedList<StaticState> staticStates, LinkedList<State> newStates) {
-        //obtiene los puntos de spawn para personajes que atacan y defienden, y para las torres
+        // obtiene los puntos de spawn para personajes que atacan y defienden, y para
+        // las torres
         LinkedList<Spawn> spawnsAttack = new LinkedList<>();
         LinkedList<Spawn> spawnsDefence = new LinkedList<>();
         LinkedList<Spawn> spawnsTower = new LinkedList<>();
@@ -67,12 +71,13 @@ public class Match extends State {
             }
         }
 
-        //spawnea a los jugadores en las posiciones de spawn
+        // spawnea a los jugadores en las posiciones de spawn
         LinkedList<String> spawnPlayers = playingPlayers;
         if (playingPlayers.isEmpty()) {
             spawnPlayers = ready;
-            //mezcla a los jugadores para formar aleatoriamente los equipos
-            //en caso de haber mas de sizeTeam*2 jugadores permitira que se elijan jugadores al azar entre los de la sala
+            // mezcla a los jugadores para formar aleatoriamente los equipos
+            // en caso de haber mas de sizeTeam*2 jugadores permitira que se elijan
+            // jugadores al azar entre los de la sala
             Collections.shuffle(spawnPlayers);
         }
         boolean attack = teamAttacker == 0;
@@ -83,12 +88,14 @@ public class Match extends State {
             if (maxCant < sizeTeam * 2) {
                 Player newPlayer;
                 if (attack) {
-                    newPlayer = new Player(player, 0, false, false, teamAttacker, 1, 100, 100, spawnsAttack.get(i).x, spawnsAttack.get(i).y, "Player", false);
+                    newPlayer = new Player(player, 0, false, false, teamAttacker, 1, 100, 100, spawnsAttack.get(i).x,
+                            spawnsAttack.get(i).y, "Player", false);
                     newStates.add(newPlayer);
                     newPlayer.addEvent("spawn");
                     i++;
                 } else {
-                    newPlayer = new Player(player, 0, false, false, 1 - teamAttacker, 0, 100, 100, spawnsDefence.get(j).x, spawnsDefence.get(j).y, "Player", false);
+                    newPlayer = new Player(player, 0, false, false, 1 - teamAttacker, 0, 100, 100,
+                            spawnsDefence.get(j).x, spawnsDefence.get(j).y, "Player", false);
                     newStates.add(newPlayer);
                     newPlayer.addEvent("spawn");
                     j++;
@@ -97,14 +104,17 @@ public class Match extends State {
                 maxCant++;
             }
         }
-        //spawnea a las torres en las posiciones de spawn
-        Tower towerMain = new Tower("towerMain", 0, false, 1 - teamAttacker, 400, 400, 3, 3, spawnsTower.get(0).x, spawnsTower.get(0).y, "Tower", false);
+        // spawnea a las torres en las posiciones de spawn
+        Tower towerMain = new Tower("towerMain", 0, false, 1 - teamAttacker, 400, 400, 3, 3, spawnsTower.get(0).x,
+                spawnsTower.get(0).y, "Tower", false);
         newStates.add(towerMain);
         towerMain.addEvent("spawn");
-        Tower towerLeft = new Tower("towerLeft", 0, false, 1 - teamAttacker, 200, 200, 3, 3, spawnsTower.get(1).x, spawnsTower.get(1).y, "Tower", false);
+        Tower towerLeft = new Tower("towerLeft", 0, false, 1 - teamAttacker, 200, 200, 3, 3, spawnsTower.get(1).x,
+                spawnsTower.get(1).y, "Tower", false);
         newStates.add(towerLeft);
         towerLeft.addEvent("spawn");
-        Tower towerRight = new Tower("towerRight", 0, false, 1 - teamAttacker, 200, 200, 3, 3, spawnsTower.get(2).x, spawnsTower.get(2).y, "Tower", false);
+        Tower towerRight = new Tower("towerRight", 0, false, 1 - teamAttacker, 200, 200, 3, 3, spawnsTower.get(2).x,
+                spawnsTower.get(2).y, "Tower", false);
         newStates.add(towerRight);
         towerRight.addEvent("spawn");
     }
@@ -151,7 +161,8 @@ public class Match extends State {
     }
 
     @Override
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
+            HashMap<String, Action> actions) {
         LinkedList<State> newStates = new LinkedList<>();
         if ((allReady() || teamsReady()) && !startGame) {
             reset(states);
@@ -205,9 +216,9 @@ public class Match extends State {
             Action action = actionEntry.getValue();
             hasChanged = true;
             switch (action.getName()) {
-                case "restart":
-                    reset(states);
-                    addEvent("end");
+            case "restart":
+                reset(states);
+                addEvent("end");
             }
         }
         return newStates;
@@ -230,24 +241,24 @@ public class Match extends State {
             Action action = actionEntry.getValue();
             hasChanged = true;
             switch (action.getName()) {
-                case "enter":
-                    newPlayers.add(id);
-                    break;
-                case "ready":
-                    if (!ready.contains(id) && !startGame) {
-                        newReady.add(id);
-                    }
-                    break;
-                case "leave":
-                    newPlayers.remove(id);
-                    newPlayingPlayers.remove(id);
-                    newReady.remove(id);
-                    break;
-                case "restart":
-                    newPlayers.clear();
-                    newPlayingPlayers.clear();
-                    newReady.clear();
-                    break;
+            case "enter":
+                newPlayers.add(id);
+                break;
+            case "ready":
+                if (!ready.contains(id) && !startGame) {
+                    newReady.add(id);
+                }
+                break;
+            case "leave":
+                newPlayers.remove(id);
+                newPlayingPlayers.remove(id);
+                newReady.remove(id);
+                break;
+            case "restart":
+                newPlayers.clear();
+                newPlayingPlayers.clear();
+                newReady.clear();
+                break;
             }
         }
         LinkedList<String> events = getEvents();
@@ -255,51 +266,51 @@ public class Match extends State {
             hasChanged = true;
             for (String event : events) {
                 switch (event) {
-                    case "start":
-                        System.out.println("Match started.");
-                        newStartGame = true;
-                        //newEndGame = false;
-                        newRound = 1;
-                        //newReady = new LinkedList<>();
-                        //permite agregar a playingPlayers unicamente los elegidos aleatoriamente
-                        LinkedList<String> playersStates = new LinkedList<>();
-                        for (State state : states) {
-                            if (state.getName().equals("Player")) {
-                                Player player = (Player) state;
-                                playersStates.add(player.id);
-                                newPlayingPlayers.add(player.id);
-                            }
+                case "start":
+                    System.out.println("Match started.");
+                    newStartGame = true;
+                    // newEndGame = false;
+                    newRound = 1;
+                    // newReady = new LinkedList<>();
+                    // permite agregar a playingPlayers unicamente los elegidos aleatoriamente
+                    LinkedList<String> playersStates = new LinkedList<>();
+                    for (State state : states) {
+                        if (state.getName().equals("Player")) {
+                            Player player = (Player) state;
+                            playersStates.add(player.id);
+                            newPlayingPlayers.add(player.id);
                         }
-                        //aca les quita el ready a aquellos que quedaron afuera
-                        for (String player : players) {
-                            if (!playersStates.contains(player)) {
-                                newReady.remove(player);
-                            }
+                    }
+                    // aca les quita el ready a aquellos que quedaron afuera
+                    for (String player : players) {
+                        if (!playersStates.contains(player)) {
+                            newReady.remove(player);
                         }
+                    }
 
-                        //newPlayingPlayers.addAll(players);
-                        newTeamPoints = new LinkedList<>();
-                        newTeamPoints.add(0);
-                        newTeamPoints.add(0);
-                        break;
-                    case "end":
-                        System.out.println("Match ended.");
-                        newEndRound = false;
-                        newStartGame = false;
-                        //newEndGame = true;
-                        newReady = new LinkedList<>();
-                        newPlayingPlayers = new LinkedList<>();
-                        break;
-                    case "startround":
-                        System.out.println("Round " + (round + 1) + " started.");
-                        newEndRound = false;
-                        newRound = round + 1;
-                        break;
-                    case "endround":
-                        System.out.println("Round " + round + " ended.");
-                        newEndRound = true;
-                        newTeamAttacker = 1 - teamAttacker;
-                        break;
+                    // newPlayingPlayers.addAll(players);
+                    newTeamPoints = new LinkedList<>();
+                    newTeamPoints.add(0);
+                    newTeamPoints.add(0);
+                    break;
+                case "end":
+                    System.out.println("Match ended.");
+                    newEndRound = false;
+                    newStartGame = false;
+                    // newEndGame = true;
+                    newReady = new LinkedList<>();
+                    newPlayingPlayers = new LinkedList<>();
+                    break;
+                case "startround":
+                    System.out.println("Round " + (round + 1) + " started.");
+                    newEndRound = false;
+                    newRound = round + 1;
+                    break;
+                case "endround":
+                    System.out.println("Round " + round + " ended.");
+                    newEndRound = true;
+                    newTeamAttacker = 1 - teamAttacker;
+                    break;
                 }
             }
         }
@@ -316,11 +327,12 @@ public class Match extends State {
             System.out.println("All players are left, match reset.");
             newTeamPoints = new LinkedList<>();
             newStartGame = false;
-            //newEndGame = true;
+            // newEndGame = true;
             newEndRound = false;
             newRound = 1;
         }
-        Match newMatch = new Match(newRound, countRounds, newEndGame, newEndRound, newStartGame, newTeamAttacker, sizeTeam, newPlayers, newPlayingPlayers, newReady, newTeamPoints, name, destroy);
+        Match newMatch = new Match(newRound, countRounds, newEndGame, newEndRound, newStartGame, newTeamAttacker,
+                sizeTeam, newPlayers, newPlayingPlayers, newReady, newTeamPoints, name, destroy);
         return newMatch;
     }
 
@@ -342,7 +354,8 @@ public class Match extends State {
 
     @Override
     protected Object clone() {
-        Match clon = new Match(round, countRounds, endGame, endRound, startGame, teamAttacker, sizeTeam, players, playingPlayers, ready, teamPoints, name, destroy);
+        Match clon = new Match(round, countRounds, endGame, endRound, startGame, teamAttacker, sizeTeam, players,
+                playingPlayers, ready, teamPoints, name, destroy);
         return clon;
     }
 

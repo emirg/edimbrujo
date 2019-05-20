@@ -1,4 +1,4 @@
-package gamelogic;
+package engine;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,19 +32,20 @@ public abstract class State {
         return hasChanged;
     }
 
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
-        //TODO in concrete class
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
+            HashMap<String, Action> actions) {
+        // TODO in concrete class
         return null;
     }
 
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
-        //TODO in concrete class
+        // TODO in concrete class
         hasChanged = false;
         return this;
     }
 
     public void createState(State newState) {
-        //record.add((State) this.clone());
+        // record.add((State) this.clone());
         this.setState(newState);
     }
 
@@ -81,7 +82,7 @@ public abstract class State {
 
     @Override
     protected Object clone() {
-        //TODO in concrete class
+        // TODO in concrete class
         return null;
     }
 

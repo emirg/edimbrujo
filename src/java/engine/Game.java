@@ -1,4 +1,4 @@
-package gamelogic;
+package engine;
 
 import java.awt.Point;
 import java.io.BufferedReader;
@@ -12,18 +12,22 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+
+import gamelogic.Player;
+import gamelogic.Spawn;
+import jdk.nashorn.internal.parser.JSONParser;
 
 public class Game implements Runnable {
 
     private LinkedList<State> states;
     private LinkedList<StaticState> staticStates;
     private HashMap<String, Action> actions;
-    private ConcurrentHashMap<String, String> actionsSended; //sessionid -> accion
+    private ConcurrentHashMap<String, String> actionsSended; // sessionid -> accion
     private HashMap<String, Player> players;
-    private ConcurrentHashMap<String, String> playersSended; //sessionid -> accion
+    private ConcurrentHashMap<String, String> playersSended; // sessionid -> accion
     private String gameState;
     private String gameFullState;
     private String gameStaticState;
@@ -32,7 +36,7 @@ public class Game implements Runnable {
 
     private Lobby lobby;
 
-    //constructor
+    // constructor
     public Game(Lobby lobby) {
         states = new LinkedList<>();
         staticStates = new LinkedList<>();
@@ -52,11 +56,11 @@ public class Game implements Runnable {
         LinkedList<State> newStates;
         while (!endGame) {
             try {
-                Thread.sleep(100); //time per frame (10 fps)
-                //readPlayers();
+                Thread.sleep(100); // time per frame (10 fps)
+                // readPlayers();
                 readActions();
-                //se realizan las comunicaciones a traves de eventos y 
-                //se generan nuevos estados que seran computados
+                // se realizan las comunicaciones a traves de eventos y
+                // se generan nuevos estados que seran computados
                 newStates = new LinkedList<>();
                 for (State state : states) {
                     LinkedList<State> newState = state.generate(states, staticStates, actions);
@@ -65,12 +69,12 @@ public class Game implements Runnable {
                     }
                 }
                 states.addAll(newStates);
-                //se generan los estados siguientes incluyendo los generados
+                // se generan los estados siguientes incluyendo los generados
                 nextStates = new LinkedList<>();
                 for (State state : states) {
                     nextStates.add(state.next(states, staticStates, actions));
                 }
-                //se crean los nuevos estados con los calculados anteriormente
+                // se crean los nuevos estados con los calculados anteriormente
                 for (int i = 0; i < states.size(); i++) {
                     states.get(i).createState(nextStates.get(i));
                     states.get(i).clearEvents();
@@ -80,14 +84,14 @@ public class Game implements Runnable {
                 int i = 0;
                 while (i < states.size()) {
                     if (states.get(i).isDestroy()) {
-                        //System.out.println("State " + states.get(i).getName() + " is removed.");
+                        // System.out.println("State " + states.get(i).getName() + " is removed.");
                         states.remove(i);
                     } else {
                         i++;
                     }
                 }
-                //System.out.println("STATIC: " + gameStaticState);
-                //System.out.println("DYNAMIC: " + gameFullState);
+                // System.out.println("STATIC: " + gameStaticState);
+                // System.out.println("DYNAMIC: " + gameFullState);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -96,12 +100,12 @@ public class Game implements Runnable {
 
     public void init() {
         try {
-            //TODO crear estados dinamicos y estaticos
+            // TODO crear estados dinamicos y estaticos
             File map = new File(this.getClass().getClassLoader().getResource("files/map.csv").toURI());
             loadMap(map);
-            //match spawnea players cuando todos hicieron ready
-            states.add(new Match(1, 2, true, false, false, 0, 4, new LinkedList<String>(),
-                    new LinkedList<String>(), new LinkedList<String>(), new LinkedList<Integer>(), "Match", false));
+            // match spawnea players cuando todos hicieron ready
+            states.add(new Match(1, 2, true, false, false, 0, 4, new LinkedList<String>(), new LinkedList<String>(),
+                    new LinkedList<String>(), new LinkedList<Integer>(), "Match", false));
             createSpawns();
         } catch (URISyntaxException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
@@ -138,20 +142,15 @@ public class Game implements Runnable {
     }
 
     public void readPlayers() {
-        /*for (Map.Entry<String, String> playerSended : playersSended.entrySet()) {
-            String sessionId = playerSended.getKey();
-            //String player = playerSended.getValue();
-            if (!players.containsKey(sessionId)) {
-                players.put(sessionId, player);
-            }
-        }
-        for (Map.Entry<String, Player> player : players.entrySet()) {
-            String sessionId = player.getKey();
-            Player playerState = player.getValue();
-            if (!playersSended.containsKey(sessionId)) {
-                playerState.setLeave(true);
-            }
-        }*/
+        /*
+         * for (Map.Entry<String, String> playerSended : playersSended.entrySet()) {
+         * String sessionId = playerSended.getKey(); //String player =
+         * playerSended.getValue(); if (!players.containsKey(sessionId)) {
+         * players.put(sessionId, player); } } for (Map.Entry<String, Player> player :
+         * players.entrySet()) { String sessionId = player.getKey(); Player playerState
+         * = player.getValue(); if (!playersSended.containsKey(sessionId)) {
+         * playerState.setLeave(true); } }
+         */
     }
 
     private void createStaticState() {
@@ -198,8 +197,7 @@ public class Game implements Runnable {
             staticStates.add(new gamelogic.Map(cells, x, y, "Map"));
 
         } catch (IOException ex) {
-            Logger.getLogger(Game.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -218,10 +216,10 @@ public class Game implements Runnable {
     }
 
     public void addAction(String sessionId, String action) {
-        //Player player = players.get(sessionId);
-        //if (players.containsKey(sessionId)) {
-        //    if (!player.isLeave()) {
-        //si existe el player y no salio ni murio, entonces puede hacer accion
+        // Player player = players.get(sessionId);
+        // if (players.containsKey(sessionId)) {
+        // if (!player.isLeave()) {
+        // si existe el player y no salio ni murio, entonces puede hacer accion
 
         if (actionsSended.containsKey(sessionId)) {
             String actualAction = actionsSended.get(sessionId);
@@ -246,8 +244,8 @@ public class Game implements Runnable {
         } else {
             actionsSended.put(sessionId, action);
         }
-        //    }
-        //}
+        // }
+        // }
     }
 
     public boolean isEndGame() {
