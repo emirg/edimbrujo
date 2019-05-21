@@ -5,6 +5,7 @@ import engine.State;
 import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.UUID;
 import org.json.simple.JSONObject;
 
 public class Entity extends State {
@@ -12,8 +13,8 @@ public class Entity extends State {
     protected int x;
     protected int y;
 
-    public Entity(int x, int y, String name, boolean destroy) {
-        super(name, destroy);
+    public Entity(int x, int y, String name, boolean destroy, String id) {
+        super(name, destroy, id == null ? UUID.randomUUID().toString() : id);
         this.x = x;
         this.y = y;
     }
@@ -36,16 +37,15 @@ public class Entity extends State {
 
   
     @Override
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
-            HashMap<String, Action> actions) {
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         return null;
     }
 
 
     @Override
-    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = false;
-        Entity newEntity = new Entity(x, y, name, destroy);
+        Entity newEntity = new Entity(x, y, name, destroy, id);
         return newEntity;
     }
 
@@ -58,7 +58,7 @@ public class Entity extends State {
 
     @Override
     protected Object clone() {
-        Entity clon = new Entity(x, y, name, destroy);
+        Entity clon = new Entity(x, y, name, destroy, id);
         return clon;
     }
 

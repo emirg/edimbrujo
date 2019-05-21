@@ -1,8 +1,7 @@
 package engine;
 
-import babylongamelogic.World;
-import phasergamelogic.Match;
-import phasergamelogic.Spawn;
+import gamelogic.World;
+import gamelogic.Match;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
@@ -111,7 +110,7 @@ public class Game implements Runnable {
     public void init() {
         //TODO crear estados dinamicos y estaticos
         /*Babylon init*/
-        states.add(new World(new LinkedList<String>(), "World", false, null));
+        //states.add(new World(new LinkedList<String>(), "World", false, null));
 
         /*Phaser init*/
         //try {
@@ -141,7 +140,7 @@ public class Game implements Runnable {
                 }
                 y++;
             }
-            staticStates.add(new phasergamelogic.Map(cells, x, y, "Map", null));
+            //staticStates.add(new phasergamelogic.Map(cells, x, y, "Map", null));
 
         } catch (IOException ex) {
             Logger.getLogger(Game.class
@@ -149,19 +148,7 @@ public class Game implements Runnable {
         }
     }
 
-    private void createSpawns() {
-        staticStates.add(new Spawn(16, 35, "SpawnAttack", null));
-        staticStates.add(new Spawn(19, 35, "SpawnAttack", null));
-        staticStates.add(new Spawn(22, 35, "SpawnAttack", null));
-        staticStates.add(new Spawn(25, 35, "SpawnAttack", null));
-        staticStates.add(new Spawn(16, 9, "SpawnDefence", null));
-        staticStates.add(new Spawn(18, 9, "SpawnDefence", null));
-        staticStates.add(new Spawn(20, 9, "SpawnDefence", null));
-        staticStates.add(new Spawn(22, 9, "SpawnDefence", null));
-        staticStates.add(new Spawn(19, 5, "SpawnTower", null));
-        staticStates.add(new Spawn(9, 20, "SpawnTower", null));
-        staticStates.add(new Spawn(29, 20, "SpawnTower", null));
-    }
+   
 
     private void createStaticState() {
         JSONObject jsonStaticStates = new JSONObject();

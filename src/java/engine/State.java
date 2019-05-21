@@ -1,12 +1,12 @@
 package engine;
 
 import engine.Action;
-import phasergamelogic.*;
+import gamelogic.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
 import org.json.simple.JSONObject;
-import phasergamelogic.Player;
+import gamelogic.Player;
 
 public abstract class State {
 

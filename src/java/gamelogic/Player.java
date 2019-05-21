@@ -19,7 +19,7 @@ public class Player extends Entity {
     public Player(String id, int countProjectile, boolean dead, boolean leave, int health,
             int healthMax, int x, int y, String name, boolean destroy) 
     {
-        super(x, y, name, destroy);
+        super(x, y, name, destroy, id);
         this.id = id;
         this.leave = leave;
         this.countProjectile = countProjectile;
@@ -180,7 +180,12 @@ public class Player extends Entity {
                             case "fire":
                                 countProjectile++;
                             break;
-                            case 
+                            case "enter":
+                                salir = false;
+                            break;
+                            case "leave":
+                                salir = true;
+                            break;
                         }
                       
                     }
