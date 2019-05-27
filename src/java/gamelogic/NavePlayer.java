@@ -1,37 +1,29 @@
 package gamelogic;
 
 import engine.Action;
+import engine.State;
+import engine.StaticState;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 import org.json.simple.JSONObject;
 
-public class Player extends Entity {
+public class NavePlayer extends Nave {
 
-    protected String id;
-    protected int countProjectile;
-    protected boolean dead;
-    protected boolean leave;
-    protected int health;
-    protected int healthMax;
+    
 
-    public Player(String id, int countProjectile, boolean dead, boolean leave, int health,
-            int healthMax, int x, int y, String name, boolean destroy) 
+    public NavePlayer(String id, int countProjectile, boolean dead, boolean leave, int health,
+            int healthMax, double x, double y, String name, boolean destroy, double oriX, double oriY) 
     {
-        super(x, y, name, destroy, id);
-        this.id = id;
-        this.leave = leave;
-        this.countProjectile = countProjectile;
-        this.dead = dead;
-        this.health = health;
-        this.healthMax = healthMax;
+        super(id,x,y,"Player",health,healthMax,oriX, oriY);
     }
 
-    public LinkedList<Projectile> generate(LinkedList<Entity> estados, HashMap <String, LinkedList<Action>> acciones)
+    @Override
+    public LinkedList<State> generate(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones)
     {
         LinkedList<Action> listAccion = acciones.get(id);
-        LinkedList<Projectile> listProyectil = new LinkedList <Projectile>();
+        LinkedList<State> listProyectil = new LinkedList ();
         if(listAccion != null)
         {
             for(Action accion : listAccion)
@@ -43,8 +35,8 @@ public class Player extends Entity {
                         case "fire":
                             if(accion.getParameter("x") != null && accion.getParameter("y") != null)
                             {
-                                int posX = Integer.parseInt(accion.getParameter("x"));
-                                int posY = Integer.parseInt(accion.getParameter("y"));
+                                double posX = Double.parseDouble(accion.getParameter("x"));
+                                double posY = Double.parseDouble(accion.getParameter("y"));
                                 
                                 if(posX != x || posY != y)
                                 {
@@ -89,14 +81,14 @@ public class Player extends Entity {
                 }
             }
         }
-        Point futuraPos = futuraPosicion(acciones);
-        for(Entity estado : estados)
+        double [] futuraPos = futuraPosicion(acciones);
+        for(State estado : estados)
         {
             //Solo se considera el choque con otro jugador
-            if(estado != this && estado.getName().equalsIgnoreCase("player") && !((Player)estado).dead)
+            if(estado != this && estado.getName().equalsIgnoreCase("player") && !((NavePlayer)estado).dead)
             {
-                Point posContrincante = ((Player) estado).futuraPosicion(acciones);
-                if(futuraPos.x == posContrincante.x && futuraPos.y == posContrincante.y)
+                double [] posContrincante = ((NavePlayer) estado).futuraPosicion(acciones);
+                if(futuraPos[0] == posContrincante[0] && futuraPos[1] == posContrincante[1])
                 {
                     this.addEvent("collide");
                 }
@@ -105,12 +97,14 @@ public class Player extends Entity {
         return listProyectil;
     }
     
-    private Point futuraPosicion(HashMap <String, LinkedList<Action>> acciones)
+    public double [] futuraPosicion(HashMap <String, LinkedList<Action>> acciones)
     {
-        Point pos;
+        double [] pos = new double [2];
         LinkedList<Action> listAccion = acciones.get(id);
-        int nuevoX = x;
-        int nuevoY = y;
+        double nuevoX = x;
+        double nuevoY = y;
+        double nuevaVelX = velocidadX;
+        double nuevaVelY = velocidadY;
         
         if(listAccion != null)
         {
@@ -122,37 +116,45 @@ public class Player extends Entity {
                     switch(accion.getName())
                     {
                         case "up":
-                            nuevoY = y - 1;
+                            nuevaVelX++;
+                            nuevoX = x - nuevaVelX;
                         break;
                         case "down":
-                            nuevoY = y + 1;
+                            nuevaVelX++;
+                            nuevoX = x + nuevaVelX;
                         break;
                         case "left":
-                            nuevoX = x - 1;
+                            nuevaVelY++;
+                            nuevoY = y - nuevaVelY;
                         break;
                         case "right":
-                            nuevoX = x + 1;
+                            nuevaVelY++;
+                            nuevoX = y + nuevaVelY;
                         break;
                     }
                 }
             }
         }
-        pos = new Point(nuevoX, nuevoY);
+        pos[0] = nuevoX;
+        pos[1] = nuevoY;
         
         return pos;
     }
     
-    public Player next(HashMap <String , LinkedList<Action>> acciones)
+    @Override
+    public NavePlayer next(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones)
     {
         LinkedList<Action> listAccion = acciones.get(id);
         hasChanged = false;
-        int nuevoX = x;
-        int nuevoY = y;
+        double nuevoX = x;
+        double nuevoY = y;
         int nuevosProyectiles = countProjectile;
         boolean salir = leave;
         boolean muerto = dead;
         int nuevaVida = health;
         boolean destruido = destroy;
+        double nuevaVelX = velocidadX;
+        double nuevaVelY = velocidadY;
         
         if(listAccion != null)
         {
@@ -166,16 +168,20 @@ public class Player extends Entity {
                         switch(accion.getName())
                         {
                             case "up":
-                                nuevoY = y - 1;
+                                nuevaVelX++;
+                                nuevoX = x - nuevaVelX;
                             break;
                             case "down":
-                                nuevoY = y + 1;
+                                nuevaVelX++;
+                                nuevoX = x + nuevaVelX;
                             break;
                             case "left":
-                                nuevoX = x - 1;
+                                nuevaVelY++;
+                                nuevoY = y - velocidadY;
                             break;
                             case "rihgt":
-                                nuevoX = x + 1;
+                                nuevaVelY++;
+                                nuevoY = y + velocidadY;
                             break;
                             case "fire":
                                 countProjectile++;
@@ -205,12 +211,16 @@ public class Player extends Entity {
                         nuevaVida = health - 10;
                         if(nuevaVida <= 0)
                         {
+                            nuevaVelX = 0;
+                            nuevaVelY = 0;
                             muerto = true;
                         }
                     break;
                     case "collide":
                         if(!revivir)
                         {
+                            nuevaVelX = velocidadX;
+                            nuevaVelY = velocidadY;
                             nuevoX = x;
                             nuevoY = y;
                         }
@@ -219,41 +229,40 @@ public class Player extends Entity {
                         revivir = true;
                         nuevoX = x;
                         nuevoY = y;
+                        nuevaVelX = 0;
+                        nuevaVelY = 0;
                         muerto = false;
-                        nuevaVida = healthMax;
+                        nuevaVida = healtMax;
                     break;
                     case "despawn":
+                        //Considera que el jugador sale del juego
                         destruido = true;
                     break;
                 }
             }
         }
-        Player nuevoJugador = new Player(id, nuevosProyectiles, muerto, leave, nuevaVida, healthMax, nuevoX, nuevoY, name, destruido);
+        NavePlayer nuevoJugador = new NavePlayer(id, nuevosProyectiles, muerto, leave, nuevaVida, healtMax, nuevoX, nuevoY, name, destruido, velocidadX, velocidadY);
         return nuevoJugador;
     }
     
-    public void setState(Player nuevoJ)
+    public void setState(NavePlayer nuevoJ)
     {
         super.setState(nuevoJ);
         id = nuevoJ.id;
         countProjectile = nuevoJ.countProjectile;
         health = nuevoJ.health;
-        healthMax = nuevoJ.healthMax;
+        healtMax = nuevoJ.healtMax;
         dead = nuevoJ.dead;
     }
 
+    @Override
     public JSONObject toJSON()
     {
         JSONObject jJugador = new JSONObject();
         JSONObject atributo = new JSONObject();
         
         atributo.put("super", super.toJSON());
-        atributo.put("id", id);
-        atributo.put("countProjectile", countProjectile);
-        atributo.put("dead", dead);
-        atributo.put("health", health);
-        atributo.put("healthMax", healthMax);
-        jJugador.put("Payer", atributo);
+        jJugador.put("NavePlayer", atributo);
         
         return jJugador;
     }

@@ -110,8 +110,8 @@ public class Game implements Runnable {
     public void init() {
         //TODO crear estados dinamicos y estaticos
         /*Babylon init*/
-        //states.add(new World(new LinkedList<String>(), "World", false, null));
-
+        states.add(new World(new LinkedList<String>(), "World", false, null));
+        
         /*Phaser init*/
         //try {
         /*File map = new File(this.getClass().getClassLoader().getResource("files/map.csv").toURI());

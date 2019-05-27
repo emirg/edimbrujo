@@ -10,16 +10,16 @@ import org.json.simple.JSONObject;
 
 public class Entity extends State {
 
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
 
-    public Entity(int x, int y, String name, boolean destroy, String id) {
+    public Entity(double x, double y, String name, boolean destroy, String id) {
         super(name, destroy, id == null ? UUID.randomUUID().toString() : id);
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
@@ -27,7 +27,7 @@ public class Entity extends State {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

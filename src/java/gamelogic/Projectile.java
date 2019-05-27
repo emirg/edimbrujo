@@ -12,11 +12,11 @@ public class Projectile extends Entity {
 
     protected String id;
     protected int number;
-    protected int xVelocity;
-    protected int yVelocity;
+    protected double xVelocity;
+    protected double yVelocity;
 
-    public Projectile(String id, int number, int xVelocity, int yVelocity, int x, int y, String name, boolean destroy) {
-        super(x, y, name, destroy);
+    public Projectile(String id, int number, double xVelocity, double yVelocity, double x, double y, String name, boolean destroy) {
+        super(x, y, "Projectile", destroy, id);
         this.id = id;
         this.number = number;
         this.xVelocity = xVelocity;
@@ -24,13 +24,13 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) 
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) 
     {
         
         for (State state : states) {
-            if (state.getName().equals("Player") && !((Player) state).dead)
+            if (state.getName().equals("Player") && !((NavePlayer) state).dead)
             {
-                Player player = ((Player) state);
+                NavePlayer player = ((NavePlayer) state);
                 
                 if (x == player.x && y == player.y) 
                 {
@@ -43,11 +43,11 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public State next(LinkedList<State> estados, LinkedList<StaticState> estadosEst, HashMap<String, Action> acciones) 
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) 
     {
         hasChanged = true;
-        int nuevoX = x + xVelocity;
-        int nuevoY = y + yVelocity;
+        double nuevoX = x + xVelocity;
+        double nuevoY = y + yVelocity;
         boolean destruido = destroy;
         
         //falta considerar que es un mundo de 360°
@@ -86,7 +86,6 @@ public class Projectile extends Entity {
         JSONObject jsonArrow = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
-        jsonAttrs.put("id", id);
         jsonAttrs.put("number", number);
         jsonAttrs.put("xVelocity", x);
         jsonAttrs.put("yVelocity", y);

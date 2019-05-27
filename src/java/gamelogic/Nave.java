@@ -7,8 +7,10 @@ package gamelogic;
 
 import engine.Action;
 import engine.State;
+import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -20,25 +22,30 @@ public abstract class Nave extends Entity
     protected int healtMax;
     protected boolean dead;
     protected int countProjectile;
+    protected boolean leave;
+    protected double velocidadX;
+    protected double velocidadY;
     //depende de como tratemos la orientacion puede no ser un int
-    protected int orientacion;
     
-    public Nave(String id, int x, int y, String name, int h, int hM, int orientacion)
+    public Nave(String id, double x, double y, String name, int h, int hM, double oriX, double oriY)
     {
         super(x,y,name,false,id);
         this.health = h;
         this.healtMax = hM;
+        this.leave = false;
         this.dead = false;
         this.countProjectile = 0;
-        this.orientacion = orientacion;
-        
+        this.velocidadX = oriX;
+        this.velocidadY = oriY;
         
     }
-    public LinkedList<State> generate(LinkedList<State> estados, HashMap <String, LinkedList<Action>> acciones)
+    @Override
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions)
     {
         return null;
     }
-    public Nave next(HashMap <String , LinkedList<Action>> acciones)
+    
+    public Nave next(LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions)
     {
         hasChanged = false;
         return this;
@@ -84,4 +91,22 @@ public abstract class Nave extends Entity
         this.countProjectile = countProjectile;
     }
     
+     @Override
+    public JSONObject toJSON()
+    {
+        JSONObject jNave = new JSONObject();
+        JSONObject atributo = new JSONObject();
+        
+        atributo.put("super", super.toJSON());
+        atributo.put("countProjectile", countProjectile);
+        atributo.put("dead", dead);
+        atributo.put("health", health);
+        atributo.put("healthMax", healtMax);
+        atributo.put("leave", leave);
+        atributo.put("velocidadX", velocidadX);
+        atributo.put("velocidadY", velocidadY);
+        jNave.put("Nave", atributo);
+        
+        return jNave;
+    }
 }

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
 import org.json.simple.JSONObject;
-import gamelogic.Player;
+import gamelogic.NavePlayer;
 
 public abstract class State {
 
