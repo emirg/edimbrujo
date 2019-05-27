@@ -29,12 +29,13 @@ public class Asteroide extends Entity {
         this.velocidadY = velocidadY;
     }
 
+    @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, LinkedList<Action>> actions) {
 
         for (State state : states) {
-            if (state.getName().equals("Player") && !((Player) state).dead) { // Player o Nave, dependiendo cual dejemos
-                Player player = ((Player) state);
+            if (state.getName().equals("Player") && !((NavePlayer) state).dead) { // Player o Nave, dependiendo cual dejemos
+                NavePlayer player = ((NavePlayer) state);
                 if (x == player.x && y == player.y) { // Esto va a cambiar segun si terminamos usando una libreria
                                                       // fisica
                     state.addEvent("hit");
@@ -46,6 +47,7 @@ public class Asteroide extends Entity {
         return null;
     }
 
+    @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true;

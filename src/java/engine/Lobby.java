@@ -14,7 +14,8 @@ public class Lobby {
         threadGame.start();
     }
 
-    public synchronized static Lobby startGame() {
+    public synchronized static Lobby startGame() 
+    {
         if (lobby == null) {
             lobby = new Lobby();
         }

@@ -27,14 +27,14 @@ public abstract class Nave extends Entity
     protected double velocidadY;
     //depende de como tratemos la orientacion puede no ser un int
     
-    public Nave(String id, double x, double y, String name, int h, int hM, double oriX, double oriY)
+    public Nave(String id, double x, double y, String name, int h, int hM, double oriX, double oriY, int cantProj, boolean leave, boolean dead)
     {
         super(x,y,name,false,id);
         this.health = h;
         this.healtMax = hM;
-        this.leave = false;
-        this.dead = false;
-        this.countProjectile = 0;
+        this.leave = leave;
+        this.dead = dead;
+        this.countProjectile = cantProj;
         this.velocidadX = oriX;
         this.velocidadY = oriY;
         

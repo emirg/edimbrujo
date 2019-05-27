@@ -43,6 +43,6 @@ public class World extends State
     {
         hasChanged = false;
         LinkedList<String> nuevosJugadores = (LinkedList<String>) players.clone();
-        
+        return null;
     }
 }

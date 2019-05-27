@@ -1,5 +1,8 @@
 package gamelogic;
 
+import engine.Action;
+import engine.State;
+import engine.StaticState;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,14 +15,14 @@ public class Match extends State {
     protected LinkedList<String> players;
     protected LinkedList<String> playingPlayers;
 
-    public Match(LinkedList<String> players, LinkedList<String> playingPlayers, boolean destroy) {
-        super(name, destroy);
+    public Match(String id, LinkedList<String> players, LinkedList<String> playingPlayers, boolean destroy) {
+        super("Match", destroy, id);
         this.players = players;
         this.playingPlayers = playingPlayers;
     }
 
     @Override
-    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, Action> actions) {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = false;
         LinkedList<String> newPlayers = (LinkedList<String>) players.clone();
         LinkedList<String> newPlayingPlayers = (LinkedList<String>) playingPlayers.clone();

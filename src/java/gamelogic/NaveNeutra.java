@@ -24,9 +24,9 @@ public class NaveNeutra extends Nave
    
     private String propietario;
     
-    public NaveNeutra(String id, double x, double y, int h, int hM, double oriX, double oriY, String prop)
+    public NaveNeutra(String id, double x, double y, int h, int hM, double oriX, double oriY, String prop, int countProjectile, boolean leave, boolean dead)
     {
-        super(id,x,y,"Neutra",h,hM,oriX,oriY);
+        super(id,x,y,"Neutra",h,hM,oriX,oriY, countProjectile, leave, dead);
         
         this.propietario = prop;
         
@@ -113,6 +113,8 @@ public class NaveNeutra extends Nave
         LinkedList<Action> listAccion = acciones.get(id);
         double nuevoX = x;
         double nuevoY = y;
+        double nuevaVelX = velocidadX;
+        double nuevaVelY = velocidadY;
         
         if(listAccion != null)
         {
@@ -124,16 +126,16 @@ public class NaveNeutra extends Nave
                     switch(accion.getName())
                     {
                         case "up":
-                            nuevoX = x - velocidadX;
+                            nuevoX = x - nuevaVelX;
                         break;
                         case "down":
-                            nuevoX = x + velocidadX;
+                            nuevoX = x + nuevaVelX;
                         break;
                         case "left":
-                            nuevoY = y - velocidadY;
+                            nuevoY = y - nuevaVelY;
                         break;
                         case "right":
-                            nuevoY = y + velocidadY;
+                            nuevoY = y + nuevaVelY;
                         break;
                     }
                 }
@@ -155,6 +157,9 @@ public class NaveNeutra extends Nave
         boolean muerto = dead;
         int nuevaVida = health;
         boolean destruido = destroy;
+        double nuevaVelX = velocidadX;
+        double nuevaVelY = velocidadY;
+        
         if(!listAccion.isEmpty())
         {
             for(Action accion : listAccion)
@@ -165,16 +170,16 @@ public class NaveNeutra extends Nave
                     switch(accion.getName())
                     {
                         case "up":
-                            nuevoX = x - velocidadX;
+                            nuevoX = x - nuevaVelX;
                             break;
                         case "down":
-                            nuevoX = x + velocidadX;
+                            nuevoX = x + nuevaVelX;
                             break;
                         case "left":
-                            nuevoY = y - velocidadY;
+                            nuevoY = y - nuevaVelY;
                             break;
                         case "right":
-                            nuevoY = y + velocidadY;
+                            nuevoY = y + nuevaVelY;
                             break;
                         case "fire":
                             nuevosProyectiles++;

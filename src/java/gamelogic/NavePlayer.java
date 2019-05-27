@@ -16,7 +16,7 @@ public class NavePlayer extends Nave {
     public NavePlayer(String id, int countProjectile, boolean dead, boolean leave, int health,
             int healthMax, double x, double y, String name, boolean destroy, double oriX, double oriY) 
     {
-        super(id,x,y,"Player",health,healthMax,oriX, oriY);
+        super(id,x,y,"Player",health,healthMax,oriX, oriY, countProjectile, leave, dead);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class NavePlayer extends Nave {
         
         if(listAccion != null)
         {
-            //Revisar
+            
             for(Action accion : listAccion)
             {
                 if(accion != null)
@@ -216,6 +216,7 @@ public class NavePlayer extends Nave {
                             muerto = true;
                         }
                     break;
+                    //ver colisiones
                     case "collide":
                         if(!revivir)
                         {

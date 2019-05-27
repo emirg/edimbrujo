@@ -2,6 +2,7 @@ package engine;
 
 import gamelogic.World;
 import gamelogic.Match;
+import gamelogic.NavePlayer;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
@@ -110,8 +111,8 @@ public class Game implements Runnable {
     public void init() {
         //TODO crear estados dinamicos y estaticos
         /*Babylon init*/
-        states.add(new World(new LinkedList<String>(), "World", false, null));
-        
+        //states.add(new World(new LinkedList<String>(), "World", false, null));
+        states.add(new NavePlayer("7f8",10,false,false,50,50,10,10,"player",false,1.5,1.5));
         /*Phaser init*/
         //try {
         /*File map = new File(this.getClass().getClassLoader().getResource("files/map.csv").toURI());
@@ -126,7 +127,7 @@ public class Game implements Runnable {
         }*/
     }
 
-    private void loadMap(File fileMap) {
+ /*   private void loadMap(File fileMap) {
         try {
             String linea;
             HashMap<Point, Integer> cells = new HashMap<>();
@@ -148,7 +149,7 @@ public class Game implements Runnable {
         }
     }
 
-   
+   */
 
     private void createStaticState() {
         JSONObject jsonStaticStates = new JSONObject();
