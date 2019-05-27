@@ -1,4 +1,4 @@
-
+var config = {
     type: Phaser.AUTO,
     parent: 'map',
     width: window.innerWidth,
