@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 import org.json.simple.JSONObject;
+import org.dyn4j.collision.Collisions;
 
 public class NavePlayer extends Nave {
 
