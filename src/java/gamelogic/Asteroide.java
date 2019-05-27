@@ -35,7 +35,8 @@ public class Asteroide extends Entity {
         for (State state : states) {
             if (state.getName().equals("Player") && !((Player) state).dead) { // Player o Nave, dependiendo cual dejemos
                 Player player = ((Player) state);
-                if (x == player.x && y == player.y) {
+                if (x == player.x && y == player.y) { // Esto va a cambiar segun si terminamos usando una libreria
+                                                      // fisica
                     state.addEvent("hit");
                     this.addEvent("collide");
                 }
