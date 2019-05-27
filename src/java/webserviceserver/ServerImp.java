@@ -5,7 +5,7 @@
  */
 package webserviceserver;
 
-import gamelogic.Lobby;
+import engine.Lobby;
 import java.security.SecureRandom;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -33,8 +33,7 @@ public class ServerImp {
         lobby = Lobby.startGame();
         SecureRandom random = new SecureRandom();
         rol = rol + random.nextInt(1000000000);
-        //    String session = bytes.toString();
-        lobby.addPlayer(rol);
+        // String session = bytes.toString();
         lobby.addAction(rol, "enter");
         return rol;
     }
@@ -59,7 +58,8 @@ public class ServerImp {
 
         lobby = Lobby.startGame();
         if (action.equalsIgnoreCase("fire")) {
-            String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + 1 + "\"},{\"name\": \"y\", \"value\": \"" + 1 + "\"}]}";
+            String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \""
+                    + 1 + "\"},{\"name\": \"y\", \"value\": \"" + 1 + "\"}]}";
             System.out.println(fire);
             lobby.addAction(session, fire);
 
@@ -72,10 +72,12 @@ public class ServerImp {
 
     @GET
     @Path("/actionFire")
-    public String rangeAtack(@QueryParam("x") String x, @QueryParam("y") String y, @QueryParam("session") String session) {
+    public String rangeAtack(@QueryParam("x") String x, @QueryParam("y") String y,
+            @QueryParam("session") String session) {
 
         lobby = Lobby.startGame();
-        String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
+        String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x
+                + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
         System.out.println(fire);
         lobby.addAction(session, fire);
         return "okey";
@@ -84,58 +86,52 @@ public class ServerImp {
 
     @GET
     @Path("/ready")
-    public String ready(@QueryParam("session") String session){
-        
+    public String ready(@QueryParam("session") String session) {
+
         lobby = Lobby.startGame();
         lobby.addAction(session, "ready");
         return "okey";
-        
+
     }
 
     @GET
-        @Path("/getFullState")
-        public String getFullState() throws InterruptedException {
+    @Path("/getFullState")
+    public String getFullState() throws InterruptedException {
         lobby = Lobby.startGame();
         String state = "error";
         try {
             state = lobby.getFullState();
-        
 
-} catch (InterruptedException ex) {
-            Logger.getLogger(ServerImp.class
-.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return state;
     }
-    
+
     @GET
-        @Path("/getFullStaticState")
-        public String getFullStaticState() {
+    @Path("/getFullStaticState")
+    public String getFullStaticState() {
         lobby = Lobby.startGame();
         String state = "error";
         try {
             state = lobby.getStaticState();
-        
 
-} catch (InterruptedException ex) {
-            Logger.getLogger(ServerImp.class
-.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return state;
     }
 
     @GET
-        @Path("/getState")
-        public String getState() {
+    @Path("/getState")
+    public String getState() {
         lobby = Lobby.startGame();
         String state = "error";
         try {
             state = lobby.getState();
-        
 
-} catch (InterruptedException ex) {
-            Logger.getLogger(ServerImp.class
-.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return state;
     }
