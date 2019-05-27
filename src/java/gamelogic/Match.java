@@ -48,12 +48,9 @@ public class Match extends State {
         endGame = ((Match) newMatch).endGame;
         endRound = ((Match) newMatch).endRound;
         startGame = ((Match) newMatch).startGame;
-        teamAttacker = ((Match) newMatch).teamAttacker;
-        sizeTeam = ((Match) newMatch).sizeTeam;
         players = ((Match) newMatch).players;
         playingPlayers = ((Match) newMatch).playingPlayers;
         ready = ((Match) newMatch).ready;
-        teamPoints = ((Match) newMatch).teamPoints;
     }
 
     @Override
@@ -72,7 +69,7 @@ public class Match extends State {
         jsonAttrs.put("endGame", endGame);
         jsonAttrs.put("endRound", endRound);
         jsonAttrs.put("startGame", startGame);
-        jsonAttrs.put("teamAttacker", teamAttacker);
+        //jsonAttrs.put("teamAttacker", teamAttacker);
         jsonAttrs.put("sizeTeam", sizeTeam);
 
         JSONArray jsonPlayers = new JSONArray();
@@ -97,7 +94,7 @@ public class Match extends State {
         for (Integer teamPoint : teamPoints) {
             jsonTeamPoints.add(teamPoint);
         }
-        jsonAttrs.put("teamPoints", jsonTeamPoints);
+        //jsonAttrs.put("teamPoints", jsonTeamPoints);
 
         jsonMatch.put("Match", jsonAttrs);
         return jsonMatch;
