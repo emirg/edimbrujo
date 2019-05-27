@@ -15,8 +15,8 @@ input{
 #scene{
     position: relative;
     top:0px;
-    width: 880px;
-    height: 880px;
+    width: auto;
+    height: auto;
     margin: auto;
 }
 

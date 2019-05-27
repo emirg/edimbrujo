@@ -1,35 +1,130 @@
-var socket;
-var socketID = "";
 
-var config = {
     type: Phaser.AUTO,
-    width: 880,
-    height: 880,
-    backgroundColor: '#b8b8b8',
     parent: 'map',
-
+    width: window.innerWidth,
+    height: window.innerHeight,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 4500,
+        height: 2048,
+    },
+    physics: {
+      default: "arcade",
+      arcade: {
+        fps: 60,
+        gravity: { y: 0 }
+      }
+    },
     scene: {
-        preload: preload,
-        create: create,
-
+      preload: preload,
+      create: create,
+      update: update,
     }
-    //scene: [Credits, Instructions, MainMenu, Pause, EndGame, JuegoScene]
-};
+  };
 
 var game = new Phaser.Game(config);
+var socket;
+var socketID = "";
+//dimenciones juego
+var width= 4500;
+var height= 2048;
 
 function preload() {
-    //game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON);
-    //game.load.spritesheet('tileset', 'assets/map/tilesheet.png',32,32);
-    //game.load.image('sprite','assets/sprites/sprite.png');
-    this.load.image('mapa', 'images/mapa_solo.jpeg');
-}
+    //backgroud
+    this.load.image('background', 'assets/tests/space/nebula.jpg');
+    //starts
+    this.load.image('stars', 'assets/tests/space/stars.png');
+    //space 
+    this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
+    // nave
+    this.load.spritesheet('ship', 'assets/games/asteroids/ship.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    //coins
+    this.load.spritesheet("coin", "assets/sprites/coin.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    //sprite explosion
+    this.load.spritesheet("explosion","assets/sprites/explosion.png",{
+        frameWidth: 64,
+        frameHeight: 64
+    });  
+    // crear efecto de barra cargandose 
+    this.fullBar = this.add.graphics();
+    this.fullBar.fillStyle(0xda7a34, 1);
+    this.fullBar.fillRect((this.cameras.main.width / 4)-2,(this.cameras.main.height /2) - 18, (this.cameras.main.width / 2) + 4, 20);
+    this.progress = this.add.graphics();
+  }
 
-function create() {
-    background = this.add.image(440, 440, 'mapa');
-}
+  function create() {
+    //  Prepare some spritesheets and animations
+    this.textures.addSpriteSheetFromAtlas('mine-sheet', { atlas: 'space', frame: 'mine', frameWidth: 64 });
+    this.textures.addSpriteSheetFromAtlas('asteroid1-sheet', { atlas: 'space', frame: 'asteroid1', frameWidth: 96 });
+    this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', { atlas: 'space', frame: 'asteroid2', frameWidth: 96 });
+    this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', { atlas: 'space', frame: 'asteroid3', frameWidth: 96 });
+    this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', { atlas: 'space', frame: 'asteroid4', frameWidth: 64 });
+    this.textures.addSpriteSheetFromAtlas('explosion-sheet', { atlas: 'space', frame: 'asteroid1', frameWidth: 96 });
 
-function fire(x, y) {
+
+
+    this.anims.create({ key: 'mine-anim', frames: this.anims.generateFrameNumbers('mine-sheet', { start: 0, end: 15 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid1-anim', frames: this.anims.generateFrameNumbers('asteroid1-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid2-anim', frames: this.anims.generateFrameNumbers('asteroid2-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid3-anim', frames: this.anims.generateFrameNumbers('asteroid3-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({key: 'efectoMoneda',frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 5 }),frameRate: 10,repeat: -1});
+    this.anims.create({ key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 23 }), frameRate: 100, repeat: 1 });
+    
+    //world 2048*2048
+    this.physics.world.setBounds(0,0,width,height);
+
+    //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
+    background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
+
+    //  agrego planetas ,etc
+    this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
+    this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
+    var galaxy = this.add.image(3500 ,1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+
+    //efecto estres de luz
+    for (var i = 0; i < 6; i++)
+    {
+        this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
+    }
+    //estrellas
+    stars = this.add.tileSprite(400, 300, 2000, 2000, 'stars').setScrollFactor(0);
+
+    // coins
+    //coins = this.physics.add.sprite(900, 450, 'coin');
+
+    //animacion moneda
+    this.anims.create({
+        key: "moneda-anim",
+        frames: this.anims.generateFrameNumbers("coin", { start: 0, end: 5 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    //animacion galaxia
+    this.tweens.add({
+        targets: galaxy,
+        angle: 360,
+        duration: 100000,
+        ease: 'Linear',
+        loop: -1
+    });
+
+  }
+
+  function update (time, delta)
+    {
+
+    }
+
+  function fire(x, y) {
     socket.send('{"name": "fire", "priority": "1","parameters": [{"name": "x", "value": "' + x + '"},{"name": "y", "value": "' + y + '"}]}');
 }
 
@@ -77,7 +172,6 @@ window.onload = function () {
                     console.log(gameState[i]["Map"]);
                     var width = gameState[i]["Map"]["width"];
                     var height = gameState[i]["Map"]["height"];
-                    /*
                     var j = 0;
                     var x;
                     var y;
@@ -95,17 +189,17 @@ window.onload = function () {
                             cell.style.visibility = "hidden";
                         }
                         j++;
-                        */
-                    //}
-                    //terrain.style.width = width * ($(".cell").width + 2) + "px";
-                    //terrain.style.height = height * ($(".cell").height() + 2) + "px";
+                    }
+                    terrain.style.width = width * ($(".cell").width + 2) + "px";
+                    terrain.style.height = height * ($(".cell").height() + 2) + "px";
                     //game2.style.width = width * ($(".cell").width() + 2) + "px";
 
-                    //scene.style.width = width * ($(".cell").width() + 2) + "px";
-                    //scene.style.height = height * ($(".cell").height() + 2) + "px";
+                    scene.style.width = width * ($(".cell").width() + 2) + "px";
+                    scene.style.height = height * ($(".cell").height() + 2) + "px";
 
                     //terrain.style.height = height * ($(".cell").height() + 2) + "px";
                     //game2.style.height = height * ($(".cell").height() + 2) + "px";
+                    
                 } else if (typeof gameState[i]["Player"] !== "undefined") {
                     //console.log(gameState[i]["Player"]);
                     var id = gameState[i]["Player"]["id"];
@@ -232,22 +326,6 @@ window.onload = function () {
             }
         }
     }
-
-
-    //evento al presionar el boton de Enviar Accion
-    /*sendAction.addEventListener("click", function () {
-     var actionValue = action.options[action.selectedIndex].value;
-     socket.send(actionValue);
-     });*/
-
-    ready.addEventListener("click", function () {
-        socket.send("ready");
-    });
-    
-    restart.addEventListener("click", function () {
-        socket.send("restart");
-    });
-
     var Key = {
         _pressed: {},
 
@@ -318,52 +396,4 @@ window.onload = function () {
         }
     }
 
-    //evento para fire 
-    $(document).ready(function () {
-        $("#scene").mousedown(function (event) {
-            var relX = event.pageX - $(this).offset().left;
-            var relY = event.pageY - $(this).offset().top;
-            relX = parseInt(relX / ($(".cell").width() + 2));
-            relY = parseInt(relY / ($(".cell").height() + 2));
-            //console.log("(" + relX + "," + relY + ")");
-            fire(relX, relY);
-        });
-    });
 }
-
-/*Game.create = function(){
- Game.playerMap = {};
- var testKey = game2.input.keyboard.addKey(Phaser.Keyboard.ENTER);
- testKey.onDown.add(Client.sendTest, this);
- var map = game2.add.tilemap('map');
- map.addTilesetImage('tilesheet', 'tileset'); // tilesheet is the key of the tileset in map's JSON file
- var layer;
- for(var i = 0; i < map.layers.length; i++) {
- layer = map.createLayer(i);
- }
- layer.inputEnabled = true; // Allows clicking on the map ; it's enough to do it on the last layer
- layer.events.onInputUp.add(Game.getCoordinates, this);
- Client.askNewPlayer();
- };
- 
- Game.getCoordinates = function(layer,pointer){
- Client.sendClick(pointer.worldX,pointer.worldY);
- };
- 
- Game.addNewPlayer = function(id,x,y){
- Game.playerMap[id] = game2.add.sprite(x,y,'sprite');
- };
- 
- Game.movePlayer = function(id,x,y){
- var player = Game.playerMap[id];
- var distance = Phaser.Math.distance(player.x,player.y,x,y);
- var tween = game2.add.tween(player);
- var duration = distance*10;
- tween.to({x:x,y:y}, duration);
- tween.start();
- };
- 
- Game.removePlayer = function(id){
- Game.playerMap[id].destroy();
- delete Game.playerMap[id];
- };*/
