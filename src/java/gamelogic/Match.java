@@ -20,7 +20,7 @@ public class Match extends State {
         this.players = players;
         this.playingPlayers = playingPlayers;
     }
-
+/*
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = false;
@@ -102,5 +102,5 @@ public class Match extends State {
         jsonMatch.put("Match", jsonAttrs);
         return jsonMatch;
     }
-
+*/
 }
