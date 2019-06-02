@@ -10,46 +10,37 @@ import org.json.simple.JSONObject;
 
 public class Projectile extends Entity {
 
-    protected String id;
     protected int number;
-    protected double xVelocity;
-    protected double yVelocity;
 
-    public Projectile(String id, int number, double xVelocity, double yVelocity, double x, double y, String name, boolean destroy) {
-        super(x, y, "Projectile", destroy, id);
-        this.id = id;
+    public Projectile(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int number) {
+        super("Projectile", destroy, id, x, y, velocidadX, velocidadY, 0, 0);
         this.number = number;
-        this.xVelocity = xVelocity;
-        this.yVelocity = yVelocity;
     }
 
     @Override
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) 
-    {
-        
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
+
         for (State state : states) {
-            if (state.getName().equals("Player") && !((NavePlayer) state).dead)
-            {
+            if (state.getName().equals("Player") && !((NavePlayer) state).dead) {
                 NavePlayer player = ((NavePlayer) state);
-                
-                if (x == player.x && y == player.y) 
-                {
+
+                if (x == player.x && y == player.y) {
                     state.addEvent("hit");
                     this.addEvent("collide");
                 }
-            }                 }
-            
+            }
+        }
+
         return null;
     }
 
     @Override
-    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) 
-    {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true;
         double nuevoX = x + xVelocity;
         double nuevoY = y + yVelocity;
         boolean destruido = destroy;
-        
+
         //falta considerar que es un mundo de 360°
         LinkedList<String> events = getEvents();
         if (!events.isEmpty()) {
