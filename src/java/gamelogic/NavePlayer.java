@@ -12,8 +12,17 @@ import org.dyn4j.collision.Collisions;
 
 public class NavePlayer extends Nave {
 
-    public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead, String prop) {
-        super("Player", id, x, y, velocidadX, velocidadY, h, hM, cantProj, leave, dead);
+    protected int health;
+    protected int healthMax;
+    protected boolean leave;
+    protected boolean dead;
+
+    public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead) {
+        super("Player", id, x, y, velocidadX, velocidadY, cantProj);
+        this.health = h;
+        this.healthMax = hM;
+        this.leave = leave;
+        this.dead = dead;
     }
 
     @Override
@@ -49,7 +58,7 @@ public class NavePlayer extends Nave {
                                             velocidadY = 0;
                                         }
                                     }
-                                    Projectile proyectil = new Projectile(id, countProjectile, velocidadX, velocidadY, x, y, "proyectil", false);
+                                    Projectile proyectil = new Projectile("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
                                     listProyectil.add(proyectil);
                                 }
 
@@ -76,8 +85,8 @@ public class NavePlayer extends Nave {
         LinkedList<Action> listAccion = acciones.get(id);
         double nuevoX = x;
         double nuevoY = y;
-        double nuevaVelX = velocidadX;
-        double nuevaVelY = velocidadY;
+        double nuevaVelX = velocidad.x;
+        double nuevaVelY = velocidad.y;
 
         if (listAccion != null) {
 
@@ -121,8 +130,8 @@ public class NavePlayer extends Nave {
         boolean muerto = dead;
         int nuevaVida = health;
         boolean destruido = destroy;
-        double nuevaVelX = velocidadX;
-        double nuevaVelY = velocidadY;
+        double nuevaVelX = velocidad.x;
+        double nuevaVelY = velocidad.y;
 
         if (listAccion != null) {
             for (Action accion : listAccion) {
@@ -140,11 +149,11 @@ public class NavePlayer extends Nave {
                                 break;
                             case "left":
                                 nuevaVelY++;
-                                nuevoY = y - velocidadY;
+                                nuevoY = y - velocidad.y;
                                 break;
                             case "rihgt":
                                 nuevaVelY++;
-                                nuevoY = y + velocidadY;
+                                nuevoY = y + velocidad.y;
                                 break;
                             case "fire":
                                 countProjectile++;
@@ -178,8 +187,8 @@ public class NavePlayer extends Nave {
                     //ver colisiones
                     case "collide":
                         if (!revivir) {
-                            nuevaVelX = velocidadX;
-                            nuevaVelY = velocidadY;
+                            nuevaVelX = velocidad.x;
+                            nuevaVelY = velocidad.y;
                             nuevoX = x;
                             nuevoY = y;
                         }
@@ -191,7 +200,7 @@ public class NavePlayer extends Nave {
                         nuevaVelX = 0;
                         nuevaVelY = 0;
                         muerto = false;
-                        nuevaVida = healtMax;
+                        nuevaVida = healthMax;
                         break;
                     case "despawn":
                         //Considera que el jugador sale del juego
@@ -200,16 +209,16 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(id, nuevosProyectiles, muerto, leave, nuevaVida, healtMax, nuevoX, nuevoY, name, destruido, velocidadX, velocidadY);
+        NavePlayer nuevoJugador = new NavePlayer(name, id, x, y, velocidad.x, velocidad.y, health, healthMax, countProjectile, leave, dead);
         return nuevoJugador;
     }
 
     public void setState(NavePlayer nuevoJ) {
         super.setState(nuevoJ);
         id = nuevoJ.id;
-        countProjectile = nuevoJ.countProjectile;
         health = nuevoJ.health;
-        healtMax = nuevoJ.healtMax;
+        healthMax = nuevoJ.healthMax;
+        leave = nuevoJ.leave;
         dead = nuevoJ.dead;
     }
 
@@ -219,6 +228,10 @@ public class NavePlayer extends Nave {
         JSONObject atributo = new JSONObject();
 
         atributo.put("super", super.toJSON());
+        atributo.put("health", health);
+        atributo.put("healthMax", healthMax);
+        atributo.put("leave", leave);
+        atributo.put("dead", dead);
         jJugador.put("NavePlayer", atributo);
 
         return jJugador;

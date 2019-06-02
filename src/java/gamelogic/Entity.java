@@ -75,6 +75,10 @@ public class Entity extends State {
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("x", x);
         jsonAttrs.put("y", y);
+        jsonAttrs.put("width", width);
+        jsonAttrs.put("height", height);
+        jsonAttrs.put("velocidadX", velocidad.x);
+        jsonAttrs.put("velocidadY", velocidad.y);
         jsonEntity.put("Entity", jsonAttrs);
         return jsonEntity;
     }

@@ -112,7 +112,7 @@ public class Game implements Runnable {
         //TODO crear estados dinamicos y estaticos
         /*Babylon init*/
         //states.add(new World(new LinkedList<String>(), "World", false, null));
-        states.add(new NavePlayer("Player", "7f8", 100, 100, 0, 0, 100, 100, 0, false, false, "Mio"));
+        states.add(new NavePlayer("Player", "7f8", 200, 200, 0, 0, 100, 100, 0, false, false));
 
         /*Phaser init*/
         //try {

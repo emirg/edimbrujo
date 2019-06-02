@@ -6,6 +6,7 @@ import engine.StaticState;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
 public class Projectile extends Entity {
@@ -37,8 +38,8 @@ public class Projectile extends Entity {
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true;
-        double nuevoX = x + xVelocity;
-        double nuevoY = y + yVelocity;
+        double nuevoX = x + velocidad.x;
+        double nuevoY = y + velocidad.y;
         boolean destruido = destroy;
 
         //falta considerar que es un mundo de 360°
@@ -53,7 +54,7 @@ public class Projectile extends Entity {
                 }
             }
         }
-        Projectile newArrow = new Projectile(id, number, xVelocity, yVelocity, nuevoX, nuevoY, name, destruido);
+        Projectile newArrow = new Projectile(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
         return newArrow;
     }
 
@@ -62,13 +63,12 @@ public class Projectile extends Entity {
         super.setState(newProjectile);
         id = ((Projectile) newProjectile).id;
         number = ((Projectile) newProjectile).number;
-        xVelocity = ((Projectile) newProjectile).xVelocity;
-        yVelocity = ((Projectile) newProjectile).yVelocity;
+        velocidad = new Vector2(velocidad.x, velocidad.y);
     }
 
     @Override
     protected Object clone() {
-        Projectile clon = new Projectile(id, number, xVelocity, yVelocity, x, y, name, destroy);
+        Projectile clon = new Projectile(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
         return clon;
     }
 

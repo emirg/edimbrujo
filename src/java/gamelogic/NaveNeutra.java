@@ -24,7 +24,7 @@ public class NaveNeutra extends Nave {
     private String propietario; // Podria ser una NavePlayer tambien
 
     public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead, String prop) {
-        super("Neutra", id, x, y, velocidadX, velocidadY, h, hM, cantProj, leave, dead);
+        super("Neutra", id, x, y, velocidadX, velocidadY, cantProj);
         this.propietario = prop;
     }
 
@@ -60,7 +60,7 @@ public class NaveNeutra extends Nave {
                                         velocidadY = 0;
                                     }
                                 }
-                                Projectile proyectil = new Projectile(id, countProjectile, velocidadX, velocidadY, x, y, "proyectil", false);
+                                Projectile proyectil = new Projectile("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
                                 nuevosEst.add(proyectil);
                             }
 
@@ -88,8 +88,8 @@ public class NaveNeutra extends Nave {
         LinkedList<Action> listAccion = acciones.get(id);
         double nuevoX = x;
         double nuevoY = y;
-        double nuevaVelX = velocidadX;
-        double nuevaVelY = velocidadY;
+        double nuevaVelX = velocidad.x;
+        double nuevaVelY = velocidad.y;
 
         if (listAccion != null) {
             //Revisar
@@ -123,42 +123,21 @@ public class NaveNeutra extends Nave {
         double nuevoX = x;
         double nuevoY = y;
         int nuevosProyectiles = countProjectile;
-        boolean salir = leave;
-        boolean muerto = dead;
-        int nuevaVida = health;
         boolean destruido = destroy;
-        double nuevaVelX = velocidadX;
-        double nuevaVelY = velocidadY;
+        double nuevaVelX = velocidad.x;
+        double nuevaVelY = velocidad.y;
 
         if (!listAccion.isEmpty()) {
             for (Action accion : listAccion) {
-                if (!dead) {
-                    hasChanged = true;
-                    switch (accion.getName()) {
-                        case "up":
-                            nuevoX = x - nuevaVelX;
-                            break;
-                        case "down":
-                            nuevoX = x + nuevaVelX;
-                            break;
-                        case "left":
-                            nuevoY = y - nuevaVelY;
-                            break;
-                        case "right":
-                            nuevoY = y + nuevaVelY;
-                            break;
-                        case "fire":
-                            nuevosProyectiles++;
-                            break;
-                        case "enter":
-                            salir = false;
-                            break;
-                        case "leave":
-                            salir = true;
-                    }
+                hasChanged = true;
+                switch (accion.getName()) {
+                    case "fire":
+                        nuevosProyectiles++;
+                        break;
                 }
             }
         }
+
         LinkedList<String> eventos = getEvents();
         if (!eventos.isEmpty()) {
             //Ver en que momento tiene un propietario
