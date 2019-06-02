@@ -133,7 +133,7 @@ window.onload = function () {
     page.href = window.location.href;
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
     var url = "ws://" + page.hostname + ":8080";
-    socket = new WebSocket(url + "/Edimbrujo/GameWebSocket");
+    socket = new WebSocket(url + "/StateEngine/GameWebSocket");
     socket.onmessage = stateUpdate;
 
     //mapa 
