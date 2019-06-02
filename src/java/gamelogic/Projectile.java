@@ -6,50 +6,42 @@ import engine.StaticState;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
 public class Projectile extends Entity {
 
-    protected String id;
     protected int number;
-    protected double xVelocity;
-    protected double yVelocity;
 
-    public Projectile(String id, int number, double xVelocity, double yVelocity, double x, double y, String name, boolean destroy) {
-        super(x, y, "Projectile", destroy, id);
-        this.id = id;
+    public Projectile(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int number) {
+        super("Projectile", destroy, id, x, y, velocidadX, velocidadY, 0, 0);
         this.number = number;
-        this.xVelocity = xVelocity;
-        this.yVelocity = yVelocity;
     }
 
     @Override
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) 
-    {
-        
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
+
         for (State state : states) {
-            if (state.getName().equals("Player") && !((NavePlayer) state).dead)
-            {
+            if (state.getName().equals("Player") && !((NavePlayer) state).dead) {
                 NavePlayer player = ((NavePlayer) state);
-                
-                if (x == player.x && y == player.y) 
-                {
+
+                if (x == player.x && y == player.y) {
                     state.addEvent("hit");
                     this.addEvent("collide");
                 }
-            }                 }
-            
+            }
+        }
+
         return null;
     }
 
     @Override
-    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) 
-    {
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true;
-        double nuevoX = x + xVelocity;
-        double nuevoY = y + yVelocity;
+        double nuevoX = x + velocidad.x;
+        double nuevoY = y + velocidad.y;
         boolean destruido = destroy;
-        
+
         //falta considerar que es un mundo de 360°
         LinkedList<String> events = getEvents();
         if (!events.isEmpty()) {
@@ -62,7 +54,7 @@ public class Projectile extends Entity {
                 }
             }
         }
-        Projectile newArrow = new Projectile(id, number, xVelocity, yVelocity, nuevoX, nuevoY, name, destruido);
+        Projectile newArrow = new Projectile(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
         return newArrow;
     }
 
@@ -71,13 +63,12 @@ public class Projectile extends Entity {
         super.setState(newProjectile);
         id = ((Projectile) newProjectile).id;
         number = ((Projectile) newProjectile).number;
-        xVelocity = ((Projectile) newProjectile).xVelocity;
-        yVelocity = ((Projectile) newProjectile).yVelocity;
+        velocidad = new Vector2(velocidad.x, velocidad.y);
     }
 
     @Override
     protected Object clone() {
-        Projectile clon = new Projectile(id, number, xVelocity, yVelocity, x, y, name, destroy);
+        Projectile clon = new Projectile(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
         return clon;
     }
 

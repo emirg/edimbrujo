@@ -18,15 +18,8 @@ import engine.StaticState;
  */
 public class Asteroide extends Entity {
 
-    protected double x; // La posicion deberia ser (double,double) o (int,int)?
-    protected double y;
-    protected double velocidadX;
-    protected double velocidadY;
-
-    public Asteroide(String id, double x, double y, String name, double velocidadX, double velocidadY) {
-        super(x, y, name, false, id);
-        this.velocidadX = velocidadX;
-        this.velocidadY = velocidadY;
+    public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY) {
+        super(name, false, id, x, y, velocidadX, velocidadY, 0, 0);
     }
 
     @Override
@@ -34,11 +27,18 @@ public class Asteroide extends Entity {
             HashMap<String, LinkedList<Action>> actions) {
 
         for (State state : states) {
-            if (state.getName().equals("Player") && !((NavePlayer) state).dead) { // Player o Nave, dependiendo cual dejemos
+            if (state.getName().equals("Player") && !((NavePlayer) state).dead) {
                 NavePlayer player = ((NavePlayer) state);
-                if (x == player.x && y == player.y) { // Esto va a cambiar segun si terminamos usando una libreria
-                                                      // fisica
-                    state.addEvent("hit");
+                double dist = Math.sqrt((player.x - this.x) * (player.x - this.x) + (player.y - this.y) * (player.y - this.y));
+                if (dist <= (this.width / 2 + player.width / 2) || dist <= (this.height / 2 + player.height / 2)) { // Esto va a cambiar segun si terminamos usando una libreria fisica
+                    state.addEvent("collide"); // Si la nave no muere entonces deberia ser un collide
+                    this.addEvent("collide");
+                }
+            } else if (state.getName().equals("Projectile") && !((NavePlayer) state).dead) {
+                Projectile projectile = ((Projectile) state);
+                double dist = Math.sqrt((projectile.x - this.x) * (projectile.x - this.x) + (projectile.y - this.y) * (projectile.y - this.y));
+                if (dist <= (this.width / 2 + projectile.width / 2) || dist <= (this.height / 2 + projectile.height / 2)) { // Esto va a cambiar segun si terminamos usando una libreria fisica
+                    state.addEvent("hit"); // Si la nave no muere entonces deberia ser un collide
                     this.addEvent("collide");
                 }
             }
@@ -50,19 +50,11 @@ public class Asteroide extends Entity {
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, LinkedList<Action>> actions) {
-        hasChanged = true;
-        double nuevoX = x + velocidadX;
-        double nuevoY = y + velocidadY;
-        // boolean destruido = destroy;
-
-        // falta considerar que es un mundo de 360°
-        /*
-         * LinkedList<String> events = getEvents(); if (!events.isEmpty()) { hasChanged
-         * = true; for (String event : events) { switch (event) { case "collide":
-         * destruido = true; break; } } }
-         */
-
-        Asteroide newAsteroide = new Asteroide(id, nuevoX, nuevoY, name, velocidadX, velocidadY);
+        hasChanged = true; // El asteroide siempre cambia porque siempre esta en movimiento
+        double nuevoX = x + velocidad.x;
+        double nuevoY = y + velocidad.y;
+        // La velocidad es constante 
+        Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y);
         return newAsteroide;
     }
 }

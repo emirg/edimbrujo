@@ -15,7 +15,8 @@ public class Match extends State {
     protected LinkedList<String> players;
     protected LinkedList<String> playingPlayers;
 
-    public Match(String id, LinkedList<String> players, LinkedList<String> playingPlayers, boolean destroy) {
+    public Match(String id, LinkedList<String> players, LinkedList<String> playingPlayers, boolean destroy) 
+    {
         super("Match", destroy, id);
         this.players = players;
         this.playingPlayers = playingPlayers;
@@ -26,39 +27,38 @@ public class Match extends State {
         hasChanged = false;
         LinkedList<String> newPlayers = (LinkedList<String>) players.clone();
         LinkedList<String> newPlayingPlayers = (LinkedList<String>) playingPlayers.clone();
-        for (java.util.Map.Entry<String, Action> actionEntry : actions.entrySet()) {
+        for (java.util.Map.Entry<String, LinkedList<Action>> actionEntry : actions.entrySet()) {
             String id = actionEntry.getKey();
-            Action action = actionEntry.getValue();
+            LinkedList<Action> action = actionEntry.getValue();
+            for(Action act:action)
+            {
             hasChanged = true;
-            switch (action.getName()) {
+            switch (act.getName()) {
                 case "enter":
                     newPlayers.add(id);
                     break;
                 case "leave":
                     newPlayers.remove(id);
                     newPlayingPlayers.remove(id);
-                    newReady.remove(id);
+                    //newReady.remove(id);
                     break;
             }
+            }
         }
+        return null;
     }
 
     @Override
     public void setState(State newMatch) {
         super.setState(newMatch);
-        round = ((Match) newMatch).round;
-        countRounds = ((Match) newMatch).countRounds;
-        endGame = ((Match) newMatch).endGame;
-        endRound = ((Match) newMatch).endRound;
-        startGame = ((Match) newMatch).startGame;
+        
         players = ((Match) newMatch).players;
         playingPlayers = ((Match) newMatch).playingPlayers;
-        ready = ((Match) newMatch).ready;
     }
 
     @Override
     protected Object clone() {
-        Match clon = new Match(round, countRounds, endGame, endRound, startGame, teamAttacker, sizeTeam, players, playingPlayers, ready, teamPoints, name, destroy);
+        Match clon = new Match(id,players, playingPlayers, destroy);
         return clon;
     }
 
@@ -67,13 +67,7 @@ public class Match extends State {
         JSONObject jsonMatch = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
-        jsonAttrs.put("round", round);
-        jsonAttrs.put("countRounds", countRounds);
-        jsonAttrs.put("endGame", endGame);
-        jsonAttrs.put("endRound", endRound);
-        jsonAttrs.put("startGame", startGame);
-        //jsonAttrs.put("teamAttacker", teamAttacker);
-        jsonAttrs.put("sizeTeam", sizeTeam);
+        
 
         JSONArray jsonPlayers = new JSONArray();
         for (String player : players) {
@@ -87,17 +81,7 @@ public class Match extends State {
         }
         jsonAttrs.put("playingPlayers", jsonPlayingPlayers);
 
-        JSONArray jsonReady = new JSONArray();
-        for (String aReady : ready) {
-            jsonReady.add(aReady);
-        }
-        jsonAttrs.put("ready", jsonReady);
-
-        JSONArray jsonTeamPoints = new JSONArray();
-        for (Integer teamPoint : teamPoints) {
-            jsonTeamPoints.add(teamPoint);
-        }
-        //jsonAttrs.put("teamPoints", jsonTeamPoints);
+        
 
         jsonMatch.put("Match", jsonAttrs);
         return jsonMatch;
