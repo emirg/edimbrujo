@@ -122,45 +122,34 @@ function create() {
 }
 
 function update(time, delta) {
-    /*if (typeof this.physics !== "undefined" && objetosNuevos.length > 0) {
-     console.log(objetosNuevos);
-     var x = objetosNuevos[0]["super"]["Nave"]["super"]["Entity"]["super"]["x"];
-     var y = objetosNuevos[0]["super"]["Nave"]["super"]["Entity"]["super"]["y"];
-     console.log("(x,y): " + x + y);
-     this.physics.add.sprite(x, y, "ship");
-     objetosNuevos.pop();
-     }*/
+    if (typeof this.physics !== "undefined" && objetosNuevos.length > 0) {
+        console.log(objetosNuevos);
+        nave = objetosNuevos.pop();
+        var x = nave["super"]["Nave"]["super"]["Entity"]["x"];
+        var y = nave["super"]["Nave"]["super"]["Entity"]["y"];
+        console.log("(x,y): " + x + y);
+        this.physics.add.sprite(x, y, "ship"); //sprite o image?
+    }
 }
 
 function stateUpdate(event) {
-    //console.log(socket);
-    //console.log(event.data);
+    // Esta entrando primero al stateUpdate y después al create de Phaser
     var gameState = JSON.parse(event.data);
-    //console.log(gameState);
-    //console.log("stateUpdate");
-    //var game2State = event.data;
+
     if (typeof gameState !== "undefined") {
-        //console.log(game2State);
         if (gameState["id"] !== "undefined" && socketID === "") {
             socketID = gameState["id"];
-            //console.log(socketID);
         }
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
-            // console.log(game2State[i]);
             if (typeof gameState[i]["NavePlayer"] !== "undefined") {
                 var nave = gameState[i]["NavePlayer"];
-                var health = nave["health"];
-                var x = nave["super"]["Nave"]["super"]["Entity"]["x"];
-                var y = nave["super"]["Nave"]["super"]["Entity"]["y"];
-                game.scene.scenes[0].add.image(x,y,'ship'); // Funciona pero cuando termina la pantalla de carga se va
-                // Puede que se este cargando una nueva escena 
-                // Esta entrando primero al stateUpdate y después al create de Phaser
+                objetosNuevos.push(nave);
             }
             i++;
         }
     }
-    //update();
+    update(); // No se si esta bien esto pero funciona 
 }
 
 
