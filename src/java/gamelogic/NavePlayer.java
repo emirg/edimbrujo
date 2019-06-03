@@ -137,23 +137,25 @@ public class NavePlayer extends Nave {
             for (Action accion : listAccion) {
                 if (accion != null) {
                     hasChanged = true;
+                    System.out.println("has change");
                     if (!dead) {
+
                         switch (accion.getName()) {
-                            case "up":
-                                nuevaVelX++;
-                                nuevoX = x - nuevaVelX;
-                                break;
-                            case "down":
-                                nuevaVelX++;
+                            case "right":
+                                nuevaVelX=5;
                                 nuevoX = x + nuevaVelX;
                                 break;
                             case "left":
-                                nuevaVelY++;
-                                nuevoY = y - velocidad.y;
+                                nuevaVelX=5;
+                                nuevoX = x - nuevaVelX;
                                 break;
-                            case "rihgt":
-                                nuevaVelY++;
-                                nuevoY = y + velocidad.y;
+                            case "up":
+                                nuevaVelY=5;
+                                nuevoY = y - nuevaVelY;
+                                break;
+                            case "down":
+                                nuevaVelY=5;
+                                nuevoY = y + nuevaVelY;
                                 break;
                             case "fire":
                                 countProjectile++;
@@ -209,7 +211,7 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, id, x, y, velocidad.x, velocidad.y, health, healthMax, countProjectile, leave, dead);
+        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX,nuevaVelY, health, healthMax, countProjectile, leave, dead);
         return nuevoJugador;
     }
 

@@ -27,6 +27,8 @@ var config = {
 var game = new Phaser.Game(config);
 var socket;
 var socketID = "";
+var players = [];
+var cursors;
 //dimensiones juego
 var width = 4500;
 var height = 2048;
@@ -35,14 +37,15 @@ function preload() {
     //backgroud
     this.load.image('background', 'assets/tests/space/nebula.jpg');
     //starts
-    this.load.image('stars', 'assets/tests/space/stars.png');
+    //this.load.image('stars', 'assets/tests/space/stars.png');
     //space 
-    this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
+    //this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
     // nave
     this.load.spritesheet('ship', 'assets/games/asteroids/ship.png', {
         frameWidth: 32,
         frameHeight: 32
     });
+    /*
     //coins
     this.load.spritesheet("coin", "assets/sprites/coin.png", {
         frameWidth: 32,
@@ -52,12 +55,12 @@ function preload() {
     this.load.spritesheet("explosion", "assets/sprites/explosion.png", {
         frameWidth: 64,
         frameHeight: 64
-    });
+    });*/
     // crear efecto de barra cargandose 
     this.fullBar = this.add.graphics();
     this.fullBar.fillStyle(0xda7a34, 1);
     this.fullBar.fillRect((this.cameras.main.width / 4) - 2, (this.cameras.main.height / 2) - 18, (this.cameras.main.width / 2) + 4, 20);
-    this.progress = this.add.graphics();
+    this.progress = this.add.graphics()
 }
 
 function create() {
@@ -87,10 +90,10 @@ function create() {
     background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
 
     //  agrego planetas ,etc
-    this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
-    this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
-
+    //this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
+    //this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
+    //var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    /*
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
@@ -118,42 +121,36 @@ function create() {
         ease: 'Linear',
         loop: -1
     });
-
+*/
+cursors = this.input.keyboard.createCursorKeys();
 }
 
-function update(time, delta) {
-    if (typeof this.physics !== "undefined" && objetosNuevos.length > 0) {
-        console.log(objetosNuevos);
-        nave = objetosNuevos.pop();
-        var x = nave["super"]["Nave"]["super"]["Entity"]["x"];
-        var y = nave["super"]["Nave"]["super"]["Entity"]["y"];
-        console.log("(x,y): " + x + y);
-        this.physics.add.sprite(x, y, "ship"); //sprite o image?
+function update (time, delta)
+{
+   // console.log(socket);
+  //acciones cursor
+    if (cursors.left.isDown)
+    {
+        socket.send("left");
     }
-}
-
-function stateUpdate(event) {
-    // Esta entrando primero al stateUpdate y después al create de Phaser
-    var gameState = JSON.parse(event.data);
-
-    if (typeof gameState !== "undefined") {
-        if (gameState["id"] !== "undefined" && socketID === "") {
-            socketID = gameState["id"];
-        }
-        var i = 0;
-        while (typeof gameState[i] !== "undefined") {
-            if (typeof gameState[i]["NavePlayer"] !== "undefined") {
-                var nave = gameState[i]["NavePlayer"];
-                objetosNuevos.push(nave);
-            }
-            i++;
-        }
+    if (cursors.right.isDown)
+    {
+        socket.send("right");
     }
-    update(); // No se si esta bien esto pero funciona 
+    if (cursors.up.isDown)
+    {
+        socket.send("up");
+    }
+    if(cursors.down.isDown)
+    {
+        socket.send("down");
+    }
+   
 }
 
 
 window.onload = function () {
+    // Crea la conexion con WebSocket
     var page = document.createElement('a');
     page.href = window.location.href;
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
@@ -161,231 +158,45 @@ window.onload = function () {
     socket = new WebSocket(url + "/StateEngine/GameWebSocket");
     socket.onmessage = stateUpdate;
 
-    //var playerTeam = [];
-    //var sendAction = document.getElementById("sendAction");
-    //var action = document.getElementById("action");
-
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
+    function stateUpdate(event) {
+        //console.log(socket);
+        //console.log(event.data);
+        var gameState = JSON.parse(event.data);
+        console.log(gameState);
 
-    var Key = {
-        _pressed: {},
-
-        LEFT: 37,
-        UP: 38,
-        RIGHT: 39,
-        DOWN: 40,
-        FIRE: 32,
-        ALTLEFT: 65,
-        ALTUP: 87,
-        ALTRIGHT: 68,
-        ALTDOWN: 83,
-
-        areDown: function (keyCodes) {
-            var pressed = false;
-            var i = 0;
-            while (!pressed && i < keyCodes.length) {
-                pressed = this._pressed[keyCodes[i]];
-                i++;
-            }
-            return pressed;
-        },
-
-        isDown: function (keyCode) {
-            return this._pressed[keyCode];
-        },
-
-        onKeydown: function (event) {
-            this._pressed[event.keyCode] = true;
-        },
-
-        onKeyup: function (event) {
-            delete this._pressed[event.keyCode];
-        }
-    };
-
-    window.addEventListener('keyup', function (event) {
-        Key.onKeyup(event);
-    }, false);
-    window.addEventListener('keydown', function (event) {
-        Key.onKeydown(event);
-    }, false);
-
-    window.setInterval(function () {
-        updateKeyboard();
-    }, 100);
-
-    function updateKeyboard() {
-        if (Key.areDown([Key.UP, Key.ALTUP]) && Key.areDown([Key.LEFT, Key.ALTLEFT])) {
-            socket.send("upleft");
-        } else if (Key.areDown([Key.UP, Key.ALTUP]) && Key.areDown([Key.RIGHT, Key.ALTRIGHT])) {
-            socket.send("upright");
-        } else if (Key.areDown([Key.DOWN, Key.ALTDOWN]) && Key.areDown([Key.LEFT, Key.ALTLEFT])) {
-            socket.send("downleft");
-        } else if (Key.areDown([Key.DOWN, Key.ALTDOWN]) && Key.areDown([Key.RIGHT, Key.ALTRIGHT])) {
-            socket.send("downright");
-        } else if (Key.areDown([Key.UP, Key.ALTUP])) {
-            socket.send("up");
-        } else if (Key.areDown([Key.LEFT, Key.ALTLEFT])) {
-            socket.send("left");
-        } else if (Key.areDown([Key.DOWN, Key.ALTDOWN])) {
-            socket.send("down");
-        } else if (Key.areDown([Key.RIGHT, Key.ALTRIGHT])) {
-            socket.send("right");
-        }
-        if (Key.isDown(Key.FIRE)) {
-            fire(1, 1);
-        }
-    }
-}
-
-
-
-
-function stateUpdateViejo(event) {
-    //console.log(socket);
-    //console.log(event.data);
-    var gameState = JSON.parse(event.data);
-    //console.log(gameState);
-    //console.log("stateUpdate");
-    //var game2State = event.data;
-    if (typeof gameState !== "undefined") {
-        //console.log(game2State);
-        if (gameState["id"] !== "undefined" && socketID === "") {
-            socketID = gameState["id"];
-            //console.log(socketID);
-        }
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
-            // console.log(game2State[i]);
-            if (typeof gameState[i]["NavePlayer"] !== "undefined") {
-                var nave = gameState[i]["NavePlayer"];
-                var health = nave["health"];
-                var x = nave["super"]["Nave"]["super"]["Entity"]["super"]["x"];
-                var y = nave["super"]["Nave"]["super"]["Entity"]["super"]["y"];
-                // Aca deberia ir el: nave = this.physics.add.image(x, y, "ship");
-                // Pero no funciona
-                // Esta entrando primero al stateUpdate y después al create de Phaser
+            if (typeof gameState[i]["Remove"] !== "undefined") {
+                var id = gameState[i]["Remove"]["id"];
+                if (players[id] != null) {
+                    players[id].dispose();
+                    players[id] = null;
+                }
+            } else if (typeof gameState[i]["NavePlayer"] !== "undefined") {
+                var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
+                //var playerId = gameState[i]["NavePlayer"]["id"];
+                var destroy = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
+                var leave = gameState[i]["NavePlayer"]["leave"];
+                var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
+                var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
+                // Create a sphere that we will be moved by the keyboard
+                if (players[id] == null) {
+                    console.log('this'+this);
+                    console.log(game);
+                    players[id] =  game.scene.scenes[0].add.sprite(x, y, "ship");
+                    console.log(players[id]);
+                }
+                players[id].y = y;
+                players[id].x = x;
+                players[id].z = y;
 
-            } else if (typeof gameState[i]["Player"] !== "undefined") {
-                //console.log(gameState[i]["Player"]);
-                var id = gameState[i]["Player"]["id"];
-                var destroy = gameState[i]["Player"]["super"]["Entity"]["super"]["State"]["destroy"];
-                var leave = gameState[i]["Player"]["leave"];
-                var dead = gameState[i]["Player"]["dead"];
-                var health = gameState[i]["Player"]["health"];
-                var healthMax = gameState[i]["Player"]["healthMax"];
-                var x = gameState[i]["Player"]["super"]["Entity"]["x"];
-                var y = gameState[i]["Player"]["super"]["Entity"]["y"];
-                // var team = gameState[i]["Player"]["team"];
-                //playerTeam[id] = team;
-                var player = document.getElementById("player" + id);
-                if (player === null) {
-                    var name = id.substr(0, 4);
-                    entities.innerHTML += "<div id='player" + id + "' class='player'><div id='player" + id + "-healthbar' class='healthbar'><div id='player" + id + "-name' class='name'>" + name + "</div>";
-                    player = document.getElementById("player" + id);
-                }
-                //player.style.left = x * ($(".cell").width() + 2) + 1 + "px";
-                //player.style.top = y * ($(".cell").height() + 2) + 1 + "px";
-                playerHealthbar = document.getElementById("player" + id + "-healthbar");
-                playerHealthbar.style.width = health * 24 / healthMax + "px";
-                if (dead) {
-                    player.style.zIndex = "1";
-                    player.style.backgroundImage = "url('images/blood.png')";
-                    player.style.backgroundColor = "rgba(0,0,0,0)";
-                } else {
-                    player.style.zIndex = "2";
-                    player.style.backgroundImage = "url('images/brujo.png')";
-                    if (id === socketID) {
-                        player.style.backgroundColor = "green";
-                    } else {
-                        player.style.backgroundColor = $(".team" + team).css("color");//"#" + ((1 << 24) * Math.random() | 0).toString(16);
-                    }
-                }
                 if (leave) {
-                    player.style.display = "none";
-                } else {
-                    player.style.display = "block";
+                    players[id].dispose();
                 }
                 if (destroy) {
-                    $("#player" + id).remove();
-                    playerTeam[id] = "";
-                }
-                //players.innerHTML += game2State[i]["Player"]["id"] + "," + game2State[i]["Player"]["x"] + "," + game2State[i]["Player"]["y"] + "<br>";
-            } else if (typeof gameState[i]["Projectile"] !== "undefined") {
-                //console.log(game2State[i]["Projectile"]);
-                var id = gameState[i]["Projectile"]["id"];
-                var number = gameState[i]["Projectile"]["number"];
-                var destroy = gameState[i]["Projectile"]["super"]["Entity"]["super"]["State"]["destroy"];
-                var x = gameState[i]["Projectile"]["super"]["Entity"]["x"];
-                var y = gameState[i]["Projectile"]["super"]["Entity"]["y"];
-                var xVelocity = gameState[i]["Projectile"]["xVelocity"];
-                var yVelocity = gameState[i]["Projectile"]["yVelocity"];
-                //var team = gameState[i]["Projectile"]["team"];
-                var projectile = document.getElementById("projectile" + id + "-" + number);
-                if (projectile === null) {
-                    entities.innerHTML += "<div id='projectile" + id + "-" + number + "' class='arrow'><div id='projectileTeam" + id + "-" + number + "'class='arrowteam'></div></div>";
-                    projectile = document.getElementById("projectile" + id + "-" + number);
-                    var projectileTeam = document.getElementById("projectileTeam" + id + "-" + number);
-                    if (id === socketID) {
-                        projectileTeam.style.backgroundColor = "green";
-                    } else {
-                        projectileTeam.style.backgroundColor = $(".team" + team).css("color");
-                    }
-
-                }
-                //projectile.style.left = x * ($(".cell").width() + 2) + 1 + ($(".cell").width() + 2) / 2 - $(".arrow").width() / 2 + "px";
-                //projectile.style.top = y * ($(".cell").height() + 2) + 1 + ($(".cell").height() + 2) / 2 - $(".arrow").height() / 2 + "px";
-                if (destroy) {
-                    $("#projectile" + id + "-" + number).remove();
-                }
-                //players.innerHTML += game2State[i]["Player"]["id"] + "," + game2State[i]["Player"]["x"] + "," + game2State[i]["Player"]["y"] + "<br>";
-            } else if (typeof gameState[i]["Spawn"] !== "undefined") {
-                var x = gameState[i]["Spawn"]["x"];
-                var y = gameState[i]["Spawn"]["y"];
-                terrain.innerHTML += "<div id='spawn" + x + "_" + y + "' class='cell spawn'></div>";
-                spawn = document.getElementById("spawn" + x + "_" + y);
-                //spawn.style.left = x * ($(".cell").width() + 2) + "px";
-                //spawn.style.top = y * ($(".cell").height() + 2) + "px";
-            } else if (typeof gameState[i]["Match"] !== "undefined") {
-                //console.log(game2State[i]["Match"]);
-                var round = gameState[i]["Match"]["round"];
-                document.getElementById("round").innerHTML = round;
-                var countRounds = gameState[i]["Match"]["countRounds"];
-                document.getElementById("countRounds").innerHTML = countRounds;
-                var endGame = gameState[i]["Match"]["endGame"];
-                var endRound = gameState[i]["Match"]["endRound"];
-                var startGame = gameState[i]["Match"]["startGame"];
-                //var teamAttacker = gameState[i]["Match"]["teamAttacker"];
-                //var sizeTeam = gameState[i]["Match"]["sizeTeam"];
-                var players = gameState[i]["Match"]["players"];
-                var ready = gameState[i]["Match"]["ready"];
-                var playersDOM = document.getElementById("players");
-                playersDOM.innerHTML = "<tr><th>ID</th><th>Ready</th></tr>";
-                /*
-                 for (var p = 0; p < players.length; p++) {
-                 var found = false;
-                 var r = 0;
-                 var playerReady = null;
-                 while (!found && r < ready.length) {
-                 if (ready[r] === players[p]) {
-                 playerReady = ready[r];
-                 found = true;
-                 }
-                 r++;
-                 }
-                 var checked = playerReady ? "checked" : "";
-                 var team = playerTeam[players[p]];
-                 if (team === "undefined") {
-                 team = "";
-                 }
-                 playersDOM.innerHTML += "<tr><td class='team" + team + "'>" + players[p] + "</td><td><input id='ready" + player + "' type='checkbox' disabled " + checked + "/></td></tr>";
-                 }*/
-
-                //var teamPoints = gameState[i]["Match"]["teamPoints"];
-                //var teamPointsDOM = document.getElementById("teamPoints");
-                //teamPointsDOM.innerHTML = "";
-                for (var p = 0; p < teamPoints.length; p++) {
-                    teamPointsDOM.innerHTML += "<span class='team" + p + "'>" + teamPoints[p] + "</span> ";
+                    players[id].dispose();
+                    players[id] = null;
                 }
             }
             i++;
