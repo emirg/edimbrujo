@@ -165,6 +165,7 @@ public class NavePlayer extends Nave {
                                 break;
                             case "leave":
                                 salir = true;
+                                destroy=true;
                                 break;
                         }
 
