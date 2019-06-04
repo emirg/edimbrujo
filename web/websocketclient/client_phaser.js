@@ -37,15 +37,15 @@ function preload() {
     //backgroud
     this.load.image('background', 'assets/tests/space/nebula.jpg');
     //starts
-    //this.load.image('stars', 'assets/tests/space/stars.png');
+    this.load.image('stars', 'assets/tests/space/stars.png');
     //space 
-    //this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
+    this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
     // nave
     this.load.spritesheet('ship', 'assets/games/asteroids/ship.png', {
         frameWidth: 32,
         frameHeight: 32
     });
-    /*
+    
     //coins
     this.load.spritesheet("coin", "assets/sprites/coin.png", {
         frameWidth: 32,
@@ -55,7 +55,7 @@ function preload() {
     this.load.spritesheet("explosion", "assets/sprites/explosion.png", {
         frameWidth: 64,
         frameHeight: 64
-    });*/
+    });
     // crear efecto de barra cargandose 
     this.fullBar = this.add.graphics();
     this.fullBar.fillStyle(0xda7a34, 1);
@@ -90,10 +90,10 @@ function create() {
     background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
 
     //  agrego planetas ,etc
-    //this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
-    //this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    //var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
-    /*
+    this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
+    this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
+    var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
@@ -121,7 +121,7 @@ function create() {
         ease: 'Linear',
         loop: -1
     });
-*/
+
 cursors = this.input.keyboard.createCursorKeys();
 }
 

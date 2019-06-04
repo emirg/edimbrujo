@@ -18,7 +18,7 @@ function createAttackButton(parent) {
   // Los handle probablemente no sean necesarios para el boton de ataque
   function handlePress(event) {
     console.log("ataque");
-    //socket.send("ataque");
+    socket.send("start");
   }
 
   function handleRelease(event) {}

@@ -8,7 +8,7 @@ window.onload = function() {
   var url = "ws://" + page.hostname + ":8080";
   socket = new WebSocket(url + "/StateEngine/GameWebSocket");
   socket.onmessage = stateUpdate;
-  socket.send("start");
+  //socket.send("start");
 
   function stateUpdate(event) {
    //console.log(socket);

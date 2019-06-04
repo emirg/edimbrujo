@@ -58,7 +58,7 @@ function createJoystick(parent) {
       socket.send("left");
     }
 
-    if (yNew > 0) {
+    if (yNew < 0) {
       socket.send("up");
     } else {
       socket.send("down");
