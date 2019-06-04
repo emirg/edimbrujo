@@ -165,7 +165,6 @@ public class NavePlayer extends Nave {
                                 break;
                             case "leave":
                                 salir = true;
-                                destroy=true;
                                 break;
                         }
 
@@ -212,7 +211,7 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX,nuevaVelY, health, healthMax, countProjectile, leave, dead);
+        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX,nuevaVelY, health, healthMax, countProjectile, salir, muerto);
         return nuevoJugador;
     }
 
