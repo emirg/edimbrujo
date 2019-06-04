@@ -30,7 +30,7 @@ public class World extends State {
             LinkedList<Action> actionsList = actionEntry.getValue();
             for (Action action : actionsList) {
                 switch (action.getName()) {
-                    case "enter":
+                    case "start":
                         NavePlayer newPlayer = new NavePlayer("Player", id, 200, 200, 0, 0, 100, 100, 0, false, false);
                         newStates.add(newPlayer);
                         newPlayer.addEvent("spawn");

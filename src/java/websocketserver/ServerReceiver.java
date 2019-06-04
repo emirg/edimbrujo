@@ -28,7 +28,6 @@ public class ServerReceiver {
         ServerSender serverSender = new ServerSender(session, lobby);
         Thread threadServerSender = new Thread(serverSender);
         threadServerSender.start();
-
     }
 
     @OnMessage
