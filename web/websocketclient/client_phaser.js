@@ -155,7 +155,9 @@ window.onload = function () {
     page.href = window.location.href;
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
     var url = "ws://" + page.hostname + ":8080";
-    socket = new WebSocket(url + "/StateEngine/GameWebSocket");
+    //servidor Edimbrujo
+    //var url = "ws://" + page.hostname + ":60161";
+    socket = new WebSocket(url + "/"+window.location.pathname.split('/')[1]+"/GameWebSocket");
     socket.onmessage = stateUpdate;
 
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
