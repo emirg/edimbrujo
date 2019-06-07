@@ -137,24 +137,24 @@ public class NavePlayer extends Nave {
             for (Action accion : listAccion) {
                 if (accion != null) {
                     hasChanged = true;
-                    System.out.println("has change");
+                    //System.out.println("has change");
                     if (!dead) {
 
                         switch (accion.getName()) {
                             case "right":
-                                nuevaVelX=5;
+                                nuevaVelX=50;
                                 nuevoX = x + nuevaVelX;
                                 break;
                             case "left":
-                                nuevaVelX=5;
+                                nuevaVelX=50;
                                 nuevoX = x - nuevaVelX;
                                 break;
                             case "up":
-                                nuevaVelY=5;
+                                nuevaVelY=50;
                                 nuevoY = y - nuevaVelY;
                                 break;
                             case "down":
-                                nuevaVelY=5;
+                                nuevaVelY=50;
                                 nuevoY = y + nuevaVelY;
                                 break;
                             case "fire":

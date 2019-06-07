@@ -1,6 +1,7 @@
 package engine;
 
 import gamelogic.World;
+import gamelogic.Asteroide;
 import gamelogic.Match;
 import gamelogic.NavePlayer;
 import java.awt.Point;
@@ -112,6 +113,7 @@ public class Game implements Runnable {
         //TODO crear estados dinamicos y estaticos
         /*Babylon init*/
         states.add(new World(new LinkedList<String>(), "World", false, null));
+        states.add(new Asteroide("asteroide",false, "ast1", 200, 300, 100, 100));
         //states.add(new NavePlayer("Player", "7f8", 200, 200, 0, 0, 100, 100, 0, false, false));
 
         /*Phaser init*/

@@ -33,7 +33,7 @@ public class World extends State {
                     case "start":
                         NavePlayer newPlayer = new NavePlayer("Player", id, 200, 200, 0, 0, 100, 100, 0, false, false);
                         newStates.add(newPlayer);
-                        newPlayer.addEvent("spawn");
+                        //newPlayer.addEvent("spawn");
                         break;
                     case "leave":
                         for (State state : states) {
