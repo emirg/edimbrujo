@@ -20,6 +20,8 @@ function createAttackButton(parent) {
     event.preventDefault();
     //console.log("ataque");
     socket.send("fire");
+    socket.send('{"name": "fire", "priority": "1"}');
+
   }
 
   function handleRelease(event) {}

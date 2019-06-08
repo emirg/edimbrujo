@@ -67,8 +67,8 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        double[] futuraPos = futuraPosicion(acciones);
-        for (State estado : estados) {
+        //double[] futuraPos = futuraPosicion(acciones);
+        /*for (State estado : estados) {
             //Solo se considera el choque con otro jugador
             if (estado != this && estado.getName().equalsIgnoreCase("player") && !((NavePlayer) estado).dead) {
                 double[] posContrincante = ((NavePlayer) estado).futuraPosicion(acciones);
@@ -76,7 +76,7 @@ public class NavePlayer extends Nave {
                     this.addEvent("collide");
                 }
             }
-        }
+        }*/
         return listProyectil;
     }
 
@@ -118,7 +118,7 @@ public class NavePlayer extends Nave {
     @Override
     public NavePlayer next(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
         LinkedList<Action> listAccion = acciones.get(id);
-        hasChanged = false;
+        hasChanged = true;
         double nuevoX = x;
         double nuevoY = y;
         int nuevosProyectiles = countProjectile;
@@ -137,15 +137,14 @@ public class NavePlayer extends Nave {
                     if (!dead) {
                         switch (accion.getName()) {
                             case "move":
-                               //System.out.println("x:" + accion.getParameter("x"));
+                                //System.out.println("Llegue al move");
                                 if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
-                                    double velX = Double.parseDouble(accion.getParameter("x"));
-                                    double velY = Double.parseDouble(accion.getParameter("y"));
-                                    velocidad.x = velX;
-                                    velocidad.y = velY;
+                                    nuevaVelX = Double.parseDouble(accion.getParameter("x"));
+                                    nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                                 }
                                 break;
                             case "stop":
+                                //System.out.println("Llegue al stop");
                                 nuevaVelX = 0;
                                 nuevaVelY = 0;
                                 break;
@@ -159,13 +158,15 @@ public class NavePlayer extends Nave {
                                 salir = true;
                                 break;
                         }
+                        nuevoX = nuevoX + nuevaVelX;
+                        nuevoY = nuevoY + nuevaVelY;
 
                     }
                 }
             }
         }
-        nuevoX = x + nuevaVelX;
-        nuevoY = y + nuevaVelY;
+        //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
+
         LinkedList<String> eventos = getEvents();
 
         if (!eventos.isEmpty()) {
