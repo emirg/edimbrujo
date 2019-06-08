@@ -25,13 +25,21 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+
+//coneccion
 var socket;
 var socketID = "";
-var players = [];
+
+//cursor
 var cursors;
+
 //dimensiones juego
 var width = 4500;
 var height = 2048;
+
+//arreglos
+var asteroides=[];
+var players = [];
 
 function preload() {
     //backgroud
@@ -41,9 +49,9 @@ function preload() {
     //space 
     this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
     // nave
-    this.load.spritesheet('ship', 'assets/games/asteroids/ship.png', {
-        frameWidth: 32,
-        frameHeight: 32
+    this.load.spritesheet('ship', 'assets/sprites/ship1.png', {
+        frameWidth: 64,
+        frameHeight: 64
     });
     
     //coins
@@ -129,6 +137,10 @@ function update (time, delta)
 {
    // console.log(socket);
   //acciones cursor
+  for (let index = 0; index < asteroides.length; index++) {
+     asteroides[i].anims.play('asteroid1-anim',true); 
+  }
+  
     if (cursors.left.isDown)
     {
         socket.send("left");
@@ -165,10 +177,11 @@ window.onload = function () {
         //console.log(socket);
         //console.log(event.data);
         var gameState = JSON.parse(event.data);
-        console.log(gameState);
+        //console.log(gameState);
 
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
+            //console.log(gameState[i]["Entity"]+"hola")
             if (typeof gameState[i]["Remove"] !== "undefined") {
                 var id = gameState[i]["Remove"]["id"];
                 if (players[id] != null) {
@@ -185,7 +198,7 @@ window.onload = function () {
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
                     console.log('this'+this);
-                    console.log(game);
+                    console.log(gameState);
                     players[id] =  game.scene.scenes[0].add.sprite(x, y, "ship");
                     console.log(players[id]);
                 }
@@ -199,6 +212,17 @@ window.onload = function () {
                 if (destroy) {
                     players[id].dispose();
                     players[id] = null;
+                }
+            }else if(typeof gameState[i]['Entity']!=="undefined"){
+                //console.log("asteroide...................................")
+                //console.log(gameState[i]["Entity"]);
+                var id=gameState[i]["Entity"]["super"]["State"]["id"];
+                var x=gameState[i]["Entity"]["x"];
+                var y=gameState[i]["Entity"]["y"];
+                //console.log(x);
+                //console.log(y);
+                if(asteroides[id]==null){
+                    asteroides[id]=  game.scene.scenes[0].add.sprite(x, y, "asteroid1");
                 }
             }
             i++;

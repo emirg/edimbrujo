@@ -18,7 +18,7 @@ import engine.StaticState;
  */
 public class Asteroide extends Entity {
 
-    public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY) {
+    public Asteroide(String name, boolean destroy,String id, double x, double y, double velocidadX, double velocidadY) {
         super(name, false, id, x, y, velocidadX, velocidadY, 0, 0);
     }
 
@@ -51,9 +51,12 @@ public class Asteroide extends Entity {
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true; // El asteroide siempre cambia porque siempre esta en movimiento
-        double nuevoX = x + velocidad.x;
-        double nuevoY = y + velocidad.y;
+        double nuevoX = x;
+        double nuevoY = y + +20;
         // La velocidad es constante 
+        if(nuevoY>2000){
+            nuevoY=0;
+        }
         Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y);
         return newAsteroide;
     }
