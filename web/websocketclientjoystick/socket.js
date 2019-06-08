@@ -4,6 +4,10 @@ var socketID = "";
 //%%%%%%%%%%%%%%%% esta de adorno %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+function empezar(){
+    socket.send("start");
+}
+
 window.onload = function() {
   var page = document.createElement("a");
   page.href = window.location.href;
@@ -12,17 +16,14 @@ window.onload = function() {
   //servidor Edimbrujo
   var url = "ws://" + page.hostname + ":60161";
   socket = new WebSocket(url + "/"+window.location.pathname.split('/')[1]+"/GameWebSocket");
-
-  
   socket.onmessage = stateUpdate;
-  //socket.send("start");
-
+  socket.onopen = empezar;
   function stateUpdate(event) {
    //console.log(socket);
         //console.log(event.data);
         var gameState = JSON.parse(event.data);
         console.log(gameState);
-
+        /*
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
             if (typeof gameState[i]["Remove"] !== "undefined") {
@@ -56,6 +57,6 @@ window.onload = function() {
                 }
             }*/
             i++;
-        }
+        }*/
   }
 };
