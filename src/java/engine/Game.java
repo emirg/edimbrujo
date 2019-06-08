@@ -112,10 +112,10 @@ public class Game implements Runnable {
     public void init() {
         //TODO crear estados dinamicos y estaticos
         states.add(new World(new LinkedList<String>(), "World", false, null));
-        states.add(new Asteroide("Asteroide", false, "ast1", 200, 500, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "ast2", 500, 650, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "ast3", 400, 800, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "ast4", 100, 950, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "0", 200, 500, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
         //states.add(new NavePlayer("Player", "7f8", 200, 200, 0, 0, 100, 100, 0, false, false));
 
         /*Phaser init*/

@@ -40,13 +40,15 @@ var height = 2048;
 var asteroides = [];
 var players = [];
 
+var scene;
+
 function preload() {
     //backgroud
     this.load.image('background', 'assets/tests/space/nebula.jpg');
     //starts
     this.load.image('stars', 'assets/tests/space/stars.png');
     //space 
-    //this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
+    this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
     // nave
     this.load.spritesheet('ship', 'assets/sprites/ship1.png', {
         frameWidth: 64,
@@ -73,7 +75,7 @@ function preload() {
 function create() {
     //console.log("CREATE");
     //  Prepare some spritesheets and animations
-   /* this.textures.addSpriteSheetFromAtlas('mine-sheet', {atlas: 'space', frame: 'mine', frameWidth: 64});
+    this.textures.addSpriteSheetFromAtlas('mine-sheet', {atlas: 'space', frame: 'mine', frameWidth: 64});
     this.textures.addSpriteSheetFromAtlas('asteroid1-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
     this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', {atlas: 'space', frame: 'asteroid2', frameWidth: 96});
     this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', {atlas: 'space', frame: 'asteroid3', frameWidth: 96});
@@ -89,18 +91,17 @@ function create() {
     this.anims.create({key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
     this.anims.create({key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 5}), frameRate: 10, repeat: -1});
     this.anims.create({key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 23}), frameRate: 100, repeat: 1});
-*/
+
     //world 2048*2048
     this.physics.world.setBounds(0, 0, width, height);
 
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
     background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
-
     //  agrego planetas ,etc
-   /* this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
+    this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
     var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
-*/
+
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
@@ -121,14 +122,14 @@ function create() {
     });
 
     //animacion galaxia
-    /*this.tweens.add({
+    this.tweens.add({
         targets: galaxy,
         angle: 360,
         duration: 100000,
         ease: 'Linear',
         loop: -1
-    });*/
-
+    });
+     scene=this;
     cursors = this.input.keyboard.createCursorKeys();
 }
 
@@ -138,6 +139,8 @@ function update(time, delta)
     //acciones cursor
     for (let i = 0; i < asteroides.length; i++) {
         asteroides[i].anims.play('asteroid1-anim', true);
+        //var sprite=asteroides[i];
+        //console.log(sprite.anims);
     }
 }
 
@@ -207,11 +210,12 @@ window.onload = function () {
 
                 if (asteroides[id] == null) {
                     console.log("asigne imagen asteroide");
-                    asteroides[id] = game.scene.scenes[0].add.sprite(x, y, "asteroid1");
+                    //asteroides[id] = game.scene.scenes[0].add.sprite(x, y, "asteroid1");
+                    asteroides[id]=scene.physics.add.sprite(x, y, "asteroid1");
                 }
                 asteroides[id].y = y;
                 asteroides[id].x = x;
-                asteroides[id].z = 200;
+                asteroides[id].z = y;
             }
             i++;
         }
