@@ -142,19 +142,19 @@ public class NavePlayer extends Nave {
 
                         switch (accion.getName()) {
                             case "right":
-                                nuevaVelX=50;
+                                nuevaVelX=10;
                                 nuevoX = x + nuevaVelX;
                                 break;
                             case "left":
-                                nuevaVelX=50;
+                                nuevaVelX=10;
                                 nuevoX = x - nuevaVelX;
                                 break;
                             case "up":
-                                nuevaVelY=50;
+                                nuevaVelY=10;
                                 nuevoY = y - nuevaVelY;
                                 break;
                             case "down":
-                                nuevaVelY=50;
+                                nuevaVelY=10;
                                 nuevoY = y + nuevaVelY;
                                 break;
                             case "fire":

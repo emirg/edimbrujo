@@ -166,9 +166,9 @@ window.onload = function () {
     var page = document.createElement('a');
     page.href = window.location.href;
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
-    var url = "ws://" + page.hostname + ":8080";
+    //var url = "ws://" + page.hostname + ":8080";
     //servidor Edimbrujo
-    //var url = "ws://" + page.hostname + ":60161";
+    var url = "ws://" + page.hostname + ":60161";
     socket = new WebSocket(url + "/"+window.location.pathname.split('/')[1]+"/GameWebSocket");
     socket.onmessage = stateUpdate;
 
@@ -221,9 +221,14 @@ window.onload = function () {
                 var y=gameState[i]["Entity"]["y"];
                 //console.log(x);
                 //console.log(y);
+                
                 if(asteroides[id]==null){
+                    console.log("asigne imagen asteroide");
                     asteroides[id]=  game.scene.scenes[0].add.sprite(x, y, "asteroid1");
                 }
+                asteroides[id].y = y;
+                asteroides[id].x = x;
+                asteroides[id].z = 200;
             }
             i++;
         }

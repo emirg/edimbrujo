@@ -51,8 +51,8 @@ public class Asteroide extends Entity {
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true; // El asteroide siempre cambia porque siempre esta en movimiento
-        double nuevoX = x;
-        double nuevoY = y + +20;
+        double nuevoX = x+20;
+        double nuevoY = y ;
         // La velocidad es constante 
         if(nuevoY>2000){
             nuevoY=0;
