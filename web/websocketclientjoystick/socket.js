@@ -14,7 +14,6 @@ window.onload = function() {
   //var url = "ws://" + page.hostname + ":60161";
   socket = new WebSocket(url + "/"+window.location.pathname.split('/')[1]+"/GameWebSocket");
   socket.onmessage = stateUpdate;
-  //window.setTimeout(empezar,3000);
   socket.onopen = empezar;
   function stateUpdate(event) {
    //console.log(socket);

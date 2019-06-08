@@ -111,9 +111,8 @@ public class Game implements Runnable {
 
     public void init() {
         //TODO crear estados dinamicos y estaticos
-        /*Babylon init*/
         states.add(new World(new LinkedList<String>(), "World", false, null));
-        states.add(new Asteroide("asteroide",false, "ast1", 200, 300, 100, 100));
+        states.add(new Asteroide("asteroide", false, "ast1", 200, 300, 100, 100));
         //states.add(new NavePlayer("Player", "7f8", 200, 200, 0, 0, 100, 100, 0, false, false));
 
         /*Phaser init*/
@@ -130,29 +129,6 @@ public class Game implements Runnable {
         }*/
     }
 
-    /*   private void loadMap(File fileMap) {
-        try {
-            String linea;
-            HashMap<Point, Integer> cells = new HashMap<>();
-            BufferedReader buffer = new BufferedReader(new FileReader(fileMap));
-            int y = 0;
-            int x = 0;
-            while ((linea = buffer.readLine()) != null) {
-                String[] cols = linea.split(",");
-                for (x = 0; x < cols.length; x++) {
-                    cells.put(new Point(x, y), Integer.parseInt(cols[x]));
-                }
-                y++;
-            }
-            //staticStates.add(new phasergamelogic.Map(cells, x, y, "Map", null));
-
-        } catch (IOException ex) {
-            Logger.getLogger(Game.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-     */
     private void createStaticState() {
         JSONObject jsonStaticStates = new JSONObject();
         int i = 0;
@@ -230,8 +206,7 @@ public class Game implements Runnable {
             if (actionsSended.containsKey(sessionId)) {
                 JSONObject actualAction = actionsSended.get(sessionId).get(newActionName);
                 if (actualAction != null) {
-                    int actualPriority = actualAction.get("priority") != null ? Integer.parseInt((String) actualAction.get("priority")) : 0;;
-
+                    int actualPriority = actualAction.get("priority") != null ? Integer.parseInt((String) actualAction.get("priority")) : 0;
                     if (newPriority > actualPriority) {
                         actionsSended.get(sessionId).put(newActionName, newAction);
                     }

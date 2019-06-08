@@ -89,25 +89,21 @@ public class NavePlayer extends Nave {
         double nuevaVelY = velocidad.y;
 
         if (listAccion != null) {
-
             for (Action accion : listAccion) {
                 if (accion != null) {
                     switch (accion.getName()) {
-                        case "up":
-                            nuevaVelX++;
-                            nuevoX = x - nuevaVelX;
+                        case "move":
+                            if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
+                                double velX = Double.parseDouble(accion.getParameter("x"));
+                                double velY = Double.parseDouble(accion.getParameter("y"));
+                                velocidad.x = velX;
+                                velocidad.y = velY;
+                            }
+
                             break;
-                        case "down":
-                            nuevaVelX++;
-                            nuevoX = x + nuevaVelX;
-                            break;
-                        case "left":
-                            nuevaVelY++;
-                            nuevoY = y - nuevaVelY;
-                            break;
-                        case "right":
-                            nuevaVelY++;
-                            nuevoX = y + nuevaVelY;
+                        case "stop":
+                            nuevaVelX = 0;
+                            nuevaVelY = 0;
                             break;
                     }
                 }
@@ -139,26 +135,22 @@ public class NavePlayer extends Nave {
                     hasChanged = true;
                     //System.out.println("has change");
                     if (!dead) {
-
                         switch (accion.getName()) {
-                            case "right":
-                                nuevaVelX=50;
-                                nuevoX = x + nuevaVelX;
+                            case "move":
+                               //System.out.println("x:" + accion.getParameter("x"));
+                                if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
+                                    double velX = Double.parseDouble(accion.getParameter("x"));
+                                    double velY = Double.parseDouble(accion.getParameter("y"));
+                                    velocidad.x = velX;
+                                    velocidad.y = velY;
+                                }
                                 break;
-                            case "left":
-                                nuevaVelX=50;
-                                nuevoX = x - nuevaVelX;
-                                break;
-                            case "up":
-                                nuevaVelY=50;
-                                nuevoY = y - nuevaVelY;
-                                break;
-                            case "down":
-                                nuevaVelY=50;
-                                nuevoY = y + nuevaVelY;
+                            case "stop":
+                                nuevaVelX = 0;
+                                nuevaVelY = 0;
                                 break;
                             case "fire":
-                                countProjectile++;
+                                nuevosProyectiles++;
                                 break;
                             case "enter":
                                 salir = false;
@@ -172,7 +164,10 @@ public class NavePlayer extends Nave {
                 }
             }
         }
+        nuevoX = x + nuevaVelX;
+        nuevoY = y + nuevaVelY;
         LinkedList<String> eventos = getEvents();
+
         if (!eventos.isEmpty()) {
             hasChanged = true;
             boolean revivir = false;
@@ -211,7 +206,7 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX,nuevaVelY, health, healthMax, countProjectile, salir, muerto);
+        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, salir, muerto);
         return nuevoJugador;
     }
 
