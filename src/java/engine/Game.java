@@ -95,7 +95,7 @@ public class Game implements Runnable {
                 int i = 0;
                 while (i < states.size()) {
                     if (states.get(i).isDestroy()) {
-                        //System.out.println("State " + states.get(i).getName() + " is removed.");
+                        System.out.println("State " + states.get(i).getName() + " is removed.");
                         states.remove(i);
                     } else {
                         i++;

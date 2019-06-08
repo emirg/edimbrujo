@@ -22,7 +22,7 @@ public abstract class Nave extends Entity {
 
     //depende de como tratemos la orientacion puede no ser un int
     public Nave(String name, String id, double x, double y, double velocidadX, double velocidadY, int cantProj) {
-        super(name, false, id, x, y, velocidadX, velocidadY, 0, 0);
+        super(name, false, id, x, y, velocidadX, velocidadY, 64, 64);
         this.countProjectile = cantProj;
     }
 

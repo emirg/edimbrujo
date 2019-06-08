@@ -14,7 +14,7 @@ public class Projectile extends Entity {
     protected int number;
 
     public Projectile(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int number) {
-        super("Projectile", destroy, id, x, y, velocidadX, velocidadY, 0, 0);
+        super("Projectile", destroy, id, x, y, velocidadX, velocidadY, 10, 10);
         this.number = number;
     }
 

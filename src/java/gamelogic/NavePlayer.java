@@ -34,49 +34,34 @@ public class NavePlayer extends Nave {
                 if (!dead) {
                     switch (accion.getName()) {
                         case "fire":
-                            if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
-                                double posX = Double.parseDouble(accion.getParameter("x"));
-                                double posY = Double.parseDouble(accion.getParameter("y"));
+                            Projectile proyectil = new Projectile("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
+                            listProyectil.add(proyectil);
 
-                                if (posX != x || posY != y) {
-                                    int velocidadX, velocidadY;
-                                    if (posX < x) {
-                                        velocidadX = -1;
-                                    } else {
-                                        if (posX > x) {
-                                            velocidadX = 1;
-                                        } else {
-                                            velocidadX = 0;
-                                        }
-                                    }
-                                    if (posY < y) {
-                                        velocidadY = -1;
-                                    } else {
-                                        if (posY > y) {
-                                            velocidadY = 1;
-                                        } else {
-                                            velocidadY = 0;
-                                        }
-                                    }
-                                    Projectile proyectil = new Projectile("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
-                                    listProyectil.add(proyectil);
-                                }
-
-                            }
                     }
                 }
             }
         }
-        //double[] futuraPos = futuraPosicion(acciones);
-        /*for (State estado : estados) {
-            //Solo se considera el choque con otro jugador
-            if (estado != this && estado.getName().equalsIgnoreCase("player") && !((NavePlayer) estado).dead) {
+
+        double[] futuraPos = futuraPosicion(acciones);
+        for (State estado : estados) {
+            //Choque contra otra nave
+            if (estado != this && estado.getName().equalsIgnoreCase("naveplayer") && !((NavePlayer) estado).dead) {
                 double[] posContrincante = ((NavePlayer) estado).futuraPosicion(acciones);
                 if (futuraPos[0] == posContrincante[0] && futuraPos[1] == posContrincante[1]) {
                     this.addEvent("collide");
                 }
+            } else if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
+                Asteroide ast = (Asteroide) estado;
+                double xFuturaAsteroide = ast.x + ast.velocidad.x;
+                double yFuturaAsteroide = ast.y + ast.velocidad.y;
+                if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
+                    this.addEvent("hit");
+                }
             }
-        }*/
+            /*else if(){ // Choca contra moneda?
+                
+            }*/
+        }
         return listProyectil;
     }
 
@@ -94,10 +79,8 @@ public class NavePlayer extends Nave {
                     switch (accion.getName()) {
                         case "move":
                             if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
-                                double velX = Double.parseDouble(accion.getParameter("x"));
-                                double velY = Double.parseDouble(accion.getParameter("y"));
-                                velocidad.x = velX;
-                                velocidad.y = velY;
+                                nuevaVelX = Double.parseDouble(accion.getParameter("x"));
+                                nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                             }
 
                             break;
@@ -109,8 +92,8 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        pos[0] = nuevoX;
-        pos[1] = nuevoY;
+        pos[0] = nuevoX + nuevaVelX;
+        pos[1] = nuevoY + nuevaVelY;
 
         return pos;
     }
@@ -175,7 +158,8 @@ public class NavePlayer extends Nave {
             for (String evento : eventos) {
                 switch (evento) {
                     case "hit":
-                        nuevaVida = health - 10;
+                        nuevaVida = nuevaVida - 10;
+                        System.out.println(nuevaVida);
                         if (nuevaVida <= 0) {
                             nuevaVelX = 0;
                             nuevaVelY = 0;
@@ -200,7 +184,7 @@ public class NavePlayer extends Nave {
                         muerto = false;
                         nuevaVida = healthMax;
                         break;
-                    case "despawn":
+                    case "despawn": 
                         //Considera que el jugador sale del juego
                         destruido = true;
                         break;

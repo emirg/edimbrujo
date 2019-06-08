@@ -18,8 +18,8 @@ import engine.StaticState;
  */
 public class Asteroide extends Entity {
 
-    public Asteroide(String name, boolean destroy,String id, double x, double y, double velocidadX, double velocidadY) {
-        super(name, false, id, x, y, velocidadX, velocidadY, 32, 32);
+    public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY) {
+        super(name, false, id, x, y, velocidadX, velocidadY, 64, 64);
     }
 
     @Override
@@ -31,7 +31,8 @@ public class Asteroide extends Entity {
                 NavePlayer player = ((NavePlayer) state);
                 double dist = Math.sqrt((player.x - this.x) * (player.x - this.x) + (player.y - this.y) * (player.y - this.y));
                 if (dist <= (this.width / 2 + player.width / 2) || dist <= (this.height / 2 + player.height / 2)) { // Esto va a cambiar segun si terminamos usando una libreria fisica
-                    state.addEvent("collide"); // Si la nave no muere entonces deberia ser un collide
+                    //System.out.println("COLISION"); // Hasta aca llega bien
+                    state.addEvent("hit"); // Si la nave no muere entonces deberia ser un collide
                     this.addEvent("collide");
                 }
             } else if (state.getName().equals("Projectile") && !((NavePlayer) state).dead) {
@@ -54,8 +55,8 @@ public class Asteroide extends Entity {
         double nuevoX = x + velocidad.x;
         double nuevoY = y + velocidad.y;
         // La velocidad es constante 
-        if(nuevoX>5000){
-            nuevoX=0;
+        if (nuevoX > 5000) {
+            nuevoX = 0;
         }
         Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y);
         return newAsteroide;
