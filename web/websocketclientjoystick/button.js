@@ -11,14 +11,15 @@ function createAttackButton(parent) {
   const attackButton = document.createElement("div");
   attackButton.classList.add("attackButton");
 
-  attackButton.addEventListener("mousedown", handlePress);
-  attackButton.addEventListener("touchstart", handlePress);
+  attackButton.addEventListener("mousedown", handlePress, false);
+  attackButton.addEventListener("touchstart", handlePress, false);
   // document.addEventListener("touchstart", handlePress);
 
   // Los handle probablemente no sean necesarios para el boton de ataque
   function handlePress(event) {
+    event.preventDefault();
     console.log("ataque");
-    socket.send("start");
+    socket.send("attack");
   }
 
   function handleRelease(event) {}
