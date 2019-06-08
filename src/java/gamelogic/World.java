@@ -31,13 +31,13 @@ public class World extends State {
             for (Action action : actionsList) {
                 switch (action.getName()) {
                     case "start":
-                        NavePlayer newPlayer = new NavePlayer("Player", id, 200, 200, 0, 0, 100, 100, 0, false, false);
+                        NavePlayer newPlayer = new NavePlayer("NavePlayer", id, 200, 200, 0, 0, 100, 100, 0, false, false);
                         newStates.add(newPlayer);
                         //newPlayer.addEvent("spawn");
                         break;
                     case "leave":
                         for (State state : states) {
-                            if (state.getName().equals("Player") && ((NavePlayer) state).id.equals(id)) {
+                            if (state.getName().equals("NavePlayer") && ((NavePlayer) state).id.equals(id)) {
                                 state.addEvent("despawn");
                                 break;
                             }

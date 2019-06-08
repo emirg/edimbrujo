@@ -25,6 +25,8 @@ public class Entity extends State {
         this.x = x;
         this.y = y;
         velocidad = new Vector2(velocidadX, velocidadY);
+        this.width = width;
+        this.height = height;
     }
 
     public double getX() {

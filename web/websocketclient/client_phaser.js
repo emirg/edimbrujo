@@ -38,7 +38,7 @@ var width = 4500;
 var height = 2048;
 
 //arreglos
-var asteroides=[];
+var asteroides = [];
 var players = [];
 
 function preload() {
@@ -53,7 +53,7 @@ function preload() {
         frameWidth: 64,
         frameHeight: 64
     });
-    
+
     //coins
     this.load.spritesheet("coin", "assets/sprites/coin.png", {
         frameWidth: 32,
@@ -101,7 +101,7 @@ function create() {
     this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
     var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
-    
+
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
@@ -130,34 +130,16 @@ function create() {
         loop: -1
     });
 
-cursors = this.input.keyboard.createCursorKeys();
+    cursors = this.input.keyboard.createCursorKeys();
 }
 
-function update (time, delta)
+function update(time, delta)
 {
-   // console.log(socket);
-  //acciones cursor
-  for (let index = 0; index < asteroides.length; index++) {
-     asteroides[i].anims.play('asteroid1-anim',true); 
-  }
-  
-    if (cursors.left.isDown)
-    {
-        socket.send("left");
+    // console.log(socket);
+    //acciones cursor
+    for (let index = 0; index < asteroides.length; index++) {
+        asteroides[i].anims.play('asteroid1-anim', true);
     }
-    if (cursors.right.isDown)
-    {
-        socket.send("right");
-    }
-    if (cursors.up.isDown)
-    {
-        socket.send("up");
-    }
-    if(cursors.down.isDown)
-    {
-        socket.send("down");
-    }
-   
 }
 
 
@@ -169,7 +151,7 @@ window.onload = function () {
     var url = "ws://" + page.hostname + ":8080";
     //servidor Edimbrujo
     //var url = "ws://" + page.hostname + ":60161";
-    socket = new WebSocket(url + "/"+window.location.pathname.split('/')[1]+"/GameWebSocket");
+    socket = new WebSocket(url + "/" + window.location.pathname.split('/')[1] + "/GameWebSocket");
     socket.onmessage = stateUpdate;
 
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
@@ -197,9 +179,9 @@ window.onload = function () {
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
-                    console.log('this'+this);
+                    console.log('this' + this);
                     console.log(gameState);
-                    players[id] =  game.scene.scenes[0].add.sprite(x, y, "ship");
+                    players[id] = game.scene.scenes[0].add.sprite(x, y, "ship");
                     console.log(players[id]);
                 }
                 players[id].y = y;
@@ -213,18 +195,18 @@ window.onload = function () {
                     players[id].dispose();
                     players[id] = null;
                 }
-            }else if(typeof gameState[i]['Entity']!=="undefined"){
+            } else if (typeof gameState[i]['Entity'] !== "undefined") {
                 //console.log("asteroide...................................")
                 //console.log(gameState[i]["Entity"]);
-                var id=gameState[i]["Entity"]["super"]["State"]["id"];
-                var x=gameState[i]["Entity"]["x"];
-                var y=gameState[i]["Entity"]["y"];
+                var id = gameState[i]["Entity"]["super"]["State"]["id"];
+                var x = gameState[i]["Entity"]["x"];
+                var y = gameState[i]["Entity"]["y"];
                 //console.log(x);
                 //console.log(y);
-                
-                if(asteroides[id]==null){
+
+                if (asteroides[id] == null) {
                     console.log("asigne imagen asteroide");
-                    asteroides[id]=  game.scene.scenes[0].add.sprite(x, y, "asteroid1");
+                    asteroides[id] = game.scene.scenes[0].add.sprite(x, y, "asteroid1");
                 }
                 asteroides[id].y = y;
                 asteroides[id].x = x;

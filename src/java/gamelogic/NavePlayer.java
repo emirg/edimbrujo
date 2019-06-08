@@ -18,7 +18,7 @@ public class NavePlayer extends Nave {
     protected boolean dead;
 
     public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead) {
-        super("Player", id, x, y, velocidadX, velocidadY, cantProj);
+        super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
@@ -158,13 +158,13 @@ public class NavePlayer extends Nave {
                                 salir = true;
                                 break;
                         }
-                        nuevoX = nuevoX + nuevaVelX;
-                        nuevoY = nuevoY + nuevaVelY;
 
                     }
                 }
             }
         }
+        nuevoX = nuevoX + nuevaVelX;
+        nuevoY = nuevoY + nuevaVelY;
         //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
 
         LinkedList<String> eventos = getEvents();

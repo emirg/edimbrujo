@@ -19,7 +19,7 @@ import engine.StaticState;
 public class Asteroide extends Entity {
 
     public Asteroide(String name, boolean destroy,String id, double x, double y, double velocidadX, double velocidadY) {
-        super(name, false, id, x, y, velocidadX, velocidadY, 0, 0);
+        super(name, false, id, x, y, velocidadX, velocidadY, 32, 32);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Asteroide extends Entity {
             HashMap<String, LinkedList<Action>> actions) {
 
         for (State state : states) {
-            if (state.getName().equals("Player") && !((NavePlayer) state).dead) {
+            if (state.getName().equals("NavePlayer") && !((NavePlayer) state).dead) {
                 NavePlayer player = ((NavePlayer) state);
                 double dist = Math.sqrt((player.x - this.x) * (player.x - this.x) + (player.y - this.y) * (player.y - this.y));
                 if (dist <= (this.width / 2 + player.width / 2) || dist <= (this.height / 2 + player.height / 2)) { // Esto va a cambiar segun si terminamos usando una libreria fisica

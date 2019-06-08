@@ -22,7 +22,7 @@ public class Projectile extends Entity {
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
 
         for (State state : states) {
-            if (state.getName().equals("Player") && !((NavePlayer) state).dead) {
+            if (state.getName().equals("NavePlayer") && !((NavePlayer) state).dead) {
                 NavePlayer player = ((NavePlayer) state);
 
                 if (x == player.x && y == player.y) {
