@@ -169,7 +169,7 @@ public class NaveNeutra extends Nave {
         return nuevoJugador;
     }
 
-    /**
+     /**
      * @param propietario the propietario to set
      */
     public void setPropietario(NavePlayer propietario) {

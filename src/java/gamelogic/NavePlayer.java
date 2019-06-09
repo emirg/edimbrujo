@@ -88,6 +88,7 @@ public class NavePlayer extends Nave {
                             nuevaVelX = 0;
                             nuevaVelY = 0;
                             break;
+                        
                     }
                 }
             }
@@ -114,7 +115,9 @@ public class NavePlayer extends Nave {
 
         if (listAccion != null) {
             for (Action accion : listAccion) {
+                
                 if (accion != null) {
+                    System.out.println(accion.getName());
                     hasChanged = true;
                     //System.out.println("has change");
                     if (!dead) {
@@ -141,6 +144,7 @@ public class NavePlayer extends Nave {
                                 salir = true;
                                 //System.out.println("salir "+salir);
                                 break;
+                            
                         }
 
                     }
@@ -156,6 +160,7 @@ public class NavePlayer extends Nave {
         if (!eventos.isEmpty()) {
             hasChanged = true;
             boolean revivir = false;
+            //System.out.println(eventos);
             for (String evento : eventos) {
                 switch (evento) {
                     case "hit":
@@ -165,6 +170,7 @@ public class NavePlayer extends Nave {
                             nuevaVelX = 0;
                             nuevaVelY = 0;
                             muerto = true;
+                            //this.addEvent("respawn"); ser rompe cuando trata de tratarlo 
                         }
                         break;
                     //ver colisiones
