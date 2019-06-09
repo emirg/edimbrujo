@@ -24,10 +24,18 @@ public class NaveNeutra extends Nave {
     //private String propietario; // Podria ser una NavePlayer tambien
 
     private NavePlayer propietario;
+    protected int health;
+    protected int healthMax;
+    protected boolean leave;
+    protected boolean dead;
 
     public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead, NavePlayer prop) {
         super("NaveNeutra", id, x, y, velocidadX, velocidadY, cantProj);
         this.propietario = prop;
+        this.health = h;
+        this.healthMax = hM;
+        this.leave = leave;
+        this.dead = dead;
     }
 
     @Override
@@ -118,28 +126,34 @@ public class NaveNeutra extends Nave {
         pos[1] = nuevoY;
         return pos;
     }
-
-    public Nave next(HashMap<String, LinkedList<Action>> acciones) {
-        LinkedList<Action> listAccion = acciones.get(propietario);
+    @Override
+    public NaveNeutra next(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
+        
         hasChanged = false;
         double nuevoX = x;
         double nuevoY = y;
         int nuevosProyectiles = countProjectile;
+        boolean salir = leave;
+        boolean muerto = dead;
+        int nuevaVida = health;
         boolean destruido = destroy;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
-
-        if (!listAccion.isEmpty()) {
-            for (Action accion : listAccion) {
-                hasChanged = true;
-                switch (accion.getName()) {
-                    case "fire":
-                        nuevosProyectiles++;
-                        break;
+        
+        if (propietario!=null){
+            LinkedList<Action> listAccion= acciones.get(propietario);
+        
+            if (!listAccion.isEmpty()) {
+                for (Action accion : listAccion) {
+                    hasChanged = true;
+                    switch (accion.getName()) {
+                        case "fire":
+                            nuevosProyectiles++;
+                            break;
+                    }
                 }
             }
         }
-
         LinkedList<String> eventos = getEvents();
         if (!eventos.isEmpty()) {
             //Ver en que momento tiene un propietario
@@ -150,8 +164,9 @@ public class NaveNeutra extends Nave {
             }
 
         }
-        return null;
-
+        //System.out.println("has change neutra");
+        NaveNeutra nuevoJugador = new NaveNeutra(this.name, this.id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, salir, muerto,propietario);
+        return nuevoJugador;
     }
 
     @Override
@@ -160,6 +175,10 @@ public class NaveNeutra extends Nave {
         JSONObject atributo = new JSONObject();
 
         atributo.put("super", super.toJSON());
+        atributo.put("health", health);
+        atributo.put("healthMax", healthMax);
+        atributo.put("leave", leave);
+        atributo.put("dead", dead);
         atributo.put("propietario", propietario);
         jNeutra.put("NaveNeutra", atributo);
 

@@ -56,6 +56,12 @@ function preload() {
         frameHeight: 64
     });
 
+    // nave neutra
+    this.load.spritesheet('shipNeutra', 'assets/sprites/ship.png', {
+        frameWidth: 93,
+        frameHeight: 110
+    });
+
     //coins
     this.load.spritesheet("coin", "assets/sprites/coin.png", {
         frameWidth: 32,
@@ -168,7 +174,7 @@ window.onload = function () {
 
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
-            console.log(gameState);
+            //console.log(gameState);
             if (typeof gameState[i]["Remove"] !== "undefined") {
                 var id = gameState[i]["Remove"]["id"];
                 if (players[id] != null) {
@@ -183,13 +189,13 @@ window.onload = function () {
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
                 var health = gameState[i]["NavePlayer"]["health"];
-                console.log(health);
+                //console.log(health);
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
-                    console.log('this' + this);
-                    console.log(gameState);
+                    //console.log('this' + this);
+                    //console.log(gameState);
                     players[id] = game.scene.scenes[0].add.sprite(x, y, "ship");
-                    console.log(players[id]);
+                    //console.log(players[id]);
                 }
                 players[id].y = y;
                 players[id].x = x;
@@ -212,7 +218,7 @@ window.onload = function () {
                 //console.log(y);
 
                 if (asteroides[id] == null) {
-                    console.log("asigne imagen asteroide");
+                    //console.log("asigne imagen asteroide");
                     asteroides[id] = game.scene.scenes[0].add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
                     //asteroides[id]=scene.physics.add.sprite(x, y, "asteroid1");
@@ -220,7 +226,7 @@ window.onload = function () {
                 asteroides[id].y = y;
                 asteroides[id].x = x;
                 asteroides[id].z = y;
-                
+
             }else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
                 var id = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
                 //var playerId = gameState[i]["NavePlayer"]["id"];
@@ -231,9 +237,9 @@ window.onload = function () {
                 var health = gameState[i]["NaveNeutra"]["health"];
                 // Create a sphere that we will be moved by the keyboard
                 if (neutras[id] == null) {
-                    console.log("asigne imagen naveNeutra");
-                    console.log(gameState);
-                    neutras[id] = game.scene.scenes[0].add.sprite(x, y, "ship");
+                    //console.log("asigne imagen naveNeutra");
+                    //console.log(gameState);
+                    neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
                     //neutras[id] = scene.add.sprite(x, y, "ship");
                     neutras[id].setDepth(1);
                     //console.log(players[id]);
