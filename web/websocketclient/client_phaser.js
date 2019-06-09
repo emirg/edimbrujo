@@ -39,6 +39,7 @@ var height = 2048;
 //arreglos
 var asteroides = [];
 var players = [];
+var neutras = [];
 
 var scene;
 
@@ -73,6 +74,9 @@ function preload() {
 }
 
 function create() {
+    //console.log(game.scene.scenes[0]==this);
+    //console.log(this);
+    scene=this;
     //console.log("CREATE");
     //  Prepare some spritesheets and animations
     this.textures.addSpriteSheetFromAtlas('mine-sheet', {atlas: 'space', frame: 'mine', frameWidth: 64});
@@ -129,7 +133,6 @@ function create() {
         ease: 'Linear',
         loop: -1
     });
-     scene=this;
     cursors = this.input.keyboard.createCursorKeys();
 }
 
@@ -165,7 +168,7 @@ window.onload = function () {
 
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
-            //console.log(gameState[i]["Entity"]+"hola")
+            console.log(gameState);
             if (typeof gameState[i]["Remove"] !== "undefined") {
                 var id = gameState[i]["Remove"]["id"];
                 if (players[id] != null) {
@@ -216,6 +219,25 @@ window.onload = function () {
                 asteroides[id].y = y;
                 asteroides[id].x = x;
                 asteroides[id].z = y;
+            }else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
+                var id = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
+                //var playerId = gameState[i]["NavePlayer"]["id"];
+                var destroy = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
+                var leave = gameState[i]["NaveNeutra"]["leave"];
+                var x = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["x"];
+                var y = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["y"];
+                var health = gameState[i]["NaveNeutra"]["health"];
+                // Create a sphere that we will be moved by the keyboard
+                if (neutras[id] == null) {
+                    console.log("asigne imagen naveNeutra");
+                    console.log(gameState);
+                    //neutras[id] = game.scene.scenes[0].add.sprite(x, y, "ship");
+                    neutras[id] = scene.add.sprite(x, y, "ship");
+                    //console.log(players[id]);
+                }
+                neutras[id].y = y;
+                neutras[id].x = x;
+                neutras[id].z = y;
             }
             i++;
         }

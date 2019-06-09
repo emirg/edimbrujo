@@ -21,10 +21,12 @@ import org.json.simple.JSONObject;
 public class NaveNeutra extends Nave {
     //si propietario es nulo es por que no fue reclutado
 
-    private String propietario; // Podria ser una NavePlayer tambien
+    //private String propietario; // Podria ser una NavePlayer tambien
 
-    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead, String prop) {
-        super("Neutra", id, x, y, velocidadX, velocidadY, cantProj);
+    private NavePlayer propietario;
+
+    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead, NavePlayer prop) {
+        super("NaveNeutra", id, x, y, velocidadX, velocidadY, cantProj);
         this.propietario = prop;
     }
 
