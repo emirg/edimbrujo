@@ -18,12 +18,12 @@ import org.json.simple.JSONObject;
  */
 public abstract class Nave extends Entity {
 
-    protected int countProjectile;
+    protected int countProyectil;
 
     //depende de como tratemos la orientacion puede no ser un int
     public Nave(String name, String id, double x, double y, double velocidadX, double velocidadY, int cantProj) {
         super(name, false, id, x, y, velocidadX, velocidadY, 64, 64);
-        this.countProjectile = cantProj;
+        this.countProyectil = cantProj;
     }
 
     @Override
@@ -36,12 +36,12 @@ public abstract class Nave extends Entity {
         return this;
     }
 
-    public int getCountProjectile() {
-        return countProjectile;
+    public int getCountProyectil() {
+        return countProyectil;
     }
 
-    public void setCountProjectile(int countProjectile) {
-        this.countProjectile = countProjectile;
+    public void setCountProyectil(int countProyectil) {
+        this.countProyectil = countProyectil;
     }
 
     @Override
@@ -50,7 +50,7 @@ public abstract class Nave extends Entity {
         JSONObject atributo = new JSONObject();
 
         atributo.put("super", super.toJSON());
-        atributo.put("countProjectile", countProjectile);
+        atributo.put("countProyectil", countProyectil);
         jNave.put("Nave", atributo);
 
         return jNave;

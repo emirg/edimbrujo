@@ -36,7 +36,7 @@ public class NavePlayer extends Nave {
                 if (!dead) {
                     switch (accion.getName()) {
                         case "fire":
-                            Projectile proyectil = new Projectile("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, 50, 0, 0);
                             listProyectil.add(proyectil);
 
                     }
@@ -59,8 +59,8 @@ public class NavePlayer extends Nave {
                 if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
                     this.addEvent("hit");
                 }
-            } else if (estado != this && estado.getName().equalsIgnoreCase("projectile")) { // Choque contra projectile
-                Projectile proj = (Projectile) estado;
+            } else if (estado != this && estado.getName().equalsIgnoreCase("proyectil")) { // Choque contra proyectil
+                Proyectil proj = (Proyectil) estado;
                 double xFuturaAsteroide = proj.x + proj.velocidad.x;
                 double yFuturaAsteroide = proj.y + proj.velocidad.y;
                 if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
@@ -119,7 +119,7 @@ public class NavePlayer extends Nave {
         hasChanged = true;
         double nuevoX = x;
         double nuevoY = y;
-        int nuevosProyectiles = countProjectile;
+        int nuevosProyectiles = countProyectil;
         boolean salir = leave;
         boolean muerto = dead;
         int nuevaVida = health;

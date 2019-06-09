@@ -13,83 +13,68 @@ import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.LinkedList;
 import org.json.simple.JSONObject;
+import org.dyn4j.geometry.Vector2;
 
-/**
- *
- * @author karen
- */
 public class NaveNeutra extends Nave {
     //si propietario es nulo es por que no fue reclutado
 
     //private String propietario; // Podria ser una NavePlayer tambien
     private NavePlayer propietario;
-    protected int health;
-    protected int healthMax;
-    protected boolean leave;
-    protected boolean dead;
 
-    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead, NavePlayer prop) {
+    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int cantProj, NavePlayer prop) {
         super("NaveNeutra", id, x, y, velocidadX, velocidadY, cantProj);
         this.propietario = prop;
-        this.health = h;
-        this.healthMax = hM;
-        this.leave = leave;
-        this.dead = dead;
     }
 
     @Override
     public LinkedList<State> generate(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
-        LinkedList<State> nuevosEst = null;
-        LinkedList<Action> listAccion = acciones.get(propietario);
-        if (this.propietario != null) {
-            for (Action accion : listAccion) {
-                if (accion != null) {
-                    if (accion.getName().equalsIgnoreCase("fire")) {
-                        if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
-                            double posX = Double.parseDouble(accion.getParameter("x"));
-                            double posY = Double.parseDouble(accion.getParameter("y"));
+        LinkedList<State> listProyectil = new LinkedList();
+        if (propietario != null) {
+            LinkedList<Action> listAccion = acciones.get(propietario.id);
+            if (listAccion != null) {
+                for (Action accion : listAccion) {
+                    switch (accion.getName()) {
+                        case "fire":
+                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, 50, 0, 0);
+                            listProyectil.add(proyectil);
 
-                            if (posX != x || posY != y) {
-                                double velocidadX, velocidadY;
-                                if (posX < x) {
-                                    velocidadX = -1;
-                                } else {
-                                    if (posX > x) {
-                                        velocidadX = 1;
-                                    } else {
-                                        velocidadX = 0;
-                                    }
-                                }
-                                if (posY < y) {
-                                    velocidadY = -1;
-                                } else {
-                                    if (posY > y) {
-                                        velocidadY = 1;
-                                    } else {
-                                        velocidadY = 0;
-                                    }
-                                }
-                                Projectile proyectil = new Projectile("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
-                                nuevosEst.add(proyectil);
-                            }
-
-                        }
                     }
+
                 }
             }
-            double[] futuraPos = futuraPosicion(acciones);
+
+            /*double[] futuraPos = futuraPosicion(acciones);
             for (State estado : estados) {
-                //Solo se considera el choque con otro jugador
-                if (estado != this && estado.getName().equalsIgnoreCase("player") && !((NavePlayer) estado).dead) {
+                //Choque contra otra nave
+                if (estado != this && estado.getName().equalsIgnoreCase("naveplayer") && !((NavePlayer) estado).dead) {
                     double[] posContrincante = ((NavePlayer) estado).futuraPosicion(acciones);
                     if (futuraPos[0] == posContrincante[0] && futuraPos[1] == posContrincante[1]) {
                         this.addEvent("collide");
                     }
+                } else if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
+                    Asteroide ast = (Asteroide) estado;
+                    double xFuturaAsteroide = ast.x + ast.velocidad.x;
+                    double yFuturaAsteroide = ast.y + ast.velocidad.y;
+                    if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
+                        this.addEvent("hit");
+                    }
+                } else if (estado != this && estado.getName().equalsIgnoreCase("proyectil")) { // Choque contra proyectil
+                    Proyectil proj = (Proyectil) estado;
+                    double xFuturaAsteroide = proj.x + proj.velocidad.x;
+                    double yFuturaAsteroide = proj.y + proj.velocidad.y;
+                    if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
+                        this.addEvent("hit");
+                    }
+                } else if (estado != this && estado.getName().equalsIgnoreCase("moneda")) { // Choque contra moneda
+                    Moneda mon = (Moneda) estado;
+                    if (futuraPos[0] == mon.x && futuraPos[1] == mon.y) {
+                        this.addEvent("collect");
+                    }
                 }
-            }
-
+                
+            }*/
         }
-        return nuevosEst;
+        return listProyectil;
     }
 
     public double[] futuraPosicion(HashMap<String, LinkedList<Action>> acciones) {
@@ -129,51 +114,82 @@ public class NaveNeutra extends Nave {
     @Override
     public NaveNeutra next(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
 
-        hasChanged = false;
+        hasChanged = true;
         double nuevoX = x;
         double nuevoY = y;
-        int nuevosProyectiles = countProjectile;
-        boolean salir = leave;
-        boolean muerto = dead;
-        int nuevaVida = health;
+        int nuevosProyectiles = countProyectil;
         boolean destruido = destroy;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
-
-        if (this.propietario != null) {
-            LinkedList<Action> listAccion = acciones.get(propietario);
-
-            if (!listAccion.isEmpty()) {
+        NavePlayer nuevoPropietario = propietario;
+        if (propietario != null) {
+            LinkedList<Action> listAccion = acciones.get(propietario.id);
+            if (listAccion != null) {
                 for (Action accion : listAccion) {
-                    hasChanged = true;
-                    switch (accion.getName()) {
-                        case "fire":
-                            nuevosProyectiles++;
-                            break;
+                    if (accion != null) {
+                        System.out.println(accion.getName());
+                        hasChanged = true;
+                        //System.out.println("has change");
+
+                        switch (accion.getName()) {
+                            case "move":
+                                flock();
+                                break;
+                            case "stop":
+                                //System.out.println("Llegue al stop");
+                                nuevaVelX = 0;
+                                nuevaVelY = 0;
+                                break;
+                            case "fire":
+                                nuevosProyectiles++;
+                                break;
+
+                        }
                     }
                 }
             }
         }
+        nuevoX = nuevoX + nuevaVelX;
+        nuevoY = nuevoY + nuevaVelY;
+        //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
+
         LinkedList<String> eventos = getEvents();
+
         if (!eventos.isEmpty()) {
-            //Ver en que momento tiene un propietario
             hasChanged = true;
             boolean revivir = false;
+            //System.out.println(eventos);
             for (String evento : eventos) {
+                switch (evento) {
 
+                }
             }
-
         }
-        //System.out.println("has change neutra");
-        NaveNeutra nuevoJugador = new NaveNeutra(this.name, this.id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, salir, muerto, propietario);
-        return nuevoJugador;
+        NaveNeutra nuevaNeutra = new NaveNeutra(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevosProyectiles, nuevoPropietario);
+        return nuevaNeutra;
     }
 
-     /**
+    /**
      * @param propietario the propietario to set
      */
     public void setPropietario(NavePlayer propietario) {
         this.propietario = propietario;
+    }
+
+    public void flock() {
+
+    }
+
+    public void computeAlignment() {
+
+    }
+
+    public void computeCohesion() {
+
+    }
+
+    public void computeSeparation() {
+
     }
 
     @Override

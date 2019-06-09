@@ -36,10 +36,10 @@ public class Asteroide extends Entity {
                     state.addEvent("hit"); // Si la nave no muere entonces deberia ser un collide
                     //this.addEvent("collide");
                 }
-            } else if (state.getName().equals("Projectile")) {
-                Projectile projectile = ((Projectile) state);
-                double dist = Math.sqrt((projectile.x - this.x) * (projectile.x - this.x) + (projectile.y - this.y) * (projectile.y - this.y));
-                if (dist <= (this.width / 2 + projectile.width / 2) || dist <= (this.height / 2 + projectile.height / 2)) { // Esto va a cambiar segun si terminamos usando una libreria fisica
+            } else if (state.getName().equals("Proyectil")) {
+                Proyectil proyectil = ((Proyectil) state);
+                double dist = Math.sqrt((proyectil.x - this.x) * (proyectil.x - this.x) + (proyectil.y - this.y) * (proyectil.y - this.y));
+                if (dist <= (this.width / 2 + proyectil.width / 2) || dist <= (this.height / 2 + proyectil.height / 2)) { // Esto va a cambiar segun si terminamos usando una libreria fisica
                     state.addEvent("hit");
                     //this.addEvent("collide"); // No se que tan importante es agregar el collide en el asteroide
                 }
