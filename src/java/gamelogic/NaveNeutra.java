@@ -29,6 +29,7 @@ public class NaveNeutra extends Nave {
     @Override
     public LinkedList<State> generate(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
         LinkedList<State> listProyectil = new LinkedList();
+
         if (propietario != null) {
             LinkedList<Action> listAccion = acciones.get(propietario.id);
             if (listAccion != null) {
@@ -37,9 +38,7 @@ public class NaveNeutra extends Nave {
                         case "fire":
                             Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, 50, 0, 0);
                             listProyectil.add(proyectil);
-
                     }
-
                 }
             }
 
@@ -122,8 +121,8 @@ public class NaveNeutra extends Nave {
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
         NavePlayer nuevoPropietario = propietario;
-        if (propietario != null) {
-            LinkedList<Action> listAccion = acciones.get(propietario.id);
+        if (nuevoPropietario != null && !nuevoPropietario.dead) {
+            LinkedList<Action> listAccion = acciones.get(nuevoPropietario.id);
             if (listAccion != null) {
                 for (Action accion : listAccion) {
                     if (accion != null) {
@@ -148,6 +147,8 @@ public class NaveNeutra extends Nave {
                     }
                 }
             }
+        } else if (propietario.dead) {
+            nuevoPropietario = null;
         }
         nuevoX = nuevoX + nuevaVelX;
         nuevoY = nuevoY + nuevaVelY;
@@ -170,6 +171,8 @@ public class NaveNeutra extends Nave {
     }
 
     /**
+     * A
+     *
      * @param propietario the propietario to set
      */
     public void setPropietario(NavePlayer propietario) {
@@ -177,19 +180,106 @@ public class NaveNeutra extends Nave {
     }
 
     public void flock() {
-
+        Vector2 alignment = computeAlignment(this, propietario.navesAliadas); // De donde saco los vecinos?
+        Vector2 cohesion = computeCohesion(this, propietario.navesAliadas);
+        Vector2 separation = computeSeparation(this, propietario.navesAliadas);
+        Vector2 aux = alignment.add(cohesion.add(separation));
+        aux.setMagnitude(100);
+        this.velocidad.x = aux.x;
+        this.velocidad.y = aux.y;
     }
 
-    public void computeAlignment() {
+    public Vector2 computeAlignment(NaveNeutra miAgente, LinkedList<Nave> agentes) {
+        //console.log(lider);
+        //console.log(agentes);
+        Vector2 vectorAlignment = new Vector2(0, 0);
+        int vecinos = 0;
+        double xAgente = miAgente.x;
+        double yAgente = miAgente.y;
+        for (int i = 0; i < agentes.size(); i++) {
+            Nave agente = agentes.get(i);
+            if (agentes.get(i) != miAgente) {
+                double xAgenteVecino = agente.x;
+                double yAgenteVecino = agente.y;
 
+                Vector2 vectorDistancia = new Vector2(xAgente, yAgente).subtract(new Vector2(xAgenteVecino, yAgenteVecino));
+                double distanceToTarget = vectorDistancia.getMagnitude();
+                //console.log(distanceToTarget);
+                if (distanceToTarget < 300) {
+                    vectorAlignment.add(agente.velocidad);
+                    vecinos++;
+                }
+            }
+        }
+        if (vecinos == 0) {
+            return vectorAlignment;
+        }
+        //console.log(vectorAlignment);
+        vectorAlignment.x /= vecinos;
+        vectorAlignment.y /= vecinos;
+        vectorAlignment.normalize();
+        return vectorAlignment;
     }
 
-    public void computeCohesion() {
-
+    public Vector2 computeCohesion(NaveNeutra miAgente, LinkedList<Nave> agentes) {
+        Vector2 vectorAlignment = new Vector2(0, 0);
+        int vecinos = 0;
+        double xAgente = miAgente.x;
+        double yAgente = miAgente.y;
+        for (int i = 0; i < agentes.size(); i++) {
+            Nave agente = agentes.get(i);
+            if (agente != miAgente) {
+                double xAgenteVecino = agente.x;
+                double yAgenteVecino = agente.y;
+                Vector2 vectorDistancia = new Vector2(xAgente, yAgente).subtract(new Vector2(xAgenteVecino, yAgenteVecino));
+                double distanceToTarget = vectorDistancia.getMagnitude();
+                if (distanceToTarget < 300) {
+                    vectorAlignment.x += xAgenteVecino;
+                    vectorAlignment.y += yAgenteVecino;
+                    vecinos++;
+                }
+            }
+        }
+        if (vecinos == 0) {
+            return vectorAlignment;
+        }
+        vectorAlignment.x /= vecinos;
+        vectorAlignment.y /= vecinos;
+        vectorAlignment = new Vector2(
+                vectorAlignment.x - xAgente,
+                vectorAlignment.y - yAgente
+        );
+        vectorAlignment.normalize();
+        return vectorAlignment;
     }
 
-    public void computeSeparation() {
-
+    public Vector2 computeSeparation(NaveNeutra miAgente, LinkedList<Nave> agentes) {
+        Vector2 vectorAlignment = new Vector2(0, 0);
+        int vecinos = 0;
+        double xAgente = miAgente.x;
+        double yAgente = miAgente.y;
+        for (int i = 0; i < agentes.size(); i++) {
+            Nave agente = agentes.get(i);
+            if (agente != miAgente) {
+                double xAgenteVecino = agente.x;
+                double yAgenteVecino = agente.y;
+                Vector2 vectorDistancia = new Vector2(xAgente, yAgente).subtract(new Vector2(xAgenteVecino, yAgenteVecino));
+                double distanceToTarget = vectorDistancia.getMagnitude();
+                if (distanceToTarget < 300) {
+                    vectorAlignment.x += xAgenteVecino - xAgente;
+                    vectorAlignment.y += yAgenteVecino - yAgente;
+                    vecinos++;
+                }
+            }
+        }
+        if (vecinos == 0) {
+            return vectorAlignment;
+        }
+        vectorAlignment.x /= vecinos;
+        vectorAlignment.y /= vecinos;
+        vectorAlignment.negate();
+        vectorAlignment.normalize();
+        return vectorAlignment;
     }
 
     @Override

@@ -17,6 +17,7 @@ public class NavePlayer extends Nave {
     protected boolean leave;
     protected boolean dead;
     protected int puntaje;
+    protected LinkedList<Nave> navesAliadas;
 
     public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
         super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
