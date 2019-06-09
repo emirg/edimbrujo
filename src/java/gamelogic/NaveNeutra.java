@@ -140,7 +140,7 @@ public class NaveNeutra extends Nave {
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
         
-        if (propietario!=null){
+        if (this.propietario!=null){
             LinkedList<Action> listAccion= acciones.get(propietario);
         
             if (!listAccion.isEmpty()) {
@@ -167,6 +167,13 @@ public class NaveNeutra extends Nave {
         //System.out.println("has change neutra");
         NaveNeutra nuevoJugador = new NaveNeutra(this.name, this.id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, salir, muerto,propietario);
         return nuevoJugador;
+    }
+
+    /**
+     * @param propietario the propietario to set
+     */
+    public void setPropietario(NavePlayer propietario) {
+        this.propietario = propietario;
     }
 
     @Override

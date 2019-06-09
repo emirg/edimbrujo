@@ -23,6 +23,10 @@ var config = {
     }
 };
 
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMENTARIOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// * falta barriles o monedas logicas 
+
 var game = new Phaser.Game(config);
 
 //coneccion
@@ -40,8 +44,8 @@ var height = 2048;
 var asteroides = [];
 var players = [];
 var neutras = [];
+var coins =[];
 
-var scene;
 
 function preload() {
     //backgroud
@@ -90,7 +94,7 @@ function create() {
     this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', {atlas: 'space', frame: 'asteroid2', frameWidth: 96});
     this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', {atlas: 'space', frame: 'asteroid3', frameWidth: 96});
     this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', {atlas: 'space', frame: 'asteroid4', frameWidth: 64});
-    this.textures.addSpriteSheetFromAtlas('explosion-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
+    //this.textures.addSpriteSheetFromAtlas('explosion-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
 
 
 
@@ -142,12 +146,33 @@ function create() {
     cursors = this.input.keyboard.createCursorKeys();
 }
 
+// Retorna un entero aleatorio entre min (incluido) y max (excluido)
+// ¡Usando Math.round() te dará una distribución no-uniforme!
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
 function update(time, delta)
 {
     // console.log(socket);
     //acciones cursor
     for (let i = 0; i < asteroides.length; i++) {
-        asteroides[i].anims.play('asteroid1-anim', true);
+        
+        
+        switch (i) {
+            case 1:
+                asteroides[i].anims.play('asteroid1-anim', true);
+                break;
+            case 2:
+                asteroides[i].anims.play('asteroid2-anim', true);
+                break;
+            case 3:
+                asteroides[i].anims.play('asteroid3-anim', true);
+                break
+            default:
+                asteroides[i].anims.play('asteroid4-anim', true);
+                break;
+        }
         //var sprite=asteroides[i];
         //console.log(sprite.anims);
     }
@@ -189,7 +214,7 @@ window.onload = function () {
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
                 var health = gameState[i]["NavePlayer"]["health"];
-                //console.log(health);
+                //console.log(leave);
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
                     //console.log('this' + this);
@@ -202,11 +227,13 @@ window.onload = function () {
                 players[id].z = y;
 
                 if (leave) {
-                    players[id].dispose();
+                    players[id].destroy();  
+                    //players.splice(id);
+                    //console.log(players[id]);
                 }
                 if (destroy) {
-                    players[id].dispose();
-                    players[id] = null;
+                    players[id].destroy();
+                    //players[id] = null;
                 }
             } else if (typeof gameState[i]['Entity'] !== "undefined") {
                 //console.log("asteroide...................................")
