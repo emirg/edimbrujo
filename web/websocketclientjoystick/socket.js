@@ -26,34 +26,11 @@ window.onload = function() {
         /*
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
-            if (typeof gameState[i]["Remove"] !== "undefined") {
-                var id = gameState[i]["Remove"]["id"];
-                if (players[id] != null) {
-                    players[id].dispose();
-                    players[id] = null;
-                }
-            } /*else if (typeof gameState[i]["NavePlayer"] !== "undefined") {
-                var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
-                //var playerId = gameState[i]["NavePlayer"]["id"];
-                var destroy = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
-                var leave = gameState[i]["NavePlayer"]["leave"];
-                var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
-                var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
-                // Create a sphere that we will be moved by the keyboard
-                if (players[id] == null) {
-                    console.log('this'+this);
-                    console.log(game);
-                    players[id] =  game.scene.scenes[0].add.sprite(x, y, "ship");
-                    console.log(players[id]);
-                }
-
-
-                if (leave) {
-                    players[id].dispose();
-                }
-                if (destroy) {
-                    players[id].dispose();
-                    players[id] = null;
+             if (typeof gameState[i]["NavePlayer"] !== "undefined") {
+                var id = gameState[i]["NavePlayer"]["health"]['Nave']['super']["Entity"]["super"]["State"]["id"];
+                var health = gameState[i]["NavePlayer"]["health"];
+                if (health != null) {
+                    updateHealth(health);
                 }
             }
             i++;

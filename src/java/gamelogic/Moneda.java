@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
 public class Moneda extends Entity {
 
     public Moneda(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double width, double height) {
-        super("Moneda", destroy, id, x, y, 0, 0, width, height);
+        super("Moneda", destroy, id, x, y, 0, 0, 32, 32);
     }
 
     @Override
