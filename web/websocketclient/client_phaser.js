@@ -314,17 +314,17 @@ window.onload = function () {
                     players[id].destroy();
                     //players[id] = null;
                 }
-            } else if (typeof gameState[i]['Entity'] !== "undefined") {
+            } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
                 //console.log("asteroide...................................")
-                //console.log(gameState[i]["Entity"]);
-                var id = gameState[i]["Entity"]["super"]["State"]["id"];
-                var x = gameState[i]["Entity"]["x"];
-                var y = gameState[i]["Entity"]["y"];
+                //console.log(gameState[i]["Asteroide"]['super']["Entity"]["super"]['State']);
+                var id = gameState[i]["Asteroide"]['super']["Entity"]["super"]["State"]["id"];
+                var x = gameState[i]["Asteroide"]['super']["Entity"]["x"];
+                var y = gameState[i]["Asteroide"]['super']["Entity"]["y"];
                 //console.log(x);
                 //console.log(y);
 
                 if (asteroides[id] == null) {
-                    //console.log("asigne imagen asteroide");
+                    console.log("asigne imagen asteroide");
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
 
@@ -332,7 +332,7 @@ window.onload = function () {
                 }
                 asteroides[id].y = y;
                 asteroides[id].x = x;
-                asteroides[id].z = 0;
+                asteroides[id].z = y;
 
             }else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
                 var id = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
