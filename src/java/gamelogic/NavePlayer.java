@@ -18,13 +18,13 @@ public class NavePlayer extends Nave {
     protected boolean dead;
     protected int puntaje;
 
-    public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead) {
+    public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
         super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
         this.dead = dead;
-        this.puntaje = 0;
+        this.puntaje = puntaje;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class NavePlayer extends Nave {
                             nuevaVelX = 0;
                             nuevaVelY = 0;
                             break;
-                        
+
                     }
                 }
             }
@@ -126,10 +126,11 @@ public class NavePlayer extends Nave {
         boolean destruido = destroy;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
+        int nuevoPuntaje = puntaje;
 
         if (listAccion != null) {
             for (Action accion : listAccion) {
-                
+
                 if (accion != null) {
                     System.out.println(accion.getName());
                     hasChanged = true;
@@ -158,7 +159,7 @@ public class NavePlayer extends Nave {
                                 salir = true;
                                 //System.out.println("salir "+salir);
                                 break;
-                            
+
                         }
 
                     }
@@ -197,7 +198,7 @@ public class NavePlayer extends Nave {
                         }
                         break;
                     case "collect":
-                        puntaje = puntaje + 10; // Si esto se hace dos veces cuando recolecta moneda entonces hay que sacar el state.addEvent de Moneda
+                        nuevoPuntaje = nuevoPuntaje + 10; // Si esto se hace dos veces cuando recolecta moneda entonces hay que sacar el state.addEvent de Moneda
                         break;
                     case "respawn":
                         revivir = true;
@@ -215,7 +216,7 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, salir, muerto);
+        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto);
         return nuevoJugador;
     }
 
@@ -227,6 +228,7 @@ public class NavePlayer extends Nave {
         this.health = ((NavePlayer) newPlayer).health;
         this.healthMax = ((NavePlayer) newPlayer).healthMax;
         this.dead = ((NavePlayer) newPlayer).dead;
+        this.puntaje = ((NavePlayer) newPlayer).puntaje;
     }
 
     @Override
@@ -239,19 +241,19 @@ public class NavePlayer extends Nave {
         atributo.put("healthMax", healthMax);
         atributo.put("leave", leave);
         atributo.put("dead", dead);
+        atributo.put("puntaje", puntaje);
         jJugador.put("NavePlayer", atributo);
 
         return jJugador;
     }
 
-    @Override
+    /* @Override
     public JSONObject toJSON(String sessionId, LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions, JSONObject lastState) {
         NavePlayer thePlayer = getPlayer(sessionId, states);
         return (thePlayer != null && Math.abs(thePlayer.getX() - x) < 10 && Math.abs(thePlayer.getY() - y) < 10)
                 ? (lastState == null || hasChanged || isJSONRemover(lastState) ? toJSON() : null)
                 : (lastState != null && !isJSONRemover(lastState) ? toJSONRemover() : null);
-    }
-
+    }*/
     protected NavePlayer getPlayer(String sessionId, LinkedList<State> states) {
         NavePlayer thePlayer = null;
         int i = 0;
