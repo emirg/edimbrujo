@@ -16,7 +16,6 @@ public class NavePlayer extends Nave {
     protected int healthMax;
     protected boolean leave;
     protected boolean dead;
-	private State nuevoJ;
 
     public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead) {
         super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
@@ -140,7 +139,7 @@ public class NavePlayer extends Nave {
                                 break;
                             case "leave":
                                 salir = true;
-                                System.out.println("salir "+salir);
+                                //System.out.println("salir "+salir);
                                 break;
                         }
 
@@ -202,18 +201,10 @@ public class NavePlayer extends Nave {
         super.setState(newPlayer);
         this.id = ((NavePlayer) newPlayer).id;
         this.leave = ((NavePlayer) newPlayer).leave;
+        this.health = ((NavePlayer) newPlayer).health;
+        this.healthMax = ((NavePlayer) newPlayer).healthMax;
+        this.dead = ((NavePlayer) newPlayer).dead;
     }
-/*
-    public void setState(State nuevoJ) {
-        this.nuevoJ = nuevoJ;
-		super.setState(nuevoJ);
-        id = nuevoJ.id;
-        health = nuevoJ.health;
-        healthMax = nuevoJ.healthMax;
-        leave = nuevoJ.leave;
-        System.out.println("newLeave "+leave);
-        dead = nuevoJ.dead;
-    }*/
 
     @Override
     public JSONObject toJSON() {

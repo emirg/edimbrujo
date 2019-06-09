@@ -44,7 +44,8 @@ var height = 2048;
 var asteroides = [];
 var players = [];
 var neutras = [];
-var coins =[];
+var coins;
+var particles;
 
 
 function preload() {
@@ -124,16 +125,21 @@ function create() {
     //estrellas
     stars = this.add.tileSprite(400, 300, 2000, 2000, 'stars').setScrollFactor(0);
 
-    // coins
-    //coins = this.physics.add.sprite(900, 450, 'coin');
+    particles = this.add.particles('space');
 
-    //animacion moneda
+    // coins
+    coins = this.physics.add.sprite(900, 450, 'coin');
+
+    coins.setCollideWorldBounds(true);
+
     this.anims.create({
-        key: "moneda-anim",
-        frames: this.anims.generateFrameNumbers("coin", {start: 0, end: 5}),
-        frameRate: 10,
-        repeat: -1
+    key: "efectoMoneda",
+    frames: this.anims.generateFrameNumbers("coin", { start: 0, end: 5 }),
+    frameRate: 10,
+    repeat: -1
     });
+
+    //this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
     //animacion galaxia
     this.tweens.add({
@@ -154,11 +160,9 @@ function getRandomInt(min, max) {
 
 function update(time, delta)
 {
-    // console.log(socket);
-    //acciones cursor
+    coins.anims.play("efectoMoneda", true);
+
     for (let i = 0; i < asteroides.length; i++) {
-        
-        
         switch (i) {
             case 1:
                 asteroides[i].anims.play('asteroid1-anim', true);
@@ -177,6 +181,57 @@ function update(time, delta)
         //console.log(sprite.anims);
     }
 }
+
+function particle(ship,id){
+     //particulas
+     console.log(ship);
+     console.log(players[id]);
+        var emitter = particles.createEmitter({
+            frame: 'blue',
+            speed: 100,
+            lifespan: {
+                onEmit: function (particle, key, t, value)
+                {
+                    return Phaser.Math.Percent(ship.body.speed, 0, 300) * 2000;
+                }
+            },
+            alpha: {
+                onEmit: function (particle, key, t, value)
+                {
+                    return Phaser.Math.Percent(ship.body.speed, 0, 300);
+                }
+            },
+            angle: {
+                onEmit: function (particle, key, t, value)
+                {
+                    var v = Phaser.Math.Between(-10, 10);
+                    return (ship.angle - 180) + v;
+                }
+            },
+            scale: { start: 0.6, end: 0 },
+            blendMode: 'ADD'
+        });
+        
+        emitter.startFollow(ship);
+    
+}
+
+function collectCoins(player, coins) {
+    //  Add and update the score
+    //score += 10;
+    //var text='Score: ' + score;
+    //scoreText.setText(text);
+    var x =
+      player.x < 400
+        ? Phaser.Math.Between(100, 3000)
+        : Phaser.Math.Between(0, 1000);
+    var y =
+      player.y < 400
+        ? Phaser.Math.Between(100, 3000)
+        : Phaser.Math.Between(0, 1000);
+    coins.setPosition(x, y);
+    //coins.setVisible(false);
+  }
 
 
 window.onload = function () {
@@ -219,7 +274,18 @@ window.onload = function () {
                 if (players[id] == null) {
                     //console.log('this' + this);
                     //console.log(gameState);
-                    players[id] = game.scene.scenes[0].add.sprite(x, y, "ship");
+                    players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
+                    //players[id] .setDrag(300);
+                    //players[id].setDamping(true);
+                    //players[id] .setAngularDrag(400);
+                    //players[id] .setMaxVelocity(600);
+                    //players[id] .setCollideWorldBounds(true);
+                    game.scene.scenes[0].physics.add.overlap(players[id], coins,collectCoins, null, this);
+                    if(particles!== undefined){
+                        particle(players[id],id);
+                        console.log("particules");
+                    }
+                    
                     //console.log(players[id]);
                 }
                 players[id].y = y;
@@ -248,6 +314,7 @@ window.onload = function () {
                     //console.log("asigne imagen asteroide");
                     asteroides[id] = game.scene.scenes[0].add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
+
                     //asteroides[id]=scene.physics.add.sprite(x, y, "asteroid1");
                 }
                 asteroides[id].y = y;
