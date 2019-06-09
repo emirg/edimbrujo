@@ -76,7 +76,7 @@ function preload() {
 function create() {
     //console.log(game.scene.scenes[0]==this);
     //console.log(this);
-    scene=this;
+
     //console.log("CREATE");
     //  Prepare some spritesheets and animations
     this.textures.addSpriteSheetFromAtlas('mine-sheet', {atlas: 'space', frame: 'mine', frameWidth: 64});
@@ -213,12 +213,14 @@ window.onload = function () {
 
                 if (asteroides[id] == null) {
                     console.log("asigne imagen asteroide");
-                    //asteroides[id] = game.scene.scenes[0].add.sprite(x, y, "asteroid1");
-                    asteroides[id]=scene.physics.add.sprite(x, y, "asteroid1");
+                    asteroides[id] = game.scene.scenes[0].add.sprite(x, y, "asteroid1");
+                    asteroides[id].setDepth(1);
+                    //asteroides[id]=scene.physics.add.sprite(x, y, "asteroid1");
                 }
                 asteroides[id].y = y;
                 asteroides[id].x = x;
                 asteroides[id].z = y;
+                
             }else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
                 var id = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
                 //var playerId = gameState[i]["NavePlayer"]["id"];
@@ -231,8 +233,9 @@ window.onload = function () {
                 if (neutras[id] == null) {
                     console.log("asigne imagen naveNeutra");
                     console.log(gameState);
-                    //neutras[id] = game.scene.scenes[0].add.sprite(x, y, "ship");
-                    neutras[id] = scene.add.sprite(x, y, "ship");
+                    neutras[id] = game.scene.scenes[0].add.sprite(x, y, "ship");
+                    //neutras[id] = scene.add.sprite(x, y, "ship");
+                    neutras[id].setDepth(1);
                     //console.log(players[id]);
                 }
                 neutras[id].y = y;
