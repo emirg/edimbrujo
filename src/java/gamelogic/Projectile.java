@@ -24,10 +24,9 @@ public class Projectile extends Entity {
         for (State state : states) {
             if (state.getName().equals("NavePlayer") && !((NavePlayer) state).dead) {
                 NavePlayer player = ((NavePlayer) state);
-
                 if (x == player.x && y == player.y) {
                     state.addEvent("hit");
-                    this.addEvent("collide");
+                    this.addEvent("hit");
                 }
             }
         }
@@ -48,13 +47,13 @@ public class Projectile extends Entity {
             hasChanged = true;
             for (String event : events) {
                 switch (event) {
-                    case "collide":
+                    case "hit":
                         destruido = true;
                         break;
                 }
             }
         }
-        Projectile newArrow = new Projectile(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
+        Projectile newArrow = new Projectile(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y, number);
         return newArrow;
     }
 
