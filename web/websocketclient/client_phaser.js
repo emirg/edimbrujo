@@ -46,6 +46,7 @@ var players = [];
 var neutras = [];
 var coins;
 var particles;
+var bullets=[];
 
 
 function preload() {
@@ -87,6 +88,7 @@ function preload() {
 function create() {
     //console.log(game.scene.scenes[0]==this);
     //console.log(this);
+  
 
     //console.log("CREATE");
     //  Prepare some spritesheets and animations
@@ -184,8 +186,8 @@ function update(time, delta)
 
 function particle(ship,id){
      //particulas
-     console.log(ship);
-     console.log(players[id]);
+     //console.log(ship);
+     //console.log(players[id]);
         var emitter = particles.createEmitter({
             frame: 'blue',
             speed: 100,
@@ -286,15 +288,15 @@ window.onload = function () {
                     //players[id] .setCollideWorldBounds(true);
                     game.scene.scenes[0].physics.add.overlap(players[id], coins,collectCoins, null, this);
                     for (let i = 0; i < asteroides.length; i++) {
-                        console.log(asteroides[i]);
-                        console.log(players[id]);
-                        console.log("moneda");
-                        console.log(coins);
+                        //console.log(asteroides[i]);
+                        //console.log(players[id]);
+                        //console.log("moneda");
+                        //console.log(coins);
                         game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
-                        console.log("colision");
+                        //console.log("colision");
                     }
                     if(particles!== undefined){
-                        particle(players[id],id);
+                        //particle(players[id],id);
                         console.log("particules");
                     }
                     
@@ -336,7 +338,6 @@ window.onload = function () {
 
             }else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
                 var id = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
-                //var playerId = gameState[i]["NavePlayer"]["id"];
                 var destroy = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
                 var leave = gameState[i]["NaveNeutra"]["leave"];
                 var x = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["x"];
@@ -354,8 +355,71 @@ window.onload = function () {
                 neutras[id].y = y;
                 neutras[id].x = x;
                 neutras[id].z = y;
+            }else if (typeof gameState[i]["Proyectil"] !== "undefined") {
+                console.log(gameState);
+                var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
+                var x = gameState[i]["Proyectil"]['super']["Entity"]["x"];
+                var y = gameState[i]["Proyectil"]['super']["Entity"]["y"];
+                
+                if(bullets[id]==null){
+                    bullets[id] = game.scene.scenes[0].add.image(x, y, 'space', 'blaster');
+                }
+                bullets[id].y = y;
+                bullets[id].x = x;
+                bullets[id].z = y;
             }
             i++;
         }
     }
 };
+var Bullet = new Phaser.Class({
+
+    Extends: Phaser.Physics.Arcade.Image,
+
+    initialize:
+
+    function Bullet (scene)
+    {
+        Phaser.Physics.Arcade.Image.call(this, scene, 0, 0, 'space', 'blaster');
+
+        this.setBlendMode(1);
+        this.setDepth(1);
+
+        this.speed = 1000;
+        this.lifespan = 1000;
+
+        this._temp = new Phaser.Math.Vector2();
+    },
+    
+    fire: function (ship)
+    {
+        this.lifespan = 1000;
+
+        this.setActive(true);
+        this.setVisible(true);
+        // this.setRotation(ship.rotation);
+        this.setAngle(ship.body.rotation);
+        this.setPosition(ship.x, ship.y);
+        this.body.reset(ship.x, ship.y);
+
+       
+        var angle = Phaser.Math.DegToRad(ship.body.rotation);
+    
+        this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
+
+        this.body.velocity.x *= 2;
+        this.body.velocity.y *= 2;
+    },
+    update: function (time, delta)
+    {
+        this.lifespan -= delta;
+
+        if (this.lifespan <= 0)
+        {
+            this.setActive(false);
+            this.setVisible(false);
+            this.body.stop();
+        }
+    }
+
+});

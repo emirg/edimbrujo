@@ -37,7 +37,7 @@ public class Asteroide extends Entity {
                     //this.addEvent("collide");
                 }
             } else if (state.getName().equals("Projectile")) {
-                Projectile projectile = ((Projectile) state);
+                Proyectil projectile = ((Proyectil) state);
                 double dist = Math.sqrt((projectile.x - this.x) * (projectile.x - this.x) + (projectile.y - this.y) * (projectile.y - this.y));
                 if (dist <= (this.width / 2 + projectile.width / 2) || dist <= (this.height / 2 + projectile.height / 2)) { // Esto va a cambiar segun si terminamos usando una libreria fisica
                     state.addEvent("hit");

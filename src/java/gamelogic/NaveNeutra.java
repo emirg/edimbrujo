@@ -69,7 +69,7 @@ public class NaveNeutra extends Nave {
                                         velocidadY = 0;
                                     }
                                 }
-                                Projectile proyectil = new Projectile("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
+                                Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, velocidad.x, velocidad.y, 0);
                                 nuevosEst.add(proyectil);
                             }
 

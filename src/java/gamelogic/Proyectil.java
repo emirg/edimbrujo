@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
-public class Projectile extends Entity {
+public class Proyectil extends Entity {
 
     protected int number;
 
-    public Projectile(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int number) {
+    public Proyectil(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int number) {
         super("Projectile", destroy, id, x, y, velocidadX, velocidadY, 10, 10);
         this.number = number;
     }
@@ -53,21 +53,21 @@ public class Projectile extends Entity {
                 }
             }
         }
-        Projectile newArrow = new Projectile(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y, number);
+        Proyectil newArrow = new Proyectil(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y, number);
         return newArrow;
     }
 
     @Override
     public void setState(State newProjectile) {
         super.setState(newProjectile);
-        id = ((Projectile) newProjectile).id;
-        number = ((Projectile) newProjectile).number;
+        id = ((Proyectil) newProjectile).id;
+        number = ((Proyectil) newProjectile).number;
         velocidad = new Vector2(velocidad.x, velocidad.y);
     }
 
     @Override
     protected Object clone() {
-        Projectile clon = new Projectile(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
+        Proyectil clon = new Proyectil(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
         return clon;
     }
 
@@ -77,7 +77,7 @@ public class Projectile extends Entity {
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("number", number);
-        jProjectile.put("Projectile", jsonAttrs);
+        jProjectile.put("Proyectil", jsonAttrs);
         return jProjectile;
     }
 
