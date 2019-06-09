@@ -17,6 +17,7 @@ public class NavePlayer extends Nave {
     protected boolean leave;
     protected boolean dead;
     protected int puntaje;
+    protected LinkedList<Nave> navesAliadas;
 
     public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
         super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
@@ -36,7 +37,7 @@ public class NavePlayer extends Nave {
                 if (!dead) {
                     switch (accion.getName()) {
                         case "fire":
-                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, velocidad.x+50, velocidad.y, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, 50, 0, 0);
                             listProyectil.add(proyectil);
 
                     }
@@ -59,7 +60,7 @@ public class NavePlayer extends Nave {
                 if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
                     this.addEvent("hit");
                 }
-            } else if (estado != this && estado.getName().equalsIgnoreCase("projectile")) { // Choque contra projectile
+            } else if (estado != this && estado.getName().equalsIgnoreCase("proyectil")) { // Choque contra proyectil
                 Proyectil proj = (Proyectil) estado;
                 double xFuturaAsteroide = proj.x + proj.velocidad.x;
                 double yFuturaAsteroide = proj.y + proj.velocidad.y;
@@ -119,7 +120,7 @@ public class NavePlayer extends Nave {
         hasChanged = true;
         double nuevoX = x;
         double nuevoY = y;
-        int nuevosProyectiles = countProjectile;
+        int nuevosProyectiles = countProyectil;
         boolean salir = leave;
         boolean muerto = dead;
         int nuevaVida = health;

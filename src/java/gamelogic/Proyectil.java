@@ -14,7 +14,7 @@ public class Proyectil extends Entity {
     protected int number;
 
     public Proyectil(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int number) {
-        super("Projectile", destroy, id, x, y, velocidadX, velocidadY, 10, 10);
+        super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 25, 25);
         this.number = number;
     }
 
@@ -58,10 +58,10 @@ public class Proyectil extends Entity {
     }
 
     @Override
-    public void setState(State newProjectile) {
-        super.setState(newProjectile);
-        id = ((Proyectil) newProjectile).id;
-        number = ((Proyectil) newProjectile).number;
+    public void setState(State newProyectil) {
+        super.setState(newProyectil);
+        id = ((Proyectil) newProyectil).id;
+        number = ((Proyectil) newProyectil).number;
         velocidad = new Vector2(velocidad.x, velocidad.y);
     }
 
@@ -73,12 +73,12 @@ public class Proyectil extends Entity {
 
     @Override
     public JSONObject toJSON() {
-        JSONObject jProjectile = new JSONObject();
+        JSONObject jProyectil = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("number", number);
-        jProjectile.put("Proyectil", jsonAttrs);
-        return jProjectile;
+        jProyectil.put("Proyectil", jsonAttrs);
+        return jProyectil;
     }
 
 }
