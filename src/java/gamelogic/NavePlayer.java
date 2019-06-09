@@ -57,6 +57,18 @@ public class NavePlayer extends Nave {
                 if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
                     this.addEvent("hit");
                 }
+            } else if (estado != this && estado.getName().equalsIgnoreCase("projectile")) { // Choque contra projectile
+                Projectile proj = (Projectile) estado;
+                double xFuturaAsteroide = proj.x + proj.velocidad.x;
+                double yFuturaAsteroide = proj.y + proj.velocidad.y;
+                if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
+                    this.addEvent("hit");
+                }
+            } else if (estado != this && estado.getName().equalsIgnoreCase("projectile")) { // Choque contra moneda
+                Moneda mon = (Moneda) estado;
+                if (futuraPos[0] == mon.x && futuraPos[1] == mon.y) {
+                    this.addEvent("hit");
+                }
             }
             /*else if(){ // Choca contra moneda?
                 
@@ -185,7 +197,7 @@ public class NavePlayer extends Nave {
                         muerto = false;
                         nuevaVida = healthMax;
                         break;
-                    case "despawn": 
+                    case "despawn":
                         //Considera que el jugador sale del juego
                         destruido = true;
                         break;
@@ -219,5 +231,26 @@ public class NavePlayer extends Nave {
         jJugador.put("NavePlayer", atributo);
 
         return jJugador;
+    }
+
+    @Override
+    public JSONObject toJSON(String sessionId, LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions, JSONObject lastState) {
+        NavePlayer thePlayer = getPlayer(sessionId, states);
+        return (thePlayer != null && Math.abs(thePlayer.getX() - x) < 10 && Math.abs(thePlayer.getY() - y) < 10)
+                ? (lastState == null || hasChanged || isJSONRemover(lastState) ? toJSON() : null)
+                : (lastState != null && !isJSONRemover(lastState) ? toJSONRemover() : null);
+    }
+
+    protected NavePlayer getPlayer(String sessionId, LinkedList<State> states) {
+        NavePlayer thePlayer = null;
+        int i = 0;
+        while (thePlayer == null && i < states.size()) {
+            State state = states.get(i);
+            if (state.getName().equals("NavePlayer") && ((NavePlayer) state).id.equals(sessionId)) {
+                thePlayer = (NavePlayer) state;
+            }
+            i++;
+        }
+        return thePlayer;
     }
 }
