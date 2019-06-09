@@ -73,14 +73,12 @@ public class Projectile extends Entity {
 
     @Override
     public JSONObject toJSON() {
-        JSONObject jsonArrow = new JSONObject();
+        JSONObject jProjectile = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("number", number);
-        jsonAttrs.put("xVelocity", x);
-        jsonAttrs.put("yVelocity", y);
-        jsonArrow.put("Projectile", jsonAttrs);
-        return jsonArrow;
+        jProjectile.put("Projectile", jsonAttrs);
+        return jProjectile;
     }
 
 }

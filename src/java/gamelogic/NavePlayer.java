@@ -16,6 +16,7 @@ public class NavePlayer extends Nave {
     protected int healthMax;
     protected boolean leave;
     protected boolean dead;
+    protected int puntaje;
 
     public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, boolean leave, boolean dead) {
         super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
@@ -23,6 +24,7 @@ public class NavePlayer extends Nave {
         this.healthMax = hM;
         this.leave = leave;
         this.dead = dead;
+        this.puntaje = 0;
     }
 
     @Override
@@ -64,10 +66,10 @@ public class NavePlayer extends Nave {
                 if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
                     this.addEvent("hit");
                 }
-            } else if (estado != this && estado.getName().equalsIgnoreCase("projectile")) { // Choque contra moneda
+            } else if (estado != this && estado.getName().equalsIgnoreCase("moneda")) { // Choque contra moneda
                 Moneda mon = (Moneda) estado;
                 if (futuraPos[0] == mon.x && futuraPos[1] == mon.y) {
-                    this.addEvent("hit");
+                    this.addEvent("collect");
                 }
             }
             /*else if(){ // Choca contra moneda?
@@ -187,6 +189,9 @@ public class NavePlayer extends Nave {
                             nuevoX = x;
                             nuevoY = y;
                         }
+                        break;
+                    case "collect":
+                        puntaje = puntaje + 10; // Si esto se hace dos veces cuando recolecta moneda entonces hay que sacar el state.addEvent de Moneda
                         break;
                     case "respawn":
                         revivir = true;

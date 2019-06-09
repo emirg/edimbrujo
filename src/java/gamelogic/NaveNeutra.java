@@ -22,7 +22,6 @@ public class NaveNeutra extends Nave {
     //si propietario es nulo es por que no fue reclutado
 
     //private String propietario; // Podria ser una NavePlayer tambien
-
     private NavePlayer propietario;
     protected int health;
     protected int healthMax;
@@ -126,9 +125,10 @@ public class NaveNeutra extends Nave {
         pos[1] = nuevoY;
         return pos;
     }
+
     @Override
     public NaveNeutra next(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
-        
+
         hasChanged = false;
         double nuevoX = x;
         double nuevoY = y;
@@ -139,10 +139,10 @@ public class NaveNeutra extends Nave {
         boolean destruido = destroy;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
-        
-        if (this.propietario!=null){
-            LinkedList<Action> listAccion= acciones.get(propietario);
-        
+
+        if (this.propietario != null) {
+            LinkedList<Action> listAccion = acciones.get(propietario);
+
             if (!listAccion.isEmpty()) {
                 for (Action accion : listAccion) {
                     hasChanged = true;
@@ -165,7 +165,7 @@ public class NaveNeutra extends Nave {
 
         }
         //System.out.println("has change neutra");
-        NaveNeutra nuevoJugador = new NaveNeutra(this.name, this.id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, salir, muerto,propietario);
+        NaveNeutra nuevoJugador = new NaveNeutra(this.name, this.id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, salir, muerto, propietario);
         return nuevoJugador;
     }
 
@@ -182,10 +182,6 @@ public class NaveNeutra extends Nave {
         JSONObject atributo = new JSONObject();
 
         atributo.put("super", super.toJSON());
-        atributo.put("health", health);
-        atributo.put("healthMax", healthMax);
-        atributo.put("leave", leave);
-        atributo.put("dead", dead);
         atributo.put("propietario", propietario);
         jNeutra.put("NaveNeutra", atributo);
 

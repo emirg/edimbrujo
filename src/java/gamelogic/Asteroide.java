@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import engine.Action;
 import engine.State;
 import engine.StaticState;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -60,5 +61,16 @@ public class Asteroide extends Entity {
         }
         Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y);
         return newAsteroide;
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject jAsteroide = new JSONObject();
+        JSONObject atributo = new JSONObject();
+
+        atributo.put("super", super.toJSON());
+        jAsteroide.put("Asteroide", atributo);
+
+        return jAsteroide;
     }
 }
