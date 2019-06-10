@@ -64,7 +64,7 @@ function preload() {
     });
     this.load.spritesheet('bullet', 'assets/sprites/bullets/bullet11.png', {
         frameWidth: 64,
-        frameHeight: 64
+        frameHeight: 12
     });
 
     // nave neutra
@@ -323,8 +323,8 @@ window.onload = function () {
                     //console.log(players[id]);
                 }
                 //console.log(destroy);
-                if (destroy) {
-                    players[id].destroy();
+                if (dead) {
+                    //players[id].destroy();
                     //players[id] = null;
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {

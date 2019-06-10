@@ -164,9 +164,12 @@ public class NavePlayer extends Nave {
                                 salir = true;
                                 //System.out.println("salir "+salir);
                                 break;
-
+                                
                         }
 
+                    }else{
+                        System.out.println("respawn "+dead);
+                        this.addEvent("respawn");
                     }
                 }
             }
@@ -207,8 +210,8 @@ public class NavePlayer extends Nave {
                         break;
                     case "respawn":
                         revivir = true;
-                        nuevoX = x;
-                        nuevoY = y;
+                        nuevoX = 200;
+                        nuevoY = 200;
                         nuevaVelX = 0;
                         nuevaVelY = 0;
                         muerto = false;

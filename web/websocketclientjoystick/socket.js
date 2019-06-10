@@ -34,13 +34,16 @@ window.onload = function () {
             while (typeof gameState[i] !== "undefined") {
                 if (typeof gameState[i]["NavePlayer"] !== "undefined") {
                     var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
+                    var dead = gameState[i]["NavePlayer"]["dead"];
                     if (id == socketID){                        
                         var health = gameState[i]["NavePlayer"]["health"];
                         console.log(health);
                         if (health != null) {
                             updateHealth(health);
                         }
-
+                        if(dead){
+                            socket.send("died");
+                        }
                     }
                 }
                 i++;
