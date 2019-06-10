@@ -6,6 +6,8 @@ import engine.StaticState;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Vector;
+
 import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
@@ -13,11 +15,14 @@ public class Proyectil extends Entity {
 
     protected int number;
     protected String idPlayer;
+    protected Vector2 direccion;
+    protected double angulo;
 
     public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY, int number) {
         super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 64, 12);
         this.number = number;
         this.idPlayer = idPlayer;
+        this.angulo=angulo;
     }
 
     @Override
@@ -70,6 +75,7 @@ public class Proyectil extends Entity {
         super.setState(newProyectil);
         idPlayer = ((Proyectil) newProyectil).idPlayer;
         number = ((Proyectil) newProyectil).number;
+        angulo = ((Proyectil) newProyectil).angulo;
     }
 
     @Override
@@ -84,6 +90,7 @@ public class Proyectil extends Entity {
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("number", number);
+        jsonAttrs.put("angulo", angulo);
         jProyectil.put("Proyectil", jsonAttrs);
         return jProyectil;
     }
