@@ -23,12 +23,15 @@ public abstract class Nave extends Entity {
 
     protected int countProyectil;
     protected Vector2 direccion;
+    protected double angulo;
 
     //depende de como tratemos la orientacion puede no ser un int
     public Nave(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir, double yDir, int cantProj) {
         super(name, false, id, x, y, velocidadX, velocidadY, 64, 64);
         this.countProyectil = cantProj;
         this.direccion= new Vector2(xDir,yDir);
+        this.angulo = direccion.getDirection()*(180/Math.PI);
+
     }
 
     @Override
@@ -50,6 +53,15 @@ public abstract class Nave extends Entity {
     }
 
     @Override
+    public void setState(State newNave) {
+        super.setState(newNave);
+        direccion.x = ((Nave) newNave).direccion.x;
+        direccion.y = ((Nave) newNave).direccion.y;
+        countProyectil =((Nave) newNave).countProyectil;
+        angulo = ((Nave) newNave).angulo;
+    }
+
+    @Override
     public JSONObject toJSON() {
         JSONObject jNave = new JSONObject();
         JSONObject atributo = new JSONObject();
@@ -57,6 +69,7 @@ public abstract class Nave extends Entity {
         atributo.put("super", super.toJSON());
         atributo.put("xDir",direccion.x);
         atributo.put("yDir",direccion.y);
+        atributo.put("angulo", angulo);
         atributo.put("countProyectil", countProyectil);
         jNave.put("Nave", atributo);
 

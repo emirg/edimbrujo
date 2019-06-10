@@ -62,6 +62,10 @@ public class Entity extends State {
         super.setState(newEntity);
         x = ((Entity) newEntity).x;
         y = ((Entity) newEntity).y;
+        velocidad.x = ((Entity) newEntity).velocidad.x;
+        velocidad.y = ((Entity) newEntity).velocidad.y;
+        width = ((Entity) newEntity).width;
+        height = ((Entity) newEntity).height;
     }
 
     @Override

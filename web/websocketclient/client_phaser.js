@@ -250,9 +250,9 @@ window.onload = function () {
     var page = document.createElement('a');
     page.href = window.location.href;
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
-    var url = "ws://" + page.hostname + ":8080";
+    //var url = "ws://" + page.hostname + ":8080";
     //servidor Edimbrujo
-    //var url = "ws://" + page.hostname + ":60161";
+    var url = "ws://" + page.hostname + ":60161";
     socket = new WebSocket(url + "/" + window.location.pathname.split('/')[1] + "/GameWebSocket");
     socket.onmessage = stateUpdate;
 
@@ -289,6 +289,7 @@ window.onload = function () {
                 var health = gameState[i]["NavePlayer"]["health"];
                 var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
                 var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
+                var angulo = gameState[i]["NavePlayer"]["super"]['Nave']['angulo'];
                 //console.log(leave);
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
@@ -316,8 +317,11 @@ window.onload = function () {
                     
                     //console.log(players[id]);
                 }
-                console.log(xDir,yDir);
-                players[id].angle = Math.atan2(xDir,yDir);
+                //console.log(xDir,yDir);
+                //console.log(Math.atan2(xDir,yDir));
+                //players[id].angle = Math.atan2(yDir,xDir)*100;
+                console.log(angulo*(180/Math.PI));
+                players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = 0;

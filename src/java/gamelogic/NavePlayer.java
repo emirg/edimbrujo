@@ -103,8 +103,6 @@ public class NavePlayer extends Nave {
                             if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
                                 nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                 nuevaVelY = Double.parseDouble(accion.getParameter("y"));
-                                nuevaDirX = nuevaVelX;
-                                nuevaDirY = nuevaVelY;
                             }
 
                             break;
