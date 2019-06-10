@@ -38,7 +38,6 @@ public class NaveNeutra extends Nave {
         this.idProp = p;
         this.pregunta = preg;
         this.respuesta = resp;
-        this.opciones = op;
     }
 
     @Override
