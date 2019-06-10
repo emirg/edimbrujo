@@ -147,7 +147,7 @@ public class NaveNeutra extends Nave {
                     }
                 }
             }
-        } else if (propietario.dead) {
+        } else if (nuevoPropietario != null && nuevoPropietario.dead) {
             nuevoPropietario = null;
         }
         nuevoX = nuevoX + nuevaVelX;
