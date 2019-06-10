@@ -250,9 +250,9 @@ window.onload = function () {
     var page = document.createElement('a');
     page.href = window.location.href;
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
-    //var url = "ws://" + page.hostname + ":8080";
+    var url = "ws://" + page.hostname + ":8080";
     //servidor Edimbrujo
-    var url = "ws://" + page.hostname + ":60161";
+    //var url = "ws://" + page.hostname + ":60161";
     socket = new WebSocket(url + "/" + window.location.pathname.split('/')[1] + "/GameWebSocket");
     socket.onmessage = stateUpdate;
 
@@ -320,7 +320,7 @@ window.onload = function () {
                 //console.log(xDir,yDir);
                 //console.log(Math.atan2(xDir,yDir));
                 //players[id].angle = Math.atan2(yDir,xDir)*100;
-                console.log(angulo*(180/Math.PI));
+                //console.log(angulo*(180/Math.PI));
                 players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
@@ -380,14 +380,22 @@ window.onload = function () {
                 var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Proyectil"]['super']["Entity"]["x"];
                 var y = gameState[i]["Proyectil"]['super']["Entity"]["y"];
-                //var destroy =gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
+                var destroy =gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
+                var angulo = gameState[i]["Proyectil"]['angulo'];
                 
                 if(bullets[id]==null){
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
                 }
+                bullets[id].angle = angulo;
                 bullets[id].y = y;
                 bullets[id].x = x;
                 bullets[id].z = y;
+                if (destroy) {
+                    bullets[id].destroy();
+                    //console.log(bullets[id]);
+                    //console.log("destroyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+                }
+
             }
             i++;
         }

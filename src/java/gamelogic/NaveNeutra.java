@@ -37,7 +37,7 @@ public class NaveNeutra extends Nave {
                 for (Action accion : listAccion) {
                     switch (accion.getName()) {
                         case "fire":
-                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, 50, 0, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y,angulo, 50, 0, 0);
                             listProyectil.add(proyectil);
                     }
                 }

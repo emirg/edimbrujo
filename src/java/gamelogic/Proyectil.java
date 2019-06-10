@@ -6,16 +6,21 @@ import engine.StaticState;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Vector;
+
 import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
 public class Proyectil extends Entity {
 
     protected int number;
+    protected Vector2 direccion;
+    protected double angulo;
 
-    public Proyectil(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int number) {
+    public Proyectil(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double angulo, int number) {
         super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 64, 12);
         this.number = number;
+        this.angulo=angulo;
     }
 
     @Override
@@ -59,21 +64,20 @@ public class Proyectil extends Entity {
                 }
             }
         }
-        Proyectil newArrow = new Proyectil(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y, number);
+        Proyectil newArrow = new Proyectil(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y,angulo, number);
         return newArrow;
     }
 
     @Override
     public void setState(State newProyectil) {
         super.setState(newProyectil);
-        id = ((Proyectil) newProyectil).id;
         number = ((Proyectil) newProyectil).number;
-        velocidad = new Vector2(velocidad.x, velocidad.y);
+        angulo = ((Proyectil) newProyectil).angulo;
     }
 
     @Override
     protected Object clone() {
-        Proyectil clon = new Proyectil(name, destroy, id, x, y, velocidad.x, velocidad.y, number);
+        Proyectil clon = new Proyectil(name, destroy, id, x, y, velocidad.x, velocidad.y,angulo, number);
         return clon;
     }
 
@@ -83,6 +87,7 @@ public class Proyectil extends Entity {
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("number", number);
+        jsonAttrs.put("angulo", angulo);
         jProyectil.put("Proyectil", jsonAttrs);
         return jProyectil;
     }
