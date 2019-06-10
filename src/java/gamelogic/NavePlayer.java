@@ -20,8 +20,8 @@ public class NavePlayer extends Nave {
     protected LinkedList<Nave> navesAliadas;
     protected int idBullets;
 
-    public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
-        super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
+    public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
+        super("NavePlayer", id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
@@ -41,7 +41,7 @@ public class NavePlayer extends Nave {
                     switch (accion.getName()) {
                         case "fire":
                             String idAux = id + "" + idBullets;
-                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux, x, y, 50, 0, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux,id, x, y, velocidad.x, velocidad.y,direccion.x,direccion.y,angulo, 0);
                             listProyectil.add(proyectil);
                             idBullets++;
                     }
@@ -52,12 +52,7 @@ public class NavePlayer extends Nave {
         double[] futuraPos = futuraPosicion(acciones);
         for (State estado : estados) {
             //Choque contra otra nave
-            if (estado != this && estado.getName().equalsIgnoreCase("naveplayer") && !((NavePlayer) estado).dead) {
-                double[] posContrincante = ((NavePlayer) estado).futuraPosicion(acciones);
-                if (futuraPos[0] == posContrincante[0] && futuraPos[1] == posContrincante[1]) {
-                    this.addEvent("collide");
-                }
-            } else if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
+            if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
                 Asteroide ast = (Asteroide) estado;
                 double xFuturaAsteroide = ast.x + ast.velocidad.x;
                 double yFuturaAsteroide = ast.y + ast.velocidad.y;
@@ -91,6 +86,9 @@ public class NavePlayer extends Nave {
         double nuevoY = y;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
+        double nuevaDirX= direccion.x;
+        double nuevaDirY=direccion.y;
+
 
         if (listAccion != null) {
             for (Action accion : listAccion) {
@@ -101,7 +99,6 @@ public class NavePlayer extends Nave {
                                 nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                 nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                             }
-
                             break;
                         case "stop":
                             nuevaVelX = 0;
@@ -131,6 +128,8 @@ public class NavePlayer extends Nave {
         boolean destruido = destroy;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
+        double nuevaDirX = direccion.x;
+        double nuevaDirY = direccion.y;
         int nuevoPuntaje = puntaje;
 
         if (listAccion != null) {
@@ -147,6 +146,10 @@ public class NavePlayer extends Nave {
                                 if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
                                     nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                     nuevaVelY = Double.parseDouble(accion.getParameter("y"));
+                                    nuevaDirX = nuevaVelX;
+                                    nuevaDirY = nuevaVelY;
+                                    System.out.println(nuevaDirX);
+                                    System.out.println(nuevaDirY);
                                 }
                                 break;
                             case "stop":
@@ -164,9 +167,12 @@ public class NavePlayer extends Nave {
                                 salir = true;
                                 //System.out.println("salir "+salir);
                                 break;
-
+                                
                         }
 
+                    }else{
+                        System.out.println("respawn "+dead);
+                        this.addEvent("respawn");
                     }
                 }
             }
@@ -207,8 +213,8 @@ public class NavePlayer extends Nave {
                         break;
                     case "respawn":
                         revivir = true;
-                        nuevoX = x;
-                        nuevoY = y;
+                        nuevoX = 200;
+                        nuevoY = 200;
                         nuevaVelX = 0;
                         nuevaVelY = 0;
                         muerto = false;
@@ -221,7 +227,7 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto);
+        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto);
         return nuevoJugador;
     }
 

@@ -117,8 +117,7 @@ public class Game implements Runnable {
         states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0));
         states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0));
         states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
-        states.add(new NaveNeutra("NaveNeutra", "neutra1", 1000, 1000, 0, 0, 0, null,"",true,"","",0));
-      //   states.add(new NaveNeutra("NaveNeutra1", "neutra1", 1500, 1500, 0, 0, 0, null));
+        states.add(new NaveNeutra("NaveNeutra1", "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
 
         /*Phaser init*/
         //try {
@@ -139,7 +138,7 @@ public class Game implements Runnable {
         states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0));
         states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0));
         states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
-        states.add(new NaveNeutra("NaveNeutra", "neutra1", 1000, 1000, 0, 0, 0,null,"",true,"","",0));
+        states.add(new NaveNeutra("NaveNeutra1", "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
     }
 
     private void createStaticState() {

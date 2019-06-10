@@ -64,7 +64,7 @@ function preload() {
     });
     this.load.spritesheet('bullet', 'assets/sprites/bullets/bullet11.png', {
         frameWidth: 64,
-        frameHeight: 64
+        frameHeight: 12
     });
 
     // nave neutra
@@ -122,7 +122,7 @@ function create() {
     //  agrego planetas ,etc
     this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    //var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
 
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
@@ -149,13 +149,14 @@ function create() {
     //this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
     //animacion galaxia
+    /*
     this.tweens.add({
         targets: galaxy,
         angle: 360,
         duration: 100000,
         ease: 'Linear',
         loop: -1
-    });
+    });*/
     cursors = this.input.keyboard.createCursorKeys();
 }
 
@@ -249,9 +250,9 @@ window.onload = function () {
     var page = document.createElement('a');
     page.href = window.location.href;
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
-    var url = "ws://" + page.hostname + ":8080";
+    //var url = "ws://" + page.hostname + ":8080";
     //servidor Edimbrujo
-    //var url = "ws://" + page.hostname + ":60161";
+    var url = "ws://" + page.hostname + ":60161";
     socket = new WebSocket(url + "/" + window.location.pathname.split('/')[1] + "/GameWebSocket");
     socket.onmessage = stateUpdate;
 
@@ -286,6 +287,9 @@ window.onload = function () {
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
                 var health = gameState[i]["NavePlayer"]["health"];
+                var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
+                var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
+                var angulo = gameState[i]["NavePlayer"]["super"]['Nave']['angulo'];
                 //console.log(leave);
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
@@ -313,6 +317,11 @@ window.onload = function () {
                     
                     //console.log(players[id]);
                 }
+                //console.log(xDir,yDir);
+                //console.log(Math.atan2(xDir,yDir));
+                //players[id].angle = Math.atan2(yDir,xDir)*100;
+                //console.log(angulo*(180/Math.PI));
+                players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = 0;
@@ -323,8 +332,8 @@ window.onload = function () {
                     //console.log(players[id]);
                 }
                 //console.log(destroy);
-                if (destroy) {
-                    players[id].destroy();
+                if (dead) {
+                    //players[id].destroy();
                     //players[id] = null;
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
@@ -371,14 +380,22 @@ window.onload = function () {
                 var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Proyectil"]['super']["Entity"]["x"];
                 var y = gameState[i]["Proyectil"]['super']["Entity"]["y"];
-                //var destroy =gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
+                var destroy =gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
+                var angulo = gameState[i]["Proyectil"]['angulo'];
                 
                 if(bullets[id]==null){
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
                 }
+                bullets[id].angle = angulo;
                 bullets[id].y = y;
                 bullets[id].x = x;
                 bullets[id].z = y;
+                if (destroy) {
+                    bullets[id].destroy();
+                    //console.log(bullets[id]);
+                    //console.log("destroyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+                }
+
             }
             i++;
         }

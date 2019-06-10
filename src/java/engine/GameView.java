@@ -3,6 +3,9 @@ package engine;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Phaser;
+
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import org.json.simple.JSONObject;
 
 public class GameView implements Runnable {
@@ -47,19 +50,33 @@ public class GameView implements Runnable {
             //generar el estado estatico para la visibilidad del jugador
             jsonState = staticState.toJSON(sessionId, states, staticStates, actions, staticStatesSended.get(staticState));
             if (jsonState != null) {
-                staticStatesSended.put(staticState, jsonState);
+                //staticStatesSended.put(staticState, jsonState);
+                //System.out.println("golaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 jsonStates.put(i + "", jsonState);
                 i++;
             }
         }
+        boolean cont=true;
         for (State state : states) {
             //generar el estado para la visibilidad del jugador
             jsonState = state.toJSON(sessionId, states, staticStates, actions, statesSended.get(state));
-            if (jsonState != null) {
-                statesSended.put(state, jsonState);
-                jsonStates.put(i + "", jsonState);
-                i++;
+            if(state.name.equalsIgnoreCase("NavePlayer") && state.id.equalsIgnoreCase(sessionId)){
+                if (jsonState != null) {
+                    //statesSended.put(state, jsonState);
+                    jsonStates = new JSONObject();
+                    i=0;
+                    jsonStates.put(i + "", jsonState);
+                    cont=false;
+                    i++;
+                }
+            }else{
+                if (cont && jsonState != null) {
+                    //statesSended.put(state, jsonState);
+                    jsonStates.put(i + "", jsonState);
+                    i++;
+                }
             }
+            
         }
         gameState = !jsonStates.isEmpty() ? jsonStates.toString() : null;
     }

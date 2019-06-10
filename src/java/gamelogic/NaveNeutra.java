@@ -28,9 +28,8 @@ public class NaveNeutra extends Nave {
     private static final int[] opciones = {9,7,6,4};
     private String idPosP;
 
-    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int cantProj, NavePlayer prop,
-            String p,boolean d,String posible, String preg,int resp) {
-        super(name, id, x, y, velocidadX, velocidadY, cantProj);
+    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop) {
+        super("NaveNeutra", id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
         this.propietario = prop;
         this.idPosP= posible;
         //disponible va a estar en falso cuando un jugador este respondiendo
@@ -54,7 +53,7 @@ public class NaveNeutra extends Nave {
                 for (Action accion : listAccion) {
                     switch (accion.getName()) {
                         case "fire":
-                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, 50, 0, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, id,propietario.id, x, y,velocidad.x,velocidad.y,direccion.x,direccion.y,angulo,0);
                             listProyectil.add(proyectil);
                             
                     }
@@ -78,7 +77,8 @@ public class NaveNeutra extends Nave {
         boolean destruido = destroy;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
-        boolean nuevaDis = this.disponible;
+        double nuevaDirX = direccion.x;
+        double nuevaDirY = direccion.y;
         NavePlayer nuevoPropietario = propietario;
         String nuevoIdP = this.idProp;
         String nuevoPos = this.idPosP;
@@ -169,8 +169,7 @@ public class NaveNeutra extends Nave {
                 }
             }
         }
-        // System.out.println("nuevo id prop "+nuevoIdP);
-        NaveNeutra nuevaNeutra = new NaveNeutra(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevosProyectiles, nuevoPropietario,nuevoIdP,nuevaDis);
+        NaveNeutra nuevaNeutra = new NaveNeutra(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario);
         return nuevaNeutra;
     }
 
