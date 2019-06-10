@@ -24,18 +24,27 @@ window.onload = function () {
         var gameState = JSON.parse(event.data);
         console.log(gameState);
 
-        var i = 0;
-        while (typeof gameState[i] !== "undefined") {
-            if (typeof gameState[i]["NavePlayer"] !== "undefined") {
-                var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
-                var health = gameState[i]["NavePlayer"]["health"];
-                console.log(health);
-                if (health != null) {
-                    updateHealth(health);
-                }
-
+        if (typeof gameState !== "undefined") {
+            //console.log(game2State);
+            if (gameState["id"] !== "undefined" && socketID === "") {
+                socketID = gameState["id"];
+                //console.log(socketID);
             }
-            i++;
+            var i = 0;
+            while (typeof gameState[i] !== "undefined") {
+                if (typeof gameState[i]["NavePlayer"] !== "undefined") {
+                    var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
+                    if (id == socketID){                        
+                        var health = gameState[i]["NavePlayer"]["health"];
+                        console.log(health);
+                        if (health != null) {
+                            updateHealth(health);
+                        }
+
+                    }
+                }
+                i++;
+            }
         }
     }
 };
