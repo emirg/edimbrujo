@@ -31,12 +31,12 @@ public class NaveNeutra extends Nave {
     public NaveNeutra(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop) {
         super("NaveNeutra",destroy, id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
         this.propietario = prop;
-        this.idPosP= posible;
+        //this.idPosP= posible;
         //disponible va a estar en falso cuando un jugador este respondiendo
-        this.disponible= d;
-        this.idProp = p;
-        this.pregunta = preg;
-        this.respuesta = resp;
+        //this.disponible= d;
+        //this.idProp = p;
+        //this.pregunta = preg;
+        //this.respuesta = resp;
     }
 
     @Override
@@ -151,7 +151,7 @@ public class NaveNeutra extends Nave {
            
             nuevoPropietario = null;
             nuevoIdP = "";
-            nuevaDis = true;
+            //nuevaDis = true;
         }
         nuevoX = nuevoX + nuevaVelX;
         nuevoY = nuevoY + nuevaVelY;

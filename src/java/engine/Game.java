@@ -117,7 +117,7 @@ public class Game implements Runnable {
         states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0));
         states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0));
         states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
-        states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
+        //states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
 
         /*Phaser init*/
         //try {
@@ -242,7 +242,7 @@ public class Game implements Runnable {
                 if (action == "enter") {
                     //aumento en uno los miembros de la barrera
                     //(tal ves hay que hacerlo en el hilo del gameView)
-                    viewsBarrier.register();
+                    //viewsBarrier.register();
                     //creo el nuevo hilo
                     GameView gameView = new GameView(sessionId, states, staticStates, actions, viewsBarrier);
                     Thread threadGameView = new Thread(gameView);
@@ -254,28 +254,13 @@ public class Game implements Runnable {
                     //(tal ves hay que hacerlo en el hilo del gameView)
                     //viewsBarrier.arriveAndDeregister();
                     //mato el hilo seteando su variable de terminancion y realizando un notify
-                    try{
-                        gameViews.get(sessionId).stop();
-                    }catch(Exception e){System.out.println(e.getMessage());}
+                    //try{
+                    gameViews.get(sessionId).stop();
+                    //catch(Exception e){System.out.println(e.getMessage());}
                     //lo elimino de la lista de gridViews
                     gameViews.remove(sessionId);
                 }
             }
-            /*for(Map.Entry<String, String> gameViewSended : gameViewsSended.entrySet()) {
-                String sessionId = gameViewSended.getKey();
-                String action = gameViewSended.getValue();
-                if (action == "leave") {
-                    //disminuyo en uno los miembros de la barrera
-                    //(tal ves hay que hacerlo en el hilo del gameView)
-                    //viewsBarrier.arriveAndDeregister();
-                    //mato el hilo seteando su variable de terminancion y realizando un notify
-                    try{
-                        gameViews.get(sessionId).stop();
-                    }catch(Exception e){System.out.println("leave tratado");}
-                    //lo elimino de la lista de gridViews
-                    gameViews.remove(sessionId);
-                }*/
-            //}
             gameViewsSended.clear();
         }
     }

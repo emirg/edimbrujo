@@ -33,6 +33,7 @@ public class GameView implements Runnable {
 
     @Override
     public void run() {
+        viewsBarrier.register();
         while (!playerExit) {
             viewsBarrier.arriveAndAwaitAdvance();
             if (!playerExit) {
@@ -72,8 +73,8 @@ public class GameView implements Runnable {
                     i++;
                 }
             }else{*/
-                if (cont && jsonState != null) {
-                    //statesSended.put(state, jsonState);
+                if (jsonState != null) {
+                    statesSended.put(state, jsonState);
                     jsonStates.put(i + "", jsonState);
                     i++;
                 }
@@ -89,6 +90,6 @@ public class GameView implements Runnable {
 
     public synchronized void stop() {
         playerExit = true;
-        notifyAll();
+        //notifyAll();
     }
 }
