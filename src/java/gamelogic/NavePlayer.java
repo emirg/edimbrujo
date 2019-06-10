@@ -41,7 +41,7 @@ public class NavePlayer extends Nave {
                     switch (accion.getName()) {
                         case "fire":
                             String idAux = id + "" + idBullets;
-                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux, x, y, velocidad.x, velocidad.y ,direccion.x, direccion.y,angulo, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux,id, x, y, 50, 0, 0);
                             listProyectil.add(proyectil);
                             idBullets++;
                     }
@@ -52,12 +52,7 @@ public class NavePlayer extends Nave {
         double[] futuraPos = futuraPosicion(acciones);
         for (State estado : estados) {
             //Choque contra otra nave
-            if (estado != this && estado.getName().equalsIgnoreCase("naveplayer") && !((NavePlayer) estado).dead) {
-                double[] posContrincante = ((NavePlayer) estado).futuraPosicion(acciones);
-                if (futuraPos[0] == posContrincante[0] && futuraPos[1] == posContrincante[1]) {
-                    this.addEvent("collide");
-                }
-            } else if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
+            if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
                 Asteroide ast = (Asteroide) estado;
                 double xFuturaAsteroide = ast.x + ast.velocidad.x;
                 double yFuturaAsteroide = ast.y + ast.velocidad.y;
@@ -104,7 +99,6 @@ public class NavePlayer extends Nave {
                                 nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                 nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                             }
-
                             break;
                         case "stop":
                             nuevaVelX = 0;
