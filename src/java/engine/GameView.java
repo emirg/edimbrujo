@@ -40,6 +40,7 @@ public class GameView implements Runnable {
                 viewsBarrier.arriveAndAwaitAdvance();
             }
         }
+        viewsBarrier.arriveAndDeregister();
     }
 
     private void createState() {
@@ -60,7 +61,8 @@ public class GameView implements Runnable {
         for (State state : states) {
             //generar el estado para la visibilidad del jugador
             jsonState = state.toJSON(sessionId, states, staticStates, actions, statesSended.get(state));
-            if(state.name.equalsIgnoreCase("NavePlayer") && state.id.equalsIgnoreCase(sessionId)){
+            /*
+            if(cont && state.name.equalsIgnoreCase("NavePlayer") && state.id.equalsIgnoreCase(sessionId)){
                 if (jsonState != null) {
                     //statesSended.put(state, jsonState);
                     jsonStates = new JSONObject();
@@ -69,13 +71,13 @@ public class GameView implements Runnable {
                     cont=false;
                     i++;
                 }
-            }else{
+            }else{*/
                 if (cont && jsonState != null) {
                     //statesSended.put(state, jsonState);
                     jsonStates.put(i + "", jsonState);
                     i++;
                 }
-            }
+            //}
             
         }
         gameState = !jsonStates.isEmpty() ? jsonStates.toString() : null;

@@ -28,8 +28,8 @@ public class NaveNeutra extends Nave {
     private static final int[] opciones = {9,7,6,4};
     private String idPosP;
 
-    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop) {
-        super("NaveNeutra", id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
+    public NaveNeutra(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop) {
+        super("NaveNeutra",destroy, id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
         this.propietario = prop;
         this.idPosP= posible;
         //disponible va a estar en falso cuando un jugador este respondiendo
@@ -169,7 +169,7 @@ public class NaveNeutra extends Nave {
                 }
             }
         }
-        NaveNeutra nuevaNeutra = new NaveNeutra(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario);
+        NaveNeutra nuevaNeutra = new NaveNeutra(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario);
         return nuevaNeutra;
     }
 

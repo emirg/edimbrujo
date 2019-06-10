@@ -20,8 +20,8 @@ public class NavePlayer extends Nave {
     protected LinkedList<Nave> navesAliadas;
     protected int idBullets;
 
-    public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
-        super("NavePlayer", id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
+    public NavePlayer(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
+        super("NavePlayer",destroy, id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
@@ -164,7 +164,7 @@ public class NavePlayer extends Nave {
                                 salir = false;
                                 break;
                             case "leave":
-                                salir = true;
+                                destruido = true;
                                 //System.out.println("salir "+salir);
                                 break;
                                 
@@ -227,7 +227,7 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto);
+        NavePlayer nuevoJugador = new NavePlayer(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto);
         return nuevoJugador;
     }
 
