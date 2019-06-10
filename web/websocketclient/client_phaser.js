@@ -26,6 +26,7 @@ var config = {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMENTARIOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // * falta barriles o monedas logicas 
+// problemas con id bullet como es el mismo que la nave solo permite una bala a la vez 
 
 var game = new Phaser.Game(config);
 
@@ -58,6 +59,10 @@ function preload() {
     this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
     // nave
     this.load.spritesheet('ship', 'assets/sprites/ship1.png', {
+        frameWidth: 64,
+        frameHeight: 64
+    });
+    this.load.spritesheet('bullet', 'assets/sprites/bullets/bullet11.png', {
         frameWidth: 64,
         frameHeight: 64
     });
@@ -261,10 +266,16 @@ window.onload = function () {
         while (typeof gameState[i] !== "undefined") {
             //console.log(gameState);
             if (typeof gameState[i]["Remove"] !== "undefined") {
+                console.log("remove");
                 var id = gameState[i]["Remove"]["id"];
                 if (players[id] != null) {
-                    players[id].dispose();
+                    players[id].destroy;
                     players[id] = null;
+                }else{
+                    if(bullets[id]!=null){
+                        bullets[id].destroy;
+                        bullets[id] = null;
+                    }
                 }
             } else if (typeof gameState[i]["NavePlayer"] !== "undefined") {
                 var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
@@ -360,9 +371,10 @@ window.onload = function () {
                 var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Proyectil"]['super']["Entity"]["x"];
                 var y = gameState[i]["Proyectil"]['super']["Entity"]["y"];
+                //var destroy =gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
                 
                 if(bullets[id]==null){
-                    bullets[id] = game.scene.scenes[0].add.image(x, y, 'space', 'blaster');
+                    bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
                 }
                 bullets[id].y = y;
                 bullets[id].x = x;
