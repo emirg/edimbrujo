@@ -122,7 +122,7 @@ function create() {
     //  agrego planetas ,etc
     this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    //var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
 
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
@@ -149,13 +149,14 @@ function create() {
     //this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
     //animacion galaxia
+    /*
     this.tweens.add({
         targets: galaxy,
         angle: 360,
         duration: 100000,
         ease: 'Linear',
         loop: -1
-    });
+    });*/
     cursors = this.input.keyboard.createCursorKeys();
 }
 
