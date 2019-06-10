@@ -18,7 +18,7 @@ public class Proyectil extends Entity {
     protected Vector2 direccion;
     protected double angulo;
 
-    public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY, int number) {
+    public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY,double xDir, double yDir ,double angulo ,int number) {
         super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 64, 12);
         this.number = number;
         this.idPlayer = idPlayer;
@@ -67,7 +67,7 @@ public class Proyectil extends Entity {
                 }
             }
         }
-        Proyectil newArrow = new Proyectil(name, destruido, id, idPlayer, nuevoX, nuevoY, velocidad.x, velocidad.y, number);
+        Proyectil newArrow = new Proyectil(name, destruido, id, idPlayer, nuevoX, nuevoY, velocidad.x, velocidad.y,direccion.x,direccion.y,angulo, number);
         return newArrow;
     }
 
@@ -81,7 +81,7 @@ public class Proyectil extends Entity {
 
     @Override
     protected Object clone() {
-        Proyectil clon = new Proyectil(name, destroy, id, idPlayer, x, y, velocidad.x, velocidad.y, number);
+        Proyectil clon = new Proyectil(name, destroy, id, idPlayer, x, y, velocidad.x, velocidad.y,direccion.x,direccion.y,angulo, number);
         return clon;
     }
 
