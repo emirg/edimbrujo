@@ -20,6 +20,7 @@ public class NaveNeutra extends Nave {
 
     //private String propietario; // Podria ser una NavePlayer tambien
     private NavePlayer propietario;
+    private static final int DISTANCIA_DE_ALIANZA = 150;
 
     public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int cantProj, NavePlayer prop) {
         super("NaveNeutra", id, x, y, velocidadX, velocidadY, cantProj);
@@ -42,37 +43,8 @@ public class NaveNeutra extends Nave {
                 }
             }
 
-            /*double[] futuraPos = futuraPosicion(acciones);
-            for (State estado : estados) {
-                //Choque contra otra nave
-                if (estado != this && estado.getName().equalsIgnoreCase("naveplayer") && !((NavePlayer) estado).dead) {
-                    double[] posContrincante = ((NavePlayer) estado).futuraPosicion(acciones);
-                    if (futuraPos[0] == posContrincante[0] && futuraPos[1] == posContrincante[1]) {
-                        this.addEvent("collide");
-                    }
-                } else if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
-                    Asteroide ast = (Asteroide) estado;
-                    double xFuturaAsteroide = ast.x + ast.velocidad.x;
-                    double yFuturaAsteroide = ast.y + ast.velocidad.y;
-                    if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
-                        this.addEvent("hit");
-                    }
-                } else if (estado != this && estado.getName().equalsIgnoreCase("proyectil")) { // Choque contra proyectil
-                    Proyectil proj = (Proyectil) estado;
-                    double xFuturaAsteroide = proj.x + proj.velocidad.x;
-                    double yFuturaAsteroide = proj.y + proj.velocidad.y;
-                    if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
-                        this.addEvent("hit");
-                    }
-                } else if (estado != this && estado.getName().equalsIgnoreCase("moneda")) { // Choque contra moneda
-                    Moneda mon = (Moneda) estado;
-                    if (futuraPos[0] == mon.x && futuraPos[1] == mon.y) {
-                        this.addEvent("collect");
-                    }
-                }
-                
-            }*/
         }
+
         return listProyectil;
     }
 
@@ -121,8 +93,21 @@ public class NaveNeutra extends Nave {
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
         NavePlayer nuevoPropietario = propietario;
+        if (nuevoPropietario == null) {
+            for (State estado : estados) {
+                if (estado != this && estado.getName().equalsIgnoreCase("naveplayer") && !((NavePlayer) estado).dead && propietario == null) {
+                    NavePlayer nave = (NavePlayer) estado;
+                    double dist = Math.sqrt((nave.x - this.x) * (nave.x - this.x) + (nave.y - this.y) * (nave.y - this.y));
+                    if (DISTANCIA_DE_ALIANZA <= 150) {
+                        nuevoPropietario = (NavePlayer) estado;
+                        propietario.navesAliadas.add(this); // Capaz que "nuevoPropietario" funciona, pero por las dudas...
+                    }
+                }
+            }
+        }
+
         if (nuevoPropietario != null && !nuevoPropietario.dead) {
-            LinkedList<Action> listAccion = acciones.get(nuevoPropietario.id);
+            LinkedList<Action> listAccion = acciones.get(nuevoPropietario.id); // Obtengo las acciones del propietario
             if (listAccion != null) {
                 for (Action accion : listAccion) {
                     if (accion != null) {
