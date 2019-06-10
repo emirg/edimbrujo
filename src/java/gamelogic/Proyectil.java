@@ -40,16 +40,22 @@ public class Proyectil extends Entity {
         double nuevoX = x + velocidad.x;
         double nuevoY = y + velocidad.y;
         boolean destruido = destroy;
+        int width= 4500;
+        int height= 2048;
+        if (x>width || y>height) {
+            destruido=true;
+        }else{
 
-        //falta considerar que es un mundo de 360°
-        LinkedList<String> events = getEvents();
-        if (!events.isEmpty()) {
-            hasChanged = true;
-            for (String event : events) {
-                switch (event) {
-                    case "hit":
-                        destruido = true;
-                        break;
+            //falta considerar que es un mundo de 360°
+            LinkedList<String> events = getEvents();
+            if (!events.isEmpty()) {
+                hasChanged = true;
+                for (String event : events) {
+                    switch (event) {
+                        case "hit":
+                            destruido = true;
+                            break;
+                    }
                 }
             }
         }

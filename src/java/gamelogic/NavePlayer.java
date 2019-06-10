@@ -18,6 +18,7 @@ public class NavePlayer extends Nave {
     protected boolean dead;
     protected int puntaje;
     protected LinkedList<Nave> navesAliadas;
+    protected int idBullets;
 
     public NavePlayer(String name, String id, double x, double y, double velocidadX, double velocidadY, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
         super("NavePlayer", id, x, y, velocidadX, velocidadY, cantProj);
@@ -26,6 +27,7 @@ public class NavePlayer extends Nave {
         this.leave = leave;
         this.dead = dead;
         this.puntaje = puntaje;
+        this.idBullets=0;
     }
 
     @Override
@@ -37,9 +39,10 @@ public class NavePlayer extends Nave {
                 if (!dead) {
                     switch (accion.getName()) {
                         case "fire":
-                            Proyectil proyectil = new Proyectil("Proyectil", false, id, x, y, 50, 0, 0);
+                            String idAux=id+""+idBullets;
+                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux, x, y, 50, 0, 0);
                             listProyectil.add(proyectil);
-
+                            idBullets++;
                     }
                 }
             }
