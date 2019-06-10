@@ -41,7 +41,7 @@ public class NavePlayer extends Nave {
                     switch (accion.getName()) {
                         case "fire":
                             String idAux = id + "" + idBullets;
-                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux, x, y, direccion.x, direccion.y,angulo, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux, x, y, velocidad.x, velocidad.y ,direccion.x, direccion.y,angulo, 0);
                             listProyectil.add(proyectil);
                             idBullets++;
                     }
