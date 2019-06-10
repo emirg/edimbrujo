@@ -10,6 +10,9 @@ import engine.State;
 import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Vector;
+import org.dyn4j.geometry.Vector2;
+
 import org.json.simple.JSONObject;
 
 /**
@@ -19,11 +22,13 @@ import org.json.simple.JSONObject;
 public abstract class Nave extends Entity {
 
     protected int countProyectil;
+    protected Vector2 direccion;
 
     //depende de como tratemos la orientacion puede no ser un int
-    public Nave(String name, String id, double x, double y, double velocidadX, double velocidadY, int cantProj) {
+    public Nave(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir, double yDir, int cantProj) {
         super(name, false, id, x, y, velocidadX, velocidadY, 64, 64);
         this.countProyectil = cantProj;
+        this.direccion= new Vector2(xDir,yDir);
     }
 
     @Override
@@ -50,6 +55,8 @@ public abstract class Nave extends Entity {
         JSONObject atributo = new JSONObject();
 
         atributo.put("super", super.toJSON());
+        atributo.put("xDir",direccion.x);
+        atributo.put("yDir",direccion.y);
         atributo.put("countProyectil", countProyectil);
         jNave.put("Nave", atributo);
 

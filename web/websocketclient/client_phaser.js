@@ -287,6 +287,8 @@ window.onload = function () {
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
                 var health = gameState[i]["NavePlayer"]["health"];
+                var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
+                var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
                 //console.log(leave);
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
@@ -314,6 +316,8 @@ window.onload = function () {
                     
                     //console.log(players[id]);
                 }
+                console.log(xDir,yDir);
+                players[id].angle = Math.atan2(xDir,yDir);
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = 0;

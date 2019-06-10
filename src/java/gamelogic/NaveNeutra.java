@@ -22,8 +22,8 @@ public class NaveNeutra extends Nave {
     private NavePlayer propietario;
     private static final int DISTANCIA_DE_ALIANZA = 150;
 
-    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY, int cantProj, NavePlayer prop) {
-        super("NaveNeutra", id, x, y, velocidadX, velocidadY, cantProj);
+    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop) {
+        super("NaveNeutra", id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
         this.propietario = prop;
     }
 
@@ -92,6 +92,8 @@ public class NaveNeutra extends Nave {
         boolean destruido = destroy;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
+        double nuevaDirX = direccion.x;
+        double nuevaDirY = direccion.y;
         NavePlayer nuevoPropietario = propietario;
         if (nuevoPropietario == null) {
             for (State estado : estados) {
@@ -151,7 +153,7 @@ public class NaveNeutra extends Nave {
                 }
             }
         }
-        NaveNeutra nuevaNeutra = new NaveNeutra(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevosProyectiles, nuevoPropietario);
+        NaveNeutra nuevaNeutra = new NaveNeutra(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario);
         return nuevaNeutra;
     }
 
