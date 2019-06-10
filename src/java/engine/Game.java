@@ -133,6 +133,14 @@ public class Game implements Runnable {
         }*/
     }
 
+    public void createSpawns() {
+        states.add(new Asteroide("Asteroide", false, "0", 200, 500, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
+        states.add(new NaveNeutra("NaveNeutra1", "neutra1", 1000, 1000, 0, 0, 0, null));
+    }
+
     private void createStaticState() {
         JSONObject jsonStaticStates = new JSONObject();
         int i = 0;

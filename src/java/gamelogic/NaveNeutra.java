@@ -100,7 +100,7 @@ public class NaveNeutra extends Nave {
                     double dist = Math.sqrt((nave.x - this.x) * (nave.x - this.x) + (nave.y - this.y) * (nave.y - this.y));
                     if (DISTANCIA_DE_ALIANZA <= 150) {
                         nuevoPropietario = (NavePlayer) estado;
-                        propietario.navesAliadas.add(this); // Capaz que "nuevoPropietario" funciona, pero por las dudas...
+                        nuevoPropietario.navesAliadas.add(this); // Capaz que "nuevoPropietario" funciona, pero por las dudas...
                     }
                 }
             }
@@ -117,7 +117,7 @@ public class NaveNeutra extends Nave {
 
                         switch (accion.getName()) {
                             case "move":
-                                flock();
+                                flock(nuevoPropietario);
                                 break;
                             case "stop":
                                 //System.out.println("Llegue al stop");
@@ -164,10 +164,10 @@ public class NaveNeutra extends Nave {
         this.propietario = propietario;
     }
 
-    public void flock() {
-        Vector2 alignment = computeAlignment(this, propietario.navesAliadas); // De donde saco los vecinos?
-        Vector2 cohesion = computeCohesion(this, propietario.navesAliadas);
-        Vector2 separation = computeSeparation(this, propietario.navesAliadas);
+    public void flock(NavePlayer nuevoPropietario) {
+        Vector2 alignment = computeAlignment(this, nuevoPropietario.navesAliadas); // De donde saco los vecinos?
+        Vector2 cohesion = computeCohesion(this, nuevoPropietario.navesAliadas);
+        Vector2 separation = computeSeparation(this, nuevoPropietario.navesAliadas);
         Vector2 aux = alignment.add(cohesion.add(separation));
         aux.setMagnitude(100);
         this.velocidad.x = aux.x;

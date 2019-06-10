@@ -27,7 +27,8 @@ public class NavePlayer extends Nave {
         this.leave = leave;
         this.dead = dead;
         this.puntaje = puntaje;
-        this.idBullets=0;
+        this.navesAliadas = new LinkedList<Nave>();
+        this.idBullets = 0;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class NavePlayer extends Nave {
                 if (!dead) {
                     switch (accion.getName()) {
                         case "fire":
-                            String idAux=id+""+idBullets;
+                            String idAux = id + "" + idBullets;
                             Proyectil proyectil = new Proyectil("Proyectil", false, idAux, x, y, 50, 0, 0);
                             listProyectil.add(proyectil);
                             idBullets++;

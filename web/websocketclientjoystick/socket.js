@@ -27,8 +27,9 @@ window.onload = function () {
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
             if (typeof gameState[i]["NavePlayer"] !== "undefined") {
-                var id = gameState[i]["NavePlayer"]["health"]['Nave']['super']["Entity"]["super"]["State"]["id"];
-                var health = gameState[i]["NavePlayer"]["health"]; // Como me fijo que el health es de la nave de este cliente?
+                var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
+                var health = gameState[i]["NavePlayer"]["health"];
+                console.log(health);
                 if (health != null) {
                     updateHealth(health);
                 }
