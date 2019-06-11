@@ -60,7 +60,7 @@ public class Game implements Runnable {
         LinkedList<State> newStates;
         while (!endGame) {
             try {
-                Thread.sleep(100); //time per frame (10 fps)
+                Thread.sleep(70); //time per frame (10 fps)
                 //readPlayers();
                 readActions();
                 //se realizan las comunicaciones a traves de eventos y 
@@ -242,7 +242,7 @@ public class Game implements Runnable {
                 if (action == "enter") {
                     //aumento en uno los miembros de la barrera
                     //(tal ves hay que hacerlo en el hilo del gameView)
-                    //viewsBarrier.register();
+                    viewsBarrier.register();
                     //creo el nuevo hilo
                     GameView gameView = new GameView(sessionId, states, staticStates, actions, viewsBarrier);
                     Thread threadGameView = new Thread(gameView);

@@ -96,7 +96,24 @@ public abstract class State {
     }
 
     public JSONObject toJSON(String sessionId, LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions, JSONObject lastState) {
-        return lastState == null || hasChanged ? toJSON() : null;
+        NavePlayer player= getPlayer(sessionId, states);
+        if(player==null){
+            return lastState == null || hasChanged ? toJSON() : null;
+        }
+        return null;
+    }
+
+    protected NavePlayer getPlayer(String sessionId, LinkedList<State> states) {
+        NavePlayer thePlayer = null;
+        int i = 0;
+        while (thePlayer == null && i < states.size()) {
+            State state = states.get(i);
+            if (state.getName().equals("NavePlayer") && ((NavePlayer) state).id.equals(sessionId)) {
+                thePlayer = (NavePlayer) state;
+            }
+            i++;
+        }
+        return thePlayer;
     }
 
     protected JSONObject toJSONRemover() {

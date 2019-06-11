@@ -395,7 +395,13 @@ window.onload = function () {
                     //console.log(bullets[id]);
                     //console.log("destroyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
                 }
-
+                for (let i = 0; i < bullets.length; i++) {
+                    //console.log(asteroides[i]);
+                    //console.log(players[id]);
+                    //console.log("moneda");
+                    //console.log(coins);
+                    //console.log("colision");
+                }
             }
             i++;
         }

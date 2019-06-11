@@ -3,6 +3,8 @@ package gamelogic;
 import engine.Action;
 import engine.State;
 import engine.StaticState;
+import sun.tools.serialver.resources.serialver;
+
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -258,23 +260,14 @@ public class NavePlayer extends Nave {
         return jJugador;
     }
 
-    /* @Override
+     @Override
     public JSONObject toJSON(String sessionId, LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions, JSONObject lastState) {
         NavePlayer thePlayer = getPlayer(sessionId, states);
-        return (thePlayer != null && Math.abs(thePlayer.getX() - x) < 10 && Math.abs(thePlayer.getY() - y) < 10)
-                ? (lastState == null || hasChanged || isJSONRemover(lastState) ? toJSON() : null)
-                : (lastState != null && !isJSONRemover(lastState) ? toJSONRemover() : null);
-    }*/
-    protected NavePlayer getPlayer(String sessionId, LinkedList<State> states) {
-        NavePlayer thePlayer = null;
-        int i = 0;
-        while (thePlayer == null && i < states.size()) {
-            State state = states.get(i);
-            if (state.getName().equals("NavePlayer") && ((NavePlayer) state).id.equals(sessionId)) {
-                thePlayer = (NavePlayer) state;
-            }
-            i++;
-        }
-        return thePlayer;
+        if(thePlayer==null || this.id.equalsIgnoreCase(sessionId)){
+            return lastState == null || hasChanged ? toJSON() : null;
+        }else{
+            return null;
+        }        
     }
+
 }

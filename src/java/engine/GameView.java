@@ -1,6 +1,7 @@
 package engine;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.Phaser;
 
@@ -33,13 +34,12 @@ public class GameView implements Runnable {
 
     @Override
     public void run() {
-        viewsBarrier.register();
         while (!playerExit) {
             viewsBarrier.arriveAndAwaitAdvance();
-            if (!playerExit) {
+            //if (!playerExit) {
                 createState();
                 viewsBarrier.arriveAndAwaitAdvance();
-            }
+            //}
         }
         viewsBarrier.arriveAndDeregister();
     }
@@ -80,7 +80,17 @@ public class GameView implements Runnable {
                 }
             //}
             
-        }
+        }/*
+        Iterator<State> iter = states.iterator();
+        while(iter.hasNext()){
+            //generar el estado para la visibilidad del jugador
+            jsonState = state.toJSON(sessionId, states, staticStates, actions, statesSended.get(state));
+            if (jsonState != null) {
+                statesSended.put(state, jsonState);
+                jsonStates.put(i + "", jsonState);
+                i++;
+            }
+        }*/
         gameState = !jsonStates.isEmpty() ? jsonStates.toString() : null;
     }
 

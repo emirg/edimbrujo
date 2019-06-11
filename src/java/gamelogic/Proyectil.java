@@ -51,7 +51,7 @@ public class Proyectil extends Entity {
         boolean destruido = destroy;
         int width = 4500;
         int height = 2048;
-        if (x > width || y > height) {
+        if (x > width || y > height || y<0 || x<0) {
             destruido = true;
         } else {
             //falta considerar que es un mundo de 360°
