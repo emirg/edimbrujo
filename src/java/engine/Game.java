@@ -2,18 +2,12 @@ package engine;
 
 import gamelogic.World;
 import gamelogic.Asteroide;
-import gamelogic.Match;
+import gamelogic.Moneda;
 import gamelogic.NaveNeutra;
-import gamelogic.NavePlayer;
-import java.awt.Point;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Phaser;
 import java.util.logging.Level;
@@ -112,33 +106,27 @@ public class Game implements Runnable {
 
     public void init() {
         //TODO crear estados dinamicos y estaticos
-        states.add(new World(new LinkedList<String>(), "World", false, null));
-        states.add(new Asteroide("Asteroide", false, "0", 200, 500, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
-        //states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
-
-        /*Phaser init*/
-        //try {
-        /*File map = new File(this.getClass().getClassLoader().getResource("files/map.csv").toURI());
-            loadMap(map);
-            //match spawnea players cuando todos hicieron ready
-            states.add(new Match(1, 2, true, false, false, 0, 4, new LinkedList<String>(),
-                    new LinkedList<String>(), new LinkedList<String>(), new LinkedList<Integer>(), "Match", false, null));
-            createSpawns();
-
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        states.add(new World(new LinkedList(), "World", false, null));
+        createSpawns();
     }
 
     public void createSpawns() {
-        states.add(new Asteroide("Asteroide", false, "0", 200, 500, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0));
-        states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0));
+        Random r = new Random();
+        int width = 4500; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
+        int height = 2048;
+        int x, y;
+
+        states.add(new Asteroide("Asteroide", false, "0", 200, 500, 30, 0)); // Capaz convenga que el id sea 
+        states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0)); // algo mas significativo como
+        states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0)); // "asteroideX" con X el numero
         states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
-        states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
+
+        for (int i = 0; i < 10; i++) {
+            x = r.nextInt(width);
+            y = r.nextInt(height);
+            states.add(new Moneda("Moneda", false, "moneda" + i, x, y, 0, 0, 0, 0));
+        }
+        //states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
     }
 
     private void createStaticState() {
@@ -249,7 +237,7 @@ public class Game implements Runnable {
                     threadGameView.start();
                     //lo agrego a la lista de gridViews
                     gameViews.put(sessionId, gameView);
-                }else if (action == "leave") {
+                } else if (action == "leave") {
                     //disminuyo en uno los miembros de la barrera
                     //(tal ves hay que hacerlo en el hilo del gameView)
                     //viewsBarrier.arriveAndDeregister();

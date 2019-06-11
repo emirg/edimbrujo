@@ -3,14 +3,9 @@ package gamelogic;
 import engine.Action;
 import engine.State;
 import engine.StaticState;
-import sun.tools.serialver.resources.serialver;
-
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Random;
 import org.json.simple.JSONObject;
-import org.dyn4j.collision.Collisions;
 
 public class NavePlayer extends Nave {
 

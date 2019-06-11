@@ -1,7 +1,5 @@
 package engine;
 
-import java.util.HashMap;
-
 public class Lobby {
 
     private Game game;

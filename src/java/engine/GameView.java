@@ -1,12 +1,8 @@
 package engine;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.Phaser;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 import org.json.simple.JSONObject;
 
 public class GameView implements Runnable {

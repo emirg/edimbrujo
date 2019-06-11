@@ -3,11 +3,8 @@ package gamelogic;
 import engine.Action;
 import engine.State;
 import engine.StaticState;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Vector;
-
 import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
@@ -49,7 +46,7 @@ public class Proyectil extends Entity {
         double nuevoX = x + direccion.x+velocidad.x;
         double nuevoY = y + direccion.y+velocidad.y;
         boolean destruido = destroy;
-        int width = 4500;
+        int width = 4500; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
         int height = 2048;
         if (x > width || y > height || y<0 || x<0) {
             destruido = true;

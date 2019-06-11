@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package webserviceserver;
 
 import engine.Lobby;
@@ -16,13 +11,16 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
-/**
- *
- * @author joan
- */
 @Stateless
 @Path("/server")
 public class ServerImp {
+    
+    /*
+    Acciones:
+    "move" en un sentido (x,y)
+    "fire"
+    "stop"
+    */
 
     private Lobby lobby;
     int session;
@@ -35,6 +33,7 @@ public class ServerImp {
         rol = rol + random.nextInt(1000000000);
         // String session = bytes.toString();
         lobby.addAction(rol, "enter");
+        lobby.addAction(rol, "start");
         return rol;
     }
 
@@ -57,13 +56,12 @@ public class ServerImp {
         System.out.println(action + " del jugador" + session);
 
         lobby = Lobby.startGame();
-        if (action.equalsIgnoreCase("fire")) {
-            String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \""
+        if (action.equalsIgnoreCase("move")) { // Si es un "move" hay que indicar la dirección/velocidad
+            String move = "{\"name\": \"move\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \""
                     + 1 + "\"},{\"name\": \"y\", \"value\": \"" + 1 + "\"}]}";
-            System.out.println(fire);
-            lobby.addAction(session, fire);
-
-        } else {
+            System.out.println(move);
+            lobby.addAction(session, move);
+        } else { // Si es un "fire" no hay que hacer nada sobre la accion
             lobby.addAction(session, action);
 
         }
@@ -71,27 +69,16 @@ public class ServerImp {
     }
 
     @GET
-    @Path("/actionFire")
-    public String rangeAtack(@QueryParam("x") String x, @QueryParam("y") String y,
+    @Path("/actionMove")
+    public String move(@QueryParam("x") String x, @QueryParam("y") String y,
             @QueryParam("session") String session) {
 
         lobby = Lobby.startGame();
-        String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x
+        String move = "{\"name\": \"move\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x
                 + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
-        System.out.println(fire);
-        lobby.addAction(session, fire);
+        System.out.println(move);
+        lobby.addAction(session, move);
         return "okey";
-
-    }
-
-    @GET
-    @Path("/ready")
-    public String ready(@QueryParam("session") String session) {
-
-        lobby = Lobby.startGame();
-        lobby.addAction(session, "ready");
-        return "okey";
-
     }
 
     @GET
@@ -120,7 +107,7 @@ public class ServerImp {
             Logger.getLogger(ServerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return state;
-    }
+    } 
 
     @GET
     @Path("/getState")

@@ -10,6 +10,7 @@ import engine.State;
 import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Random;
 import org.json.simple.JSONObject;
 
 /**
@@ -45,18 +46,25 @@ public class Moneda extends Entity {
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, LinkedList<Action>> actions) {
         boolean destruido = false;
+        double nuevoX = x;
+        double nuevoY = y;
+        int widthWorld = 4500; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
+        int heightWorld = 2048;
         LinkedList<String> events = getEvents();
         if (!events.isEmpty()) {
             hasChanged = true;
             for (String event : events) {
                 switch (event) {
                     case "collide":
-                        destruido = true;
+                        //destruido = true; // En vez de destruirlo, podemos reubicarlo (similar a las naves)
+                        Random r = new Random();
+                        nuevoX = r.nextInt(widthWorld);
+                        nuevoY = r.nextInt(heightWorld);
                         break;
                 }
             }
         }
-        Moneda newMoneda = new Moneda(name, destruido, id, x, y, velocidad.x, velocidad.y, width, height);
+        Moneda newMoneda = new Moneda(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y, width, height);
         return newMoneda;
     }
 

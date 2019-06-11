@@ -10,7 +10,6 @@ import engine.State;
 import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Vector;
 import org.dyn4j.geometry.Vector2;
 
 import org.json.simple.JSONObject;

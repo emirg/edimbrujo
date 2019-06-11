@@ -6,9 +6,6 @@ import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.UUID;
-import org.dyn4j.collision.Fixture; // Clase que representa una figura colisionable
-import org.dyn4j.dynamics.Body; // Clase que representa un cuerpo
-import org.dyn4j.dynamics.BodyFixture; // Clase que representa la figura de un cuerpo
 import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
