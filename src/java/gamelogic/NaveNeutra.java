@@ -21,20 +21,20 @@ public class NaveNeutra extends Nave {
     private static final int DISTANCIA_DE_ALIANZA = 150;
     private String idProp;
     private boolean disponible;
-    private String pregunta = "2 + 5";
-    private int respuesta = 7;
+    private String pregunta;
+    private int respuesta ;
     private static final int[] opciones = {9,7,6,4};
     private String idPosP;
 
-    public NaveNeutra(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop) {
-        super("NaveNeutra",destroy, id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
+    public NaveNeutra(String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop
+           , String posible,boolean d,String p) {
+        super("NaveNeutra", id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
         this.propietario = prop;
-        //this.idPosP= posible;
-        //disponible va a estar en falso cuando un jugador este respondiendo
-        //this.disponible= d;
-        //this.idProp = p;
-        //this.pregunta = preg;
-        //this.respuesta = resp;
+        this.idPosP= posible;
+        this.disponible= d;
+        this.idProp = p;
+        this.pregunta = "2 + 5";
+        this.respuesta = 2;
     }
 
     @Override
@@ -80,6 +80,7 @@ public class NaveNeutra extends Nave {
         NavePlayer nuevoPropietario = propietario;
         String nuevoIdP = this.idProp;
         String nuevoPos = this.idPosP;
+        boolean nuevaDis = disponible;
         int resp;
         
         if (this.idProp.equalsIgnoreCase("")) 
@@ -92,9 +93,10 @@ public class NaveNeutra extends Nave {
                    
                     if (dist <= DISTANCIA_DE_ALIANZA && disponible) 
                     {
-                        nuevoPos = nuevoPropietario.id; //Jugador que debe responder la pregunta
+                        nuevoPos = nave.id; //Jugador que debe responder la pregunta
                         //Enviar la pregunta a nuevoPos
                         // genera la pregunta pero no tiene propietario hasta que responda
+                        nave.setPregunta(pregunta,opciones,respuesta);
                       
                     /*  nuevoPropietario = (NavePlayer) estado;
                         nuevoPropietario.navesAliadas.add(this);
@@ -132,14 +134,31 @@ public class NaveNeutra extends Nave {
                             case "fire":
                                 nuevosProyectiles++;
                                 break;
-                            case "respuesta":
+                           /* case "respuesta":
                                 //controlar respuesta
-                                nuevaVelX = Double.parseDouble(accion.getParameter("x"));
+                                resp = Integer.parseInt(accion.getParameter("1"));
+                                if(respuesta == resp)
+                                {
+                                    for(State estado : estados)
+                                    {
+                                        if(estado != null && estado.getName().equalsIgnoreCase("naveplayer") && estado.getId().equalsIgnoreCase(nuevoPos))
+                                        {
+                                            nuevoPropietario = (NavePlayer) estado;
+                                            nuevoPropietario.navesAliadas.add(this);
+                                            nuevoIdP = nuevoPropietario.id;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    nuevaDis = true;
+                                    nuevoPos = "";
+                                } 
                                /*     nuevoPropietario = (NavePlayer) estado;
                                     nuevoPropietario.navesAliadas.add(this);
-                                    nuevoIdP = nuevoPropietario.id;*/
+                                    nuevoIdP = nuevoPropietario.id;
                                 
-                                break;
+                                break; */
 
                         }
                     }
@@ -167,7 +186,7 @@ public class NaveNeutra extends Nave {
                 }
             }
         }
-        NaveNeutra nuevaNeutra = new NaveNeutra(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario);
+        NaveNeutra nuevaNeutra = new NaveNeutra(name, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario,nuevoPos,nuevaDis,nuevoIdP);
         return nuevaNeutra;
     }
 
@@ -298,6 +317,9 @@ public class NaveNeutra extends Nave {
         this.disponible=((NaveNeutra)neutra).disponible;
         this.propietario =((NaveNeutra)neutra).propietario;
         this.idProp =((NaveNeutra)neutra).idProp;
+        this.pregunta = ((NaveNeutra)neutra).pregunta;
+        this.respuesta = ((NaveNeutra)neutra).respuesta;
+        
        // this.countProyectil= ((NaveNeutra)neutra).countProyectil;
         
                 
@@ -311,6 +333,7 @@ public class NaveNeutra extends Nave {
 
         atributo.put("super", super.toJSON());
         atributo.put("propietario", propietario);
+        
         jNeutra.put("NaveNeutra", atributo);
 
         return jNeutra;

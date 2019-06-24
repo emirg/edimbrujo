@@ -29,7 +29,11 @@ public class World extends State {
             for (Action action : actionsList) {
                 switch (action.getName()) {
                     case "start":
-                        NavePlayer newPlayer = new NavePlayer("NavePlayer",false, id, 200, 200, 0, 0,1,0, 100, 100, 0, 0, false, false);
+                        int [] op = new int [3];
+                        NavePlayer newPlayer = new NavePlayer("NavePlayer", id, 200, 200, 0, 0,1,0, 100, 100, 0, 0, false, false,"",op,false,-1);
+                        //String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,
+                        //  double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, int [] op,
+                            //boolean bq, int resp
                         newStates.add(newPlayer);
                         //newPlayer.addEvent("spawn");
                         break;

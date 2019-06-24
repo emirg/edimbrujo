@@ -57,7 +57,9 @@ function createJoystick(parent) {
         //jsonPos = JSON.stringify(posSend);
         //console.log(jsonPos);
         // Los x/y estan cambiados aproposito
-        socket.send('{"name": "move", "priority": "0","parameters": [{"name": "x", "value": "' + xNew + '"},{"name": "y", "value": "' + yNew + '"}]}');
+        socket.send('{"name": "move", "priority": "0","parameters": [{"name": "x", "value": "' + xNew + '"},\n\
+                                                                     {"name": "y", "value": "' + yNew + '"}]}');
+        
     }
 
     function handleMouseUp(event) {
