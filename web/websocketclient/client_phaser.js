@@ -45,7 +45,7 @@ var height = 2048;
 var asteroides = [];
 var players = [];
 var neutras = [];
-var coins;
+var coins = [];
 var particles;
 var bullets=[];
 
@@ -135,9 +135,9 @@ function create() {
     particles = this.add.particles('space');
 
     // coins
-    coins = this.physics.add.sprite(900, 450, 'coin');
+    //coins = this.physics.add.sprite(900, 450, 'coin');
 
-    coins.setCollideWorldBounds(true);
+    //coins.setCollideWorldBounds(true);
 
     this.anims.create({
     key: "efectoMoneda",
@@ -168,7 +168,12 @@ function getRandomInt(min, max) {
 
 function update(time, delta)
 {
-    coins.anims.play("efectoMoneda", true);
+    //coins.anims.play("efectoMoneda", true);
+    //console.log(coins.length);
+    for (let i = 0; i < coins.length; i++) {
+        coins[i].anims.play("efectoMoneda", true);
+
+    }
 
     for (let i = 0; i < asteroides.length; i++) {
         switch (i) {
@@ -223,7 +228,7 @@ function particle(ship,id){
         emitter.startFollow(ship);
     
 }
-
+/*
 function collectCoins(player, coins) {
     //  Add and update the score
     //score += 10;
@@ -239,7 +244,8 @@ function collectCoins(player, coins) {
         : Phaser.Math.Between(0, 1000);
     coins.setPosition(x, y);
     //coins.setVisible(false);
-}
+}*/
+
 function hitAsteroide(player,asteroide) {
     game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim'); 
   }
@@ -301,13 +307,21 @@ window.onload = function () {
                     //players[id] .setAngularDrag(400);
                     //players[id] .setMaxVelocity(600);
                     //players[id] .setCollideWorldBounds(true);
-                    game.scene.scenes[0].physics.add.overlap(players[id], coins,collectCoins, null, this);
+                    //game.scene.scenes[0].physics.add.overlap(players[id], coins,collectCoins, null, this);
                     for (let i = 0; i < asteroides.length; i++) {
                         //console.log(asteroides[i]);
                         //console.log(players[id]);
                         //console.log("moneda");
                         //console.log(coins);
                         game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
+                        //console.log("colision");
+                    }
+                    for (let i = 0; i < asteroides.length; i++) {
+                        //console.log(asteroides[i]);
+                        //console.log(players[id]);
+                        //console.log("moneda");
+                        //console.log(coins);
+                        game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
                         //console.log("colision");
                     }
                     if(particles!== undefined){
@@ -346,10 +360,11 @@ window.onload = function () {
                 //console.log(y);
 
                 if (asteroides[id] == null) {
-                    console.log("asigne imagen asteroide");
+                    //console.log("asigne imagen asteroide");
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
-
+                    //console.log(asteroides.length);
+                    //console.log(asteroides);
                     //asteroides[id]=scene.physics.add.sprite(x, y, "asteroid1");
                 }
                 asteroides[id].y = y;
@@ -376,7 +391,7 @@ window.onload = function () {
                 neutras[id].x = x;
                 neutras[id].z = y;
             }else if (typeof gameState[i]["Proyectil"] !== "undefined") {
-                console.log(gameState);
+                //console.log(gameState);
                 var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Proyectil"]['super']["Entity"]["x"];
                 var y = gameState[i]["Proyectil"]['super']["Entity"]["y"];
@@ -402,6 +417,24 @@ window.onload = function () {
                     //console.log(coins);
                     //console.log("colision");
                 }
+            }else if (typeof gameState[i]["Moneda"] !== "undefined") {
+                var id = gameState[i]["Moneda"]['super']["Entity"]["super"]["State"]["id"];
+                var x = gameState[i]["Moneda"]['super']["Entity"]["x"];
+                var y = gameState[i]["Moneda"]['super']["Entity"]["y"];
+
+                if(coins[id]==null){
+                    //console.log(id);
+                    //console.log(x);
+                    //console.log(y);
+                    coins[id]=game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
+                    coins[id].setDepth(1);
+                    //console.log(coins);
+                    //console.log(coins.length);
+                }
+                
+                coins[id].y = y;
+                coins[id].x = x;
+                coins[id].z = y;
             }
             i++;
         }

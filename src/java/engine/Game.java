@@ -124,7 +124,7 @@ public class Game implements Runnable {
         for (int i = 0; i < 10; i++) {
             x = r.nextInt(width);
             y = r.nextInt(height);
-            states.add(new Moneda("Moneda", false, "moneda" + i, x, y, 0, 0, 0, 0));
+            states.add(new Moneda("Moneda", false,""+i, x, y, 0, 0, 0, 0));
         }
         //states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
     }

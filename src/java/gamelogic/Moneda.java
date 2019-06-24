@@ -50,9 +50,10 @@ public class Moneda extends Entity {
         double nuevoY = y;
         int widthWorld = 4500; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
         int heightWorld = 2048;
+        hasChanged = true;
         LinkedList<String> events = getEvents();
         if (!events.isEmpty()) {
-            hasChanged = true;
+            
             for (String event : events) {
                 switch (event) {
                     case "collide":
