@@ -16,9 +16,17 @@ public class NavePlayer extends Nave {
     protected int puntaje;
     protected LinkedList<Nave> navesAliadas;
     protected int idBullets;
+    private String pregunta;
+    private int[] opciones;
+    private boolean bloqueado;
+    private int respuesta;
 
-    public NavePlayer(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead) {
-        super("NavePlayer",destroy, id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);
+    public NavePlayer(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir,
+            double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, int[] op,
+            boolean bq, int resp) {
+        super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj
+        );
+
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
@@ -26,6 +34,10 @@ public class NavePlayer extends Nave {
         this.puntaje = puntaje;
         this.navesAliadas = new LinkedList<Nave>();
         this.idBullets = 0;
+        this.pregunta = preg;
+        this.opciones = op;
+        this.bloqueado = bq;
+        this.respuesta = resp;
     }
 
     @Override
@@ -38,7 +50,7 @@ public class NavePlayer extends Nave {
                     switch (accion.getName()) {
                         case "fire":
                             String idAux = id + "" + idBullets;
-                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux,id, x, y, velocidad.x, velocidad.y,direccion.x,direccion.y,angulo, 0);
+                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
                             listProyectil.add(proyectil);
                             idBullets++;
                     }
@@ -68,10 +80,9 @@ public class NavePlayer extends Nave {
                 if (futuraPos[0] == mon.x && futuraPos[1] == mon.y) {
                     this.addEvent("collect");
                 }
+
             }
-            /*else if(){ // Choca contra moneda?
-                
-            }*/
+
         }
         return listProyectil;
     }
@@ -83,9 +94,8 @@ public class NavePlayer extends Nave {
         double nuevoY = y;
         double nuevaVelX = velocidad.x;
         double nuevaVelY = velocidad.y;
-        double nuevaDirX= direccion.x;
-        double nuevaDirY=direccion.y;
-
+        double nuevaDirX = direccion.x;
+        double nuevaDirY = direccion.y;
 
         if (listAccion != null) {
             for (Action accion : listAccion) {
@@ -128,6 +138,7 @@ public class NavePlayer extends Nave {
         double nuevaDirX = direccion.x;
         double nuevaDirY = direccion.y;
         int nuevoPuntaje = puntaje;
+        boolean estaBq = bloqueado;
 
         if (listAccion != null) {
             for (Action accion : listAccion) {
@@ -164,11 +175,11 @@ public class NavePlayer extends Nave {
                                 destruido = true;
                                 //System.out.println("salir "+salir);
                                 break;
-                                
+
                         }
 
-                    }else{
-                        System.out.println("respawn "+dead);
+                    } else {
+                        System.out.println("respawn " + dead);
                         this.addEvent("respawn");
                     }
                 }
@@ -208,6 +219,9 @@ public class NavePlayer extends Nave {
                     case "collect":
                         nuevoPuntaje = nuevoPuntaje + 10; // Si esto se hace dos veces cuando recolecta moneda entonces hay que sacar el state.addEvent de Moneda
                         break;
+                    case "aliar":
+                        estaBq = true;
+                        break;
                     case "respawn":
                         revivir = true;
                         nuevoX = 200;
@@ -224,8 +238,14 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto);
+        NavePlayer nuevoJugador = new NavePlayer(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto, pregunta, opciones, estaBq, respuesta);
         return nuevoJugador;
+    }
+
+    public void setPregunta(String preg, int[] op, int resp) {
+        this.pregunta = preg;
+        this.opciones = op;
+        this.respuesta = resp;
     }
 
     @Override
@@ -237,6 +257,9 @@ public class NavePlayer extends Nave {
         this.healthMax = ((NavePlayer) newPlayer).healthMax;
         this.dead = ((NavePlayer) newPlayer).dead;
         this.puntaje = ((NavePlayer) newPlayer).puntaje;
+        this.pregunta = ((NavePlayer) newPlayer).pregunta;
+        this.opciones = ((NavePlayer) newPlayer).opciones;
+        this.respuesta = ((NavePlayer) newPlayer).respuesta;
     }
 
     @Override
@@ -250,19 +273,25 @@ public class NavePlayer extends Nave {
         atributo.put("leave", leave);
         atributo.put("dead", dead);
         atributo.put("puntaje", puntaje);
+        atributo.put("bloqueado", bloqueado);
+        atributo.put("pregunta", pregunta);
+        atributo.put("opcion1", opciones[0]);
+        atributo.put("opcion2", opciones[1]);
+        atributo.put("opcion3", opciones[2]);
+
         jJugador.put("NavePlayer", atributo);
 
         return jJugador;
     }
 
-     @Override
+    @Override
     public JSONObject toJSON(String sessionId, LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions, JSONObject lastState) {
         NavePlayer thePlayer = getPlayer(sessionId, states);
-        if(thePlayer==null || this.id.equalsIgnoreCase(sessionId)){
+        if (thePlayer == null || this.id.equalsIgnoreCase(sessionId)) {
             return lastState == null || hasChanged ? toJSON() : null;
-        }else{
+        } else {
             return null;
-        }        
+        }
     }
 
 }
