@@ -48,6 +48,10 @@ var neutras = [];
 var coins = [];
 var particles;
 var bullets=[];
+var tablaPuntajes =[];
+var colors = [];
+var emitters=[];
+var punteroColor=0;
 
 
 function preload() {
@@ -157,7 +161,11 @@ function create() {
         ease: 'Linear',
         loop: -1
     });*/
+    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '42px', fill: '#fff' });    
+
     cursors = this.input.keyboard.createCursorKeys();
+
+    colors=['blue','red','green','orage','purple'];
 }
 
 // Retorna un entero aleatorio entre min (incluido) y max (excluido)
@@ -167,7 +175,14 @@ function getRandomInt(min, max) {
   }
 
 function update(time, delta)
-{
+{   
+    tablaPosiciones.setText('Tabla Posiciones \n');
+    for (var key in tablaPuntajes) {
+        if (tablaPuntajes.hasOwnProperty(key)) {
+            tablaPosiciones.text+='Player '+key+' score: '+tablaPuntajes[key]+'\n';
+            //console.log(key + " -> " + tablaPuntajes[key]);
+        }
+    }
     //coins.anims.play("efectoMoneda", true);
     //console.log(coins.length);
     for (let i = 0; i < coins.length; i++) {
@@ -197,21 +212,23 @@ function update(time, delta)
 
 function particle(ship,id){
      //particulas
+     //var color=colors[Math.floor(Math.random()*(6-0)+0)];
+     //console.log(''+color);
      //console.log(ship);
      //console.log(players[id]);
         var emitter = particles.createEmitter({
-            frame: 'blue',
+            frame: ''+colors[punteroColor],
             speed: 100,
             lifespan: {
                 onEmit: function (particle, key, t, value)
                 {
-                    return Phaser.Math.Percent(ship.body.speed, 0, 300) * 2000;
+                    return 500;
                 }
             },
             alpha: {
                 onEmit: function (particle, key, t, value)
                 {
-                    return Phaser.Math.Percent(ship.body.speed, 0, 300);
+                    return 90;
                 }
             },
             angle: {
@@ -222,29 +239,16 @@ function particle(ship,id){
                 }
             },
             scale: { start: 0.6, end: 0 },
-            blendMode: 'ADD'
+            //blendMode: 'ADD'
         });
-        
+        if(punteroColor>colors.length){
+            punteroColor=0
+        }else{
+            punteroColor++;
+        }
+        emitters[id]=emitter;
         emitter.startFollow(ship);
-    
 }
-/*
-function collectCoins(player, coins) {
-    //  Add and update the score
-    //score += 10;
-    //var text='Score: ' + score;
-    //scoreText.setText(text);
-    var x =
-      player.x < 400
-        ? Phaser.Math.Between(100, 3000)
-        : Phaser.Math.Between(0, 1000);
-    var y =
-      player.y < 400
-        ? Phaser.Math.Between(100, 3000)
-        : Phaser.Math.Between(0, 1000);
-    coins.setPosition(x, y);
-    //coins.setVisible(false);
-}*/
 
 function hitAsteroide(player,asteroide) {
     game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim'); 
@@ -293,6 +297,7 @@ window.onload = function () {
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
                 var health = gameState[i]["NavePlayer"]["health"];
+                var puntaje = gameState[i]["NavePlayer"]["puntaje"];
                 var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
                 var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
                 var angulo = gameState[i]["NavePlayer"]["super"]['Nave']['angulo'];
@@ -300,7 +305,6 @@ window.onload = function () {
                 // Create a sphere that we will be moved by the keyboard
                 if (players[id] == null) {
                     //console.log('this' + this);
-                    //console.log(gameState);
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
                     //players[id] .setDrag(300);
                     //players[id].setDamping(true);
@@ -324,9 +328,8 @@ window.onload = function () {
                         game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
                         //console.log("colision");
                     }
-                    if(particles!== undefined){
-                        //particle(players[id],id);
-                        console.log("particules");
+                    if(particles!==undefined){
+                        particle(players[id],id);
                     }
                     
                     //console.log(players[id]);
@@ -335,19 +338,25 @@ window.onload = function () {
                 //console.log(Math.atan2(xDir,yDir));
                 //players[id].angle = Math.atan2(yDir,xDir)*100;
                 //console.log(angulo*(180/Math.PI));
+                tablaPuntajes[id]=puntaje;
+
                 players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = 0;
 
                 if (leave) {
-                    players[id].destroy();  
+                    players[id].destroy();
+                    //console.log(id);
+                    //delete tablaPuntajes[id];
                     //players.splice(id);
-                    //console.log(players[id]);
+                    
                 }
                 //console.log(destroy);
                 if (destroy) {
                     players[id].destroy();
+                    delete tablaPuntajes[id];
+                    delete emitters[id];
                     //players[id] = null;
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
