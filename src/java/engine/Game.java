@@ -126,7 +126,12 @@ public class Game implements Runnable {
             y = r.nextInt(height);
             states.add(new Moneda("Moneda", false,""+i, x, y, 0, 0, 0, 0));
         }
-        //states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0, null));
+        /**
+         * (String name, boolean destroy, String id, double x, double y, double velocidadX, 
+            double velocidadY, double xDir, double yDir, int cantProj, NavePlayer prop,
+             String posible, boolean d, String p)
+         */
+        states.add(new NaveNeutra("NaveNeutra1",false, "neutra1", 1000, 1000, 0, 0,1,0, 0,true, "",0));
     }
 
     private void createStaticState() {

@@ -44,6 +44,13 @@ window.onload = function () {
                         if(dead){
                             socket.send("died");
                         }
+                        var pregunta = gameState[i]["pregunta"];
+                        if(pregunta !== "")
+                        {
+                            console.log(pregunta);
+                           // updatePregunta(pregunta);
+                            socket.send('{"name": "respuesta", "priority": "0","parameters": \n\[{"name": "x", "value": "' + 1 + '"},\n\]}');
+                        }
                     }
                 }
                 i++;
