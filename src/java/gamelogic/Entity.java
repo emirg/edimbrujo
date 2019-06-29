@@ -76,11 +76,11 @@ public class Entity extends State {
         JSONObject jsonEntity = new JSONObject();
         JSONObject jsonAttrs = new JSONObject();
         jsonAttrs.put("super", super.toJSON());
-        jsonAttrs.put("x", x);
+        jsonAttrs.put("x", x); // Para ser consistentes deberiamos hacer un objecto 'posicion' y que tenga como atributos a 'x','y'
         jsonAttrs.put("y", y);
-        jsonAttrs.put("width", width);
+        jsonAttrs.put("width", width);  // Para ser consistentes deberiamos hacer un objecto 'tamaño' y que tenga como atributos a 'width','height'
         jsonAttrs.put("height", height);
-        jsonAttrs.put("velocidadX", velocidad.x);
+        jsonAttrs.put("velocidadX", velocidad.x); // Para ser consistentes deberiamos hacer un objecto 'velocidad' y que tenga como atributos a 'x','y'
         jsonAttrs.put("velocidadY", velocidad.y);
         jsonEntity.put("Entity", jsonAttrs);
         return jsonEntity;

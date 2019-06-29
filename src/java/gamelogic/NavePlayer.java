@@ -266,6 +266,16 @@ public class NavePlayer extends Nave {
     public JSONObject toJSON() {
         JSONObject jJugador = new JSONObject();
         JSONObject atributo = new JSONObject();
+        JSONObject navesAliadas = new JSONObject();
+        JSONObject opciones = new JSONObject();
+
+        for (int i = 0; i < this.opciones.length; i++) {
+            opciones.put("opcion" + i, this.opciones[i]);
+        }
+
+        for (int i = 0; i < this.navesAliadas.size(); i++) {
+            navesAliadas.put("naveAliada" + i, this.navesAliadas.get(i).id);
+        }
 
         atributo.put("super", super.toJSON());
         atributo.put("health", health);
@@ -274,10 +284,11 @@ public class NavePlayer extends Nave {
         atributo.put("dead", dead);
         atributo.put("puntaje", puntaje);
         atributo.put("bloqueado", bloqueado);
+        atributo.put("navesAliadas", navesAliadas);
+        atributo.put("idBullets", idBullets);
         atributo.put("pregunta", pregunta);
-        atributo.put("opcion1", opciones[0]);
-        atributo.put("opcion2", opciones[1]);
-        atributo.put("opcion3", opciones[2]);
+        atributo.put("opciones", opciones);
+        atributo.put("respuesta", respuesta);
 
         jJugador.put("NavePlayer", atributo);
 

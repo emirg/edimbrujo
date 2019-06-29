@@ -66,7 +66,7 @@ public abstract class Nave extends Entity {
         JSONObject atributo = new JSONObject();
 
         atributo.put("super", super.toJSON());
-        atributo.put("xDir",direccion.x);
+        atributo.put("xDir",direccion.x); // Para ser consistentes deberiamos hacer un objecto 'direccion' y que tenga como atributos a 'x','y'
         atributo.put("yDir",direccion.y);
         atributo.put("angulo", angulo);
         atributo.put("countProyectil", countProyectil);

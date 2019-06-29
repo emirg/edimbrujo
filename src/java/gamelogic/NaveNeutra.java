@@ -19,20 +19,20 @@ public class NaveNeutra extends Nave {
     //private String propietario; // Podria ser una NavePlayer tambien
     private NavePlayer propietario;
     private static final int DISTANCIA_DE_ALIANZA = 150;
-    private String idProp;
+    private String idProp; // Por que 'idProp' y a la vez 'propietario'? Quedemosno con solo uno para evitar inconsistencias y facilitar el codigo
     private boolean disponible;
     private String pregunta;
     private int respuesta;
     private static final int[] opciones = {9, 7, 6, 4};
-    private String idPosP;
+    private String idPosP; // Que es?
 
     public NaveNeutra(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, int cantProj, NavePlayer prop,
-             String posible, boolean d, String p) {
+            String posible, boolean d, String p) {
         super("NaveNeutra", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
         this.propietario = prop;
         this.idPosP = posible;
         this.disponible = d;
-        this.idProp = p;
+        this.idProp = p; 
         this.pregunta = "2 + 5";
         this.respuesta = 2;
     }
@@ -317,11 +317,23 @@ public class NaveNeutra extends Nave {
     @Override
     public JSONObject toJSON() {
         JSONObject jNeutra = new JSONObject();
+        JSONObject opciones = new JSONObject();
         JSONObject atributo = new JSONObject();
 
-        atributo.put("super", super.toJSON());
-        atributo.put("propietario", propietario);
+        for (int i = 0; i < this.opciones.length; i++) {
+            opciones.put("opcion"+i, this.opciones[i]);
+        }
 
+        atributo.put("super", super.toJSON());
+        atributo.put("propietario", propietario.id); // No podemos poner un objeto en el JSON
+        atributo.put("DISTANCIA_DE_ALIANZA", DISTANCIA_DE_ALIANZA);
+        atributo.put("idProp", idProp);
+        atributo.put("disponible", disponible);
+        atributo.put("pregunta", pregunta);
+        atributo.put("respuesta", respuesta);
+        atributo.put("idPosP", idPosP);
+        atributo.put("opciones", opciones);
+        
         jNeutra.put("NaveNeutra", atributo);
 
         return jNeutra;

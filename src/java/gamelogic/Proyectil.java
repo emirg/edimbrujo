@@ -15,12 +15,12 @@ public class Proyectil extends Entity {
     protected Vector2 direccion;
     protected double angulo;
 
-    public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY,double xDir, double yDir ,double angulo ,int number) {
+    public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, double angulo, int number) {
         super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 64, 12);
         this.number = number;
         this.idPlayer = idPlayer;
-        this.angulo=angulo;
-        this.direccion = new Vector2(xDir,yDir);
+        this.angulo = angulo;
+        this.direccion = new Vector2(xDir, yDir);
     }
 
     @Override
@@ -43,12 +43,12 @@ public class Proyectil extends Entity {
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true;
-        double nuevoX = x + direccion.x+velocidad.x;
-        double nuevoY = y + direccion.y+velocidad.y;
+        double nuevoX = x + direccion.x + velocidad.x;
+        double nuevoY = y + direccion.y + velocidad.y;
         boolean destruido = destroy;
         int width = 4500; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
         int height = 2048;
-        if (x > width || y > height || y<0 || x<0) {
+        if (x > width || y > height || y < 0 || x < 0) {
             destruido = true;
         } else {
             //falta considerar que es un mundo de 360°
@@ -64,7 +64,7 @@ public class Proyectil extends Entity {
                 }
             }
         }
-        Proyectil newArrow = new Proyectil(name, destruido, id, idPlayer, nuevoX, nuevoY, velocidad.x, velocidad.y,direccion.x,direccion.y,angulo, number);
+        Proyectil newArrow = new Proyectil(name, destruido, id, idPlayer, nuevoX, nuevoY, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, number);
         return newArrow;
     }
 
@@ -78,7 +78,7 @@ public class Proyectil extends Entity {
 
     @Override
     protected Object clone() {
-        Proyectil clon = new Proyectil(name, destroy, id, idPlayer, x, y, velocidad.x, velocidad.y,direccion.x,direccion.y,angulo, number);
+        Proyectil clon = new Proyectil(name, destroy, id, idPlayer, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, number);
         return clon;
     }
 
@@ -89,6 +89,10 @@ public class Proyectil extends Entity {
         jsonAttrs.put("super", super.toJSON());
         jsonAttrs.put("number", number);
         jsonAttrs.put("angulo", angulo);
+        jsonAttrs.put("idPlayer", idPlayer);
+        jsonAttrs.put("xDir", direccion.x);
+        jsonAttrs.put("yDir", direccion.y);
+
         jProyectil.put("Proyectil", jsonAttrs);
         return jProyectil;
     }
