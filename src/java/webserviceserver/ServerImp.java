@@ -14,14 +14,13 @@ import javax.ws.rs.QueryParam;
 @Stateless
 @Path("/server")
 public class ServerImp {
-    
+
     /*
     Acciones:
     "move" en un sentido (x,y)
     "fire"
     "stop"
-    */
-
+     */
     private Lobby lobby;
     int session;
 
@@ -74,8 +73,8 @@ public class ServerImp {
             @QueryParam("session") String session) {
 
         lobby = Lobby.startGame();
-        String move = "{\"name\": \"move\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x
-                + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
+        String move = "{\"name\": \"move\", \"priority\": \"0\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
+
         System.out.println(move);
         lobby.addAction(session, move);
         return "okey";
@@ -107,7 +106,7 @@ public class ServerImp {
             Logger.getLogger(ServerImp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return state;
-    } 
+    }
 
     @GET
     @Path("/getState")

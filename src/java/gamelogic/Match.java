@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+// Esta clase no la estamos usando en ningun lado
 public class Match extends State {
 
     protected LinkedList<String> players;

@@ -17,7 +17,7 @@ public class NavePlayer extends Nave {
     protected LinkedList<Nave> navesAliadas;
     protected int idBullets;
     private String pregunta;
-    private int[] opciones;
+    private int[] opciones; // Yo haria que sea una lista, se vuelve mas facil de agregar/sacar cosas y no restringe el tamaño
     private boolean bloqueado;
     private int respuesta;
 
