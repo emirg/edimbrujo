@@ -34,21 +34,14 @@ public class Desafio extends State
         this.opciones[2]="7";
         this.correcta = 1;
     }
-    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
-        //TODO in concrete class
-        return null;
-    }
-
-    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
-        //TODO in concrete class
-        hasChanged = false;
-        boolean nuevoDes = this.destroy;
+    public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String,
+            LinkedList<Action>> actions) 
+    {
+        LinkedList<State> neutras = new LinkedList();
         LinkedList<Action> listAccion = actions.get(this.idNavePlayer);
-         LinkedList<Action> listAccion2 = actions.get(this.idNaveNeutra);
-       /* if (!actions.isEmpty()) 
-        {
-            hasChanged = true;
-            if (listAccion != null) 
+        NavePlayer jugador=null;
+        NaveNeutra neutra=null;
+        if (listAccion != null) 
             {
                 for (Action accion : listAccion) 
                 {
@@ -57,37 +50,73 @@ public class Desafio extends State
                     {
                         switch(accion.getName())
                         {
-                            /*case "respuesta":
-                                if( Integer.parseInt(accion.getParameter(id)) == this.correcta)
+                            case "respuesta":
+                                
+                                int res = Integer.parseInt(accion.getParameter("x"));
+                                for(State estado:states)
                                 {
-                                    Action ac1 =new Action(this.idNavePlayer,"aliar");
-                                    ac1.putParameter("idNeutra",this.idNaveNeutra );
+                                    if(estado!=null && estado.id.equalsIgnoreCase(this.idNavePlayer))
+                                    {
+                                        jugador = (NavePlayer)estado;
+                                    }
+                                    else
+                                    {
+                                        if(estado!=null && estado.id.equalsIgnoreCase(this.idNaveNeutra))
+                                        {
+                                            neutra = (NaveNeutra)estado;
+                                        }
+                                    }
                                     
-                                    Action ac2 = new Action(this.idNaveNeutra,"seguir");
-                                    ac2.putParameter("idPlayer", this.idNavePlayer);
-                                    listAccion.add(ac1);
-                                    listAccion2.add(ac2);
+                                }
+                                
+                                if(res == correcta)
+                                {
                                     
+                                    neutra.addEvent("destruir");
                                     
+                                    neutras.add(new NaveNeutra(neutra.name,neutra.destroy,this.idNaveNeutra,neutra.x,neutra.y,neutra.velocidad.x,neutra.velocidad.y,
+                                    neutra.direccion.x,neutra.direccion.y,neutra.countProyectil,true,this.idNavePlayer,neutra.idBullets));
                                 }
                                 else
-                                {
-                                    Action ac = new Action(this.idNavePlayer,"liberar");
-                                    ac.putParameter("idPlayer", this.idNavePlayer);
-                                    Action ac3 = new Action(this.idNaveNeutra,"liberar");
-                                    ac3.putParameter(this.idNaveNeutra, "liberar");
-                                    listAccion.add(ac);
-                                    listAccion2.add(ac3);
+                                {   
                                     
+                                   neutra.addEvent("destruir");
                                     
+                                    neutras.add(new NaveNeutra(neutra.name,neutra.destroy,this.idNaveNeutra,neutra.x,neutra.y,neutra.velocidad.x,neutra.velocidad.y,
+                                    neutra.direccion.x,neutra.direccion.y,neutra.countProyectil,true,"",neutra.idBullets));
                                 }
-                                      
-                                nuevoDes = true;      
-                            break;
+                                jugador.addEvent("liberar");
+                                this.addEvent("destruir");
+                                break;
+                        }
+                           
                     }
                 }
-            }    
-        }*/
+            }
+        return neutras;
+    }
+
+    public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
+        //TODO in concrete class
+        hasChanged = false;
+        boolean nuevoDes = this.destroy;
+        LinkedList<String> eventos = getEvents();
+
+        if (!eventos.isEmpty()) 
+        {
+            hasChanged = true;
+            
+            for (String evento : eventos) 
+            {
+                switch (evento) 
+                {
+                    case "destruir":
+                        nuevoDes = true;
+                        
+                        break;
+                }
+            }
+        }    
         Desafio nuevoDesafio =new Desafio(name,nuevoDes,id,this.idNaveNeutra,this.idNavePlayer);
         
         return nuevoDesafio;

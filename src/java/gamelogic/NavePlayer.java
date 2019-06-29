@@ -14,38 +14,48 @@ public class NavePlayer extends Nave {
     protected boolean leave;
     protected boolean dead;
     protected int puntaje;
-    protected LinkedList<Nave> navesAliadas;
+    protected LinkedList<String> navesAliadas;
     protected int idBullets;
     private String pregunta;
-    private int[] opciones;
+    private String[] opciones;
     private boolean bloqueado;
     private int respuesta;
+    private String idDesafio;
 
     public NavePlayer(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir,
-            double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, int[] op,
+            double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op,
             boolean bq, int resp) {
         super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj
         );
+
+    /*public NavePlayer(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,
+            double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, int [] op,
+            boolean bq, int resp) {
+        super("NavePlayer",destroy,id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);*/
 
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
         this.dead = dead;
         this.puntaje = puntaje;
-        this.navesAliadas = new LinkedList<Nave>();
+       // this.navesAliadas = aliadas;
         this.idBullets = 0;
         this.pregunta = preg;
         this.opciones = op;
         this.bloqueado = bq;
         this.respuesta = resp;
+       // this.idDesafio = des;
     }
 
     @Override
     public LinkedList<State> generate(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
         LinkedList<Action> listAccion = acciones.get(id);
         LinkedList<State> listProyectil = new LinkedList();
+        if(!bloqueado)
+        {
         if (listAccion != null) {
-            for (Action accion : listAccion) {
+            for (Action accion : listAccion) 
+            {
                 if (!dead) {
                     switch (accion.getName()) {
                         case "fire":
@@ -61,6 +71,7 @@ public class NavePlayer extends Nave {
         double[] futuraPos = futuraPosicion(acciones);
         for (State estado : estados) {
             //Choque contra otra nave
+            
             if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
                 Asteroide ast = (Asteroide) estado;
                 double xFuturaAsteroide = ast.x + ast.velocidad.x;
@@ -81,8 +92,23 @@ public class NavePlayer extends Nave {
                     this.addEvent("collect");
                 }
 
+            }else if (estado != this && estado.getName().equalsIgnoreCase("naveneutra")) 
+            {
+                NaveNeutra neutra = (NaveNeutra)estado;
+                double dist = Math.sqrt((futuraPos[0] - neutra.x) * (futuraPos[0]- neutra.x) + (futuraPos[1] - neutra.y) * (futuraPos[1] - neutra.y));
+                if (dist <= 150 && neutra.idProp.equalsIgnoreCase(""))
+                {
+                    
+                    Desafio desa = new Desafio("Desafio",false,"idDest",neutra.id,this.id);
+                    this.addEvent("desafiar");
+                    listProyectil.add(desa);
+                   
+                }
+                    
+                  
             }
 
+        }
         }
         return listProyectil;
     }
@@ -139,7 +165,13 @@ public class NavePlayer extends Nave {
         double nuevaDirY = direccion.y;
         int nuevoPuntaje = puntaje;
         boolean estaBq = bloqueado;
-
+        String  [] op = this.opciones;
+        int nuevaRes = respuesta;
+        String nuevaPreg = pregunta;
+        String nuevoDes = this.idDesafio;
+        
+        if(!bloqueado)
+        {
         if (listAccion != null) {
             for (Action accion : listAccion) {
 
@@ -165,6 +197,12 @@ public class NavePlayer extends Nave {
                                 nuevaVelX = 0;
                                 nuevaVelY = 0;
                                 break;
+                            case "respuesta":
+                                op = null;
+                                nuevaRes = -1;
+                                nuevaPreg = "";
+                                
+                            break;
                             case "fire":
                                 nuevosProyectiles++;
                                 break;
@@ -175,7 +213,7 @@ public class NavePlayer extends Nave {
                                 destruido = true;
                                 //System.out.println("salir "+salir);
                                 break;
-
+                           
                         }
 
                     } else {
@@ -188,7 +226,7 @@ public class NavePlayer extends Nave {
         nuevoX = nuevoX + nuevaVelX;
         nuevoY = nuevoY + nuevaVelY;
         //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
-
+        }
         LinkedList<String> eventos = getEvents();
 
         if (!eventos.isEmpty()) {
@@ -219,8 +257,9 @@ public class NavePlayer extends Nave {
                     case "collect":
                         nuevoPuntaje = nuevoPuntaje + 10; // Si esto se hace dos veces cuando recolecta moneda entonces hay que sacar el state.addEvent de Moneda
                         break;
-                    case "aliar":
-                        estaBq = true;
+                    case "liberar":
+                        estaBq = false;
+                        
                         break;
                     case "respawn":
                         revivir = true;
@@ -235,19 +274,35 @@ public class NavePlayer extends Nave {
                         //Considera que el jugador sale del juego
                         destruido = true;
                         break;
+                    case "desafiar":
+                        estaBq = true;
+                        for(State estado: estados)
+                        {
+                            if(estado != null && estado.getName().equalsIgnoreCase("desafio") &&((Desafio)estado).idNavePlayer.equalsIgnoreCase(id))
+                            {
+                                Desafio des = (Desafio)estado;
+                                op = des.opciones;
+                                nuevaRes = des.correcta;
+                                nuevaPreg = des.pregunta;
+                               
+                              
+                            }
+                        }
+                        break;
                 }
             }
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY, nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto, pregunta, opciones, estaBq, respuesta);
+        
+        NavePlayer nuevoJugador = new NavePlayer(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
+                nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto, 
+                nuevaPreg, op, estaBq, nuevaRes);
+
+      //  NavePlayer nuevoJugador = new NavePlayer(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,pregunta,opciones,estaBq,respuesta);
+
         return nuevoJugador;
     }
 
-    public void setPregunta(String preg, int[] op, int resp) {
-        this.pregunta = preg;
-        this.opciones = op;
-        this.respuesta = resp;
-    }
-
+   
     @Override
     public void setState(State newPlayer) {
         super.setState(newPlayer);
@@ -256,6 +311,7 @@ public class NavePlayer extends Nave {
         this.health = ((NavePlayer) newPlayer).health;
         this.healthMax = ((NavePlayer) newPlayer).healthMax;
         this.dead = ((NavePlayer) newPlayer).dead;
+        this.bloqueado= ((NavePlayer)newPlayer).bloqueado;
         this.puntaje = ((NavePlayer) newPlayer).puntaje;
         this.pregunta = ((NavePlayer) newPlayer).pregunta;
         this.opciones = ((NavePlayer) newPlayer).opciones;
@@ -266,16 +322,6 @@ public class NavePlayer extends Nave {
     public JSONObject toJSON() {
         JSONObject jJugador = new JSONObject();
         JSONObject atributo = new JSONObject();
-        JSONObject navesAliadas = new JSONObject();
-        JSONObject opciones = new JSONObject();
-
-        for (int i = 0; i < this.opciones.length; i++) {
-            opciones.put("opcion" + i, this.opciones[i]);
-        }
-
-        for (int i = 0; i < this.navesAliadas.size(); i++) {
-            navesAliadas.put("naveAliada" + i, this.navesAliadas.get(i).id);
-        }
 
         atributo.put("super", super.toJSON());
         atributo.put("health", health);
@@ -284,11 +330,13 @@ public class NavePlayer extends Nave {
         atributo.put("dead", dead);
         atributo.put("puntaje", puntaje);
         atributo.put("bloqueado", bloqueado);
-        atributo.put("navesAliadas", navesAliadas);
-        atributo.put("idBullets", idBullets);
         atributo.put("pregunta", pregunta);
-        atributo.put("opciones", opciones);
-        atributo.put("respuesta", respuesta);
+        if(opciones!=null)
+        {
+            atributo.put("opcion1", opciones[0]);
+            atributo.put("opcion2", opciones[1]);
+            atributo.put("opcion3", opciones[2]);
+        }
 
         jJugador.put("NavePlayer", atributo);
 
