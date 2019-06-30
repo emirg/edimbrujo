@@ -72,9 +72,9 @@ function preload() {
     });
 
     // nave neutra
-    this.load.spritesheet('shipNeutra', 'assets/sprites/ship.png', {
-        frameWidth: 93,
-        frameHeight: 110
+    this.load.spritesheet('shipNeutra', 'assets/sprites/thrust_ship.png', {
+        frameWidth: 21,
+        frameHeight: 28
     });
 
     //coins
@@ -242,7 +242,7 @@ function particle(ship,id){
         }else{
             punteroColor++;
         }
-        emitters[id]=emitter;
+        emitters[id]=particles;
         emitter.startFollow(ship);
 }
 
@@ -324,6 +324,8 @@ window.onload = function () {
 
                 if (leave) {
                     players[id].destroy();
+                    delete tablaPuntajes[id];
+                    delete emitters[id];
                 }
                 if (destroy) {
                     players[id].destroy();
@@ -339,6 +341,7 @@ window.onload = function () {
                 if (asteroides[id] == null) {
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
+
                 }
                 asteroides[id].y = y;
                 asteroides[id].x = x;
@@ -359,6 +362,8 @@ window.onload = function () {
                 if (neutras[id] == null) {
                     neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
                     neutras[id].setDepth(1);
+                    neutras[id].scaleX=2;
+                    neutras[id].scaleY=2;
 
                     /* Genero colision visual moneda player */
                     for (let i = 0; i < coins.length; i++) {     

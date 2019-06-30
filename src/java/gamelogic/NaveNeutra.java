@@ -63,7 +63,8 @@ public class NaveNeutra extends Nave {
                         this.addEvent("desafiado");
 
                     }
-
+                }else if (estado != this && estado.getName().equalsIgnoreCase("liberar")) { 
+                    this.addEvent("liberar");
                 }
             }
         }
@@ -92,10 +93,11 @@ public class NaveNeutra extends Nave {
             for (State estado : estados) {
                 if (estado.getId().equalsIgnoreCase(nuevoIdPropietario)) {
                     nuevoPropietario = (NavePlayer) estado;
+                    //System.out.println(nuevoPropietario);
                 }
             }
 
-            if (nuevoPropietario != null && !nuevoPropietario.dead) {
+            if (nuevoPropietario != null && !nuevoPropietario.dead ) {
                 LinkedList<Action> listAccion = acciones.get(nuevoPropietario.id); // Obtengo las acciones del propietario
                 if (listAccion != null) {
                     for (Action accion : listAccion) {
@@ -135,7 +137,7 @@ public class NaveNeutra extends Nave {
                 }
                 nuevoX = nuevoX + nuevaVelX;
                 nuevoY = nuevoY + nuevaVelY;
-            } else if (nuevoPropietario != null && nuevoPropietario.dead) {
+            } else if (nuevoPropietario != null && nuevoPropietario.dead ) {
                 nuevoPropietario = null;
                 nuevoIdPropietario = "";
                 nuevaVelX = 0;
@@ -145,6 +147,13 @@ public class NaveNeutra extends Nave {
                 nuevaDirX = 0;
                 nuevaDirY = 1;
                 nuevaDisponibilidad = true;
+            }else{
+                if(nuevoPropietario == null){
+                    nuevoPropietario = null;
+                    nuevoIdPropietario = "";
+                    nuevaDisponibilidad = true;
+                    //System.out.println("sin propietario");
+                }
             }
 
             //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
@@ -161,7 +170,7 @@ public class NaveNeutra extends Nave {
                         nuevaDisponibilidad = false;
                         break;
                     case "liberar":
-                        //    nuevaDis = true;
+                        nuevaDisponibilidad = true; //no se esta usando 
                         break;
                     case "destruir":
                         destruido = true;
