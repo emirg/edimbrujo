@@ -53,7 +53,8 @@ public class NaveNeutra extends Nave {
                         switch (accion.getName()) {
                             case "fire":
                                 String idAux = id + "" + idBullets;
-                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
+                                // Temporalmente, los proyectiles generados por la nave neutra tienen el mismo id del propietario (sino la bala cuenta como la de un enemigo)
+                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, idPropietario, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
                                 listProyectil.add(proyectil);
                                 idBullets++;
                                 break;
