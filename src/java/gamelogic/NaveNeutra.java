@@ -24,19 +24,13 @@ public class NaveNeutra extends Nave {
 
     public NaveNeutra(String name, boolean destroy, String id, double x, double y, double velocidadX,
             double velocidadY, double xDir, double yDir, int cantProj,
-            boolean d, String p, int idB) {
-        
+            boolean disponible, String idPropietario, int idBullets) {
+
         super("NaveNeutra", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
 
-        /*   public NaveNeutra(String name,boolean d, String id, double x, double y, double velocidadX, 
-            double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop
-           , String posible,String p) {
-        super("NaveNeutra",d, id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);*/
-        // this.propietario = prop;
-        //this.idPosP = posible;
-        this.disponible = d;
-        this.idPropietario = p;
-        this.idBullets = idB;
+        this.disponible = disponible;
+        this.idPropietario = idPropietario;
+        this.idBullets = idBullets;
     }
 
     @Override
@@ -46,13 +40,11 @@ public class NaveNeutra extends Nave {
             if (!this.idPropietario.equalsIgnoreCase("")) {
                 //   System.out.println("TIENE PROPIETARIO  "+(idProp));
                 LinkedList<Action> listAccion = acciones.get(this.idPropietario);
-
                 if (listAccion != null) {
-
                     for (Action accion : listAccion) {
                         switch (accion.getName()) {
                             case "fire":
-                                String idAux = id + "" + idBullets;
+                                String idAux = id + "" + idBullets; // id de la bala
                                 // Temporalmente, los proyectiles generados por la nave neutra tienen el mismo id del propietario (sino la bala cuenta como la de un enemigo)
                                 Proyectil proyectil = new Proyectil("Proyectil", false, idAux, idPropietario, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
                                 listProyectil.add(proyectil);
@@ -63,6 +55,7 @@ public class NaveNeutra extends Nave {
                 }
 
             }
+            
             for (State estado : estados) {
                 if (estado != null && estado != this && estado.getName().equalsIgnoreCase("Desafio")) {
                     Desafio des = (Desafio) estado;
@@ -90,14 +83,14 @@ public class NaveNeutra extends Nave {
         double nuevaDirX = direccion.x;
         double nuevaDirY = direccion.y;
         NavePlayer nuevoPropietario = null;
-        String nuevoIdP = this.idPropietario;
+        String nuevoIdPropietario = this.idPropietario;
         //String nuevoPos = this.idPosP;
-        boolean nuevaDis = disponible;
+        boolean nuevaDisponibilidad = disponible;
         int resp;
-        int nuevoIdB = this.idBullets;
+        int nuevoIdBullets = this.idBullets;
         if (disponible) {
             for (State estado : estados) {
-                if (estado.getId().equalsIgnoreCase(nuevoIdP)) {
+                if (estado.getId().equalsIgnoreCase(nuevoIdPropietario)) {
                     nuevoPropietario = (NavePlayer) estado;
                 }
             }
@@ -117,7 +110,7 @@ public class NaveNeutra extends Nave {
                                     for (State estado : estados) {
                                         if (estado.getName().equalsIgnoreCase("NaveNeutra")) {
                                             NaveNeutra naveA = (NaveNeutra) estado;
-                                            if (naveA.disponible && naveA.idPropietario.equalsIgnoreCase(nuevoIdP)) {
+                                            if (naveA.disponible && naveA.idPropietario.equalsIgnoreCase(nuevoIdPropietario)) {
                                                 navesAliadas.add(naveA);
                                             }
                                         }
@@ -143,16 +136,15 @@ public class NaveNeutra extends Nave {
                 nuevoX = nuevoX + nuevaVelX;
                 nuevoY = nuevoY + nuevaVelY;
             } else if (nuevoPropietario != null && nuevoPropietario.dead) {
-
                 nuevoPropietario = null;
-                nuevoIdP = "";
-                nuevoX = 1000;
-                nuevoY = 1000;
+                nuevoIdPropietario = "";
                 nuevaVelX = 0;
                 nuevaVelY = 0;
+                nuevoX = 1000;
+                nuevoY = 1000;
                 nuevaDirX = 0;
                 nuevaDirY = 1;
-                nuevaDis = true;
+                nuevaDisponibilidad = true;
             }
 
             //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
@@ -166,7 +158,7 @@ public class NaveNeutra extends Nave {
             for (String evento : eventos) {
                 switch (evento) {
                     case "desafiado":
-                        nuevaDis = false;
+                        nuevaDisponibilidad = false;
                         break;
                     case "liberar":
                         //    nuevaDis = true;
@@ -179,7 +171,7 @@ public class NaveNeutra extends Nave {
         }
 
         NaveNeutra nuevaNeutra = new NaveNeutra(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
-                nuevaDirX, nuevaDirY, nuevosProyectiles, nuevaDis, nuevoIdP, nuevoIdB);
+                nuevaDirX, nuevaDirY, nuevosProyectiles, nuevaDisponibilidad, nuevoIdPropietario, nuevoIdBullets);
 
         /* NaveNeutra nuevaNeutra = new NaveNeutra(name,destruido, id, nuevoX, nuevoY, nuevaVelX, 
                 nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario,nuevoPos,nuevoIdP);*/
