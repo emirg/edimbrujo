@@ -176,6 +176,8 @@ function getRandomInt(min, max) {
 
 function update(time, delta)
 {   
+    // falta ver de unir cada nave a un color fijo y unico para poder diferenciar la nave de la tabla
+    // o permitir ingresar un nombre asociado al id nave
     tablaPosiciones.setText('Tabla Posiciones \n');
     for (var key in tablaPuntajes) {
         if (tablaPuntajes.hasOwnProperty(key)) {
@@ -183,8 +185,6 @@ function update(time, delta)
             //console.log(key + " -> " + tablaPuntajes[key]);
         }
     }
-    //coins.anims.play("efectoMoneda", true);
-    //console.log(coins.length);
     for (let i = 0; i < coins.length; i++) {
         coins[i].anims.play("efectoMoneda", true);
 
@@ -211,11 +211,7 @@ function update(time, delta)
 }
 
 function particle(ship,id){
-     //particulas
-     //var color=colors[Math.floor(Math.random()*(6-0)+0)];
-     //console.log(''+color);
-     //console.log(ship);
-     //console.log(players[id]);
+  
         var emitter = particles.createEmitter({
             frame: ''+colors[punteroColor],
             speed: 100,
@@ -289,57 +285,38 @@ window.onload = function () {
                     }
                 }
             } else if (typeof gameState[i]["NavePlayer"] !== "undefined") {
+                /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Nave Player %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
-                //var playerId = gameState[i]["NavePlayer"]["id"];
                 var destroy = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
                 var leave = gameState[i]["NavePlayer"]["leave"];
                 var dead = gameState[i]["NavePlayer"]["dead"];
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
-                var health = gameState[i]["NavePlayer"]["health"];
+                //var health = gameState[i]["NavePlayer"]["health"];
                 var puntaje = gameState[i]["NavePlayer"]["puntaje"];
-                var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
-                var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
+                //var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
+                //var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
                 var angulo = gameState[i]["NavePlayer"]["super"]['Nave']['angulo'];
-                //console.log(leave);
-                // Create a sphere that we will be moved by the keyboard
+
+                /* Sino existe el jugador lo creo junto con sus colliders */
                 if (players[id] == null) {
-                    //console.log('this' + this);
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
-                    //players[id] .setDrag(300);
-                    //players[id].setDamping(true);
-                    //players[id] .setAngularDrag(400);
-                    //players[id] .setMaxVelocity(600);
-                    //players[id] .setCollideWorldBounds(true);
-                    //game.scene.scenes[0].physics.add.overlap(players[id], coins,collectCoins, null, this);
+                    /* Genero colision visual asteroide player*/
                     for (let i = 0; i < asteroides.length; i++) {
-                        //console.log(asteroides[i]);
-                        //console.log(players[id]);
-                        //console.log("moneda");
-                        //console.log(coins);
                         game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
-                        //console.log("colision");
                     }
-                    for (let i = 0; i < asteroides.length; i++) {
-                        //console.log(asteroides[i]);
-                        //console.log(players[id]);
-                        //console.log("moneda");
-                        //console.log(coins);
+                    /* Genero colision visual moneda player */
+                    for (let i = 0; i < coins.length; i++) {     
                         game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
-                        //console.log("colision");
                     }
                     if(particles!==undefined){
                         particle(players[id],id);
-                    }
-                    
-                    //console.log(players[id]);
+                    }   
                 }
-                //console.log(xDir,yDir);
-                //console.log(Math.atan2(xDir,yDir));
-                //players[id].angle = Math.atan2(yDir,xDir)*100;
-                //console.log(angulo*(180/Math.PI));
+                /* cargo puntaje en tabla de puntaje */
                 tablaPuntajes[id]=puntaje;
 
+                /* seteo angulo y coordenadas de la nave */
                 players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
@@ -347,98 +324,84 @@ window.onload = function () {
 
                 if (leave) {
                     players[id].destroy();
-                    //console.log(id);
-                    //delete tablaPuntajes[id];
-                    //players.splice(id);
-                    
                 }
-                //console.log(destroy);
                 if (destroy) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-                    delete emitters[id];
-                    //players[id] = null;
+                    delete emitters[id]; // no funciona buscar solucion 
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
-                //console.log("asteroide...................................")
-                //console.log(gameState[i]["Asteroide"]['super']["Entity"]["super"]['State']);
+                /* %%%%%%%%%%%%%%%%%%%%%%%%%% Asteroides %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/ 
                 var id = gameState[i]["Asteroide"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Asteroide"]['super']["Entity"]["x"];
                 var y = gameState[i]["Asteroide"]['super']["Entity"]["y"];
-                //console.log(x);
-                //console.log(y);
 
                 if (asteroides[id] == null) {
-                    //console.log("asigne imagen asteroide");
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
-                    //console.log(asteroides.length);
-                    //console.log(asteroides);
-                    //asteroides[id]=scene.physics.add.sprite(x, y, "asteroid1");
                 }
                 asteroides[id].y = y;
                 asteroides[id].x = x;
                 asteroides[id].z = y;
 
             }else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
+                /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5 Nave Neutra %%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+                /* leo informacion JSON */
                 var id = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
                 var destroy = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
                 var leave = gameState[i]["NaveNeutra"]["leave"];
                 var x = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["y"];
-                var health = gameState[i]["NaveNeutra"]["health"];
-                // Create a sphere that we will be moved by the keyboard
+                var angulo = gameState[i]["NaveNeutra"]["super"]['Nave']['angulo'];
+
+                /* Si no existia la creo */
                 if (neutras[id] == null) {
-                    //console.log("asigne imagen naveNeutra");
-                    //console.log(gameState);
                     neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
-                    //neutras[id] = scene.add.sprite(x, y, "ship");
                     neutras[id].setDepth(1);
-                    //console.log(players[id]);
+
+                    /* Genero colision visual moneda player */
+                    for (let i = 0; i < coins.length; i++) {     
+                        game.scene.scenes[0].physics.add.collider(neutras[id], coins[i], null, null, this);
+                    }
+
                 }
+                /* seteo coordenadas */
+                neutras[id].angle = angulo;
                 neutras[id].y = y;
                 neutras[id].x = x;
                 neutras[id].z = y;
+
             }else if (typeof gameState[i]["Proyectil"] !== "undefined") {
-                //console.log(gameState);
+                /* %%%%%%%%%%%%%%%%%%%%%%%%%% Proyectil %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Proyectil"]['super']["Entity"]["x"];
                 var y = gameState[i]["Proyectil"]['super']["Entity"]["y"];
                 var destroy =gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
                 var angulo = gameState[i]["Proyectil"]['angulo'];
-                
+                /* si no exitia un bala con ese mismo id la creo*/
                 if(bullets[id]==null){
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
                 }
+                /* cargo angulo y seteo coordenadas*/
                 bullets[id].angle = angulo;
                 bullets[id].y = y;
                 bullets[id].x = x;
                 bullets[id].z = y;
+
                 if (destroy) {
                     bullets[id].destroy();
-                    //console.log(bullets[id]);
-                    //console.log("destroyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
                 }
-                for (let i = 0; i < bullets.length; i++) {
-                    //console.log(asteroides[i]);
-                    //console.log(players[id]);
-                    //console.log("moneda");
-                    //console.log(coins);
-                    //console.log("colision");
-                }
+
             }else if (typeof gameState[i]["Moneda"] !== "undefined") {
+                /* %%%%%%%%%%%%%%%%%%%%%%%%% Monedas %%%%%%%%%%%%%%%%%%%%%%%%%%%%%5*/
                 var id = gameState[i]["Moneda"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Moneda"]['super']["Entity"]["x"];
                 var y = gameState[i]["Moneda"]['super']["Entity"]["y"];
 
                 if(coins[id]==null){
-                    //console.log(id);
-                    //console.log(x);
-                    //console.log(y);
                     coins[id]=game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     coins[id].setDepth(1);
-                    //console.log(coins);
-                    //console.log(coins.length);
                 }
                 
                 coins[id].y = y;
@@ -449,54 +412,3 @@ window.onload = function () {
         }
     }
 };
-var Bullet = new Phaser.Class({
-
-    Extends: Phaser.Physics.Arcade.Image,
-
-    initialize:
-
-    function Bullet (scene)
-    {
-        Phaser.Physics.Arcade.Image.call(this, scene, 0, 0, 'space', 'blaster');
-
-        this.setBlendMode(1);
-        this.setDepth(1);
-
-        this.speed = 1000;
-        this.lifespan = 1000;
-
-        this._temp = new Phaser.Math.Vector2();
-    },
-    
-    fire: function (ship)
-    {
-        this.lifespan = 1000;
-
-        this.setActive(true);
-        this.setVisible(true);
-        // this.setRotation(ship.rotation);
-        this.setAngle(ship.body.rotation);
-        this.setPosition(ship.x, ship.y);
-        this.body.reset(ship.x, ship.y);
-
-       
-        var angle = Phaser.Math.DegToRad(ship.body.rotation);
-    
-        this.scene.physics.velocityFromRotation(angle, this.speed, this.body.velocity);
-
-        this.body.velocity.x *= 2;
-        this.body.velocity.y *= 2;
-    },
-    update: function (time, delta)
-    {
-        this.lifespan -= delta;
-
-        if (this.lifespan <= 0)
-        {
-            this.setActive(false);
-            this.setVisible(false);
-            this.body.stop();
-        }
-    }
-
-});
