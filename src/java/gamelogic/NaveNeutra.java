@@ -19,7 +19,7 @@ public class NaveNeutra extends Nave {
     //private String propietario; // Podria ser una NavePlayer tambien
    // public NavePlayer propietario;
     
-    public String idProp;
+    public String idPropietario;
     public boolean disponible;
     protected int idBullets;
 
@@ -37,7 +37,7 @@ public class NaveNeutra extends Nave {
        // this.propietario = prop;
         //this.idPosP = posible;
         this.disponible = d;
-        this.idProp = p;
+        this.idPropietario = p;
         this.idBullets = idB; 
     }
 
@@ -46,9 +46,9 @@ public class NaveNeutra extends Nave {
         LinkedList<State> listProyectil = new LinkedList();
         if(disponible)
         {
-        if (!this.idProp.equalsIgnoreCase("")) {
+        if (!this.idPropietario.equalsIgnoreCase("")) {
             //   System.out.println("TIENE PROPIETARIO  "+(idProp));
-            LinkedList<Action> listAccion = acciones.get(this.idProp);
+            LinkedList<Action> listAccion = acciones.get(this.idPropietario);
 
             if (listAccion != null) {
 
@@ -95,7 +95,7 @@ public class NaveNeutra extends Nave {
         double nuevaDirX = direccion.x;
         double nuevaDirY = direccion.y;
         NavePlayer nuevoPropietario = null;
-        String nuevoIdP = this.idProp;
+        String nuevoIdP = this.idPropietario;
         //String nuevoPos = this.idPosP;
         boolean nuevaDis = disponible;
         int resp;
@@ -127,7 +127,7 @@ public class NaveNeutra extends Nave {
                                     if(estado.getName().equalsIgnoreCase("NaveNeutra"))
                                     {
                                         NaveNeutra naveA = (NaveNeutra)estado;
-                                        if(naveA.disponible && naveA.idProp.equalsIgnoreCase(nuevoIdP))
+                                        if(naveA.disponible && naveA.idPropietario.equalsIgnoreCase(nuevoIdP))
                                             navesAliadas.add(naveA);
                                     }
                                 }
@@ -312,7 +312,7 @@ public class NaveNeutra extends Nave {
         super.setState(neutra);
         this.id = ((NaveNeutra) neutra).id;
         this.disponible = ((NaveNeutra) neutra).disponible;
-        this.idProp = ((NaveNeutra) neutra).idProp;
+        this.idPropietario = ((NaveNeutra) neutra).idPropietario;
         
 
         // this.countProyectil= ((NaveNeutra)neutra).countProyectil;
@@ -324,6 +324,9 @@ public class NaveNeutra extends Nave {
         JSONObject atributo = new JSONObject();
 
         atributo.put("super", super.toJSON());
+        atributo.put("idPropietario", idPropietario);
+        atributo.put("disponible", disponible);
+        atributo.put("idBullets", idBullets);
 
         jNeutra.put("NaveNeutra", atributo);
 
