@@ -211,39 +211,40 @@ function update(time, delta)
 }
 
 function particle(ship,id){
-  
-        var emitter = particles.createEmitter({
-            frame: ''+colors[punteroColor],
-            speed: 100,
-            lifespan: {
-                onEmit: function (particle, key, t, value)
-                {
-                    return 500;
-                }
-            },
-            alpha: {
-                onEmit: function (particle, key, t, value)
-                {
-                    return 90;
-                }
-            },
-            angle: {
-                onEmit: function (particle, key, t, value)
-                {
-                    var v = Phaser.Math.Between(-10, 10);
-                    return (ship.angle - 180) + v;
-                }
-            },
-            scale: { start: 0.6, end: 0 },
-            //blendMode: 'ADD'
-        });
-        if(punteroColor>colors.length){
-            punteroColor=0
-        }else{
-            punteroColor++;
-        }
-        emitters[id]=particles;
-        emitter.startFollow(ship);
+    game.scene.scenes[0].load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
+    var particles= game.scene.scenes[0].add.particles('space');
+    var emitter = particles.createEmitter({
+        frame: ''+colors[punteroColor],
+        speed: 100,
+        lifespan: {
+            onEmit: function (particle, key, t, value)
+            {
+                return 500;
+            }
+        },
+        alpha: {
+            onEmit: function (particle, key, t, value)
+            {
+                return 90;
+            }
+        },
+        angle: {
+            onEmit: function (particle, key, t, value)
+            {
+                var v = Phaser.Math.Between(-10, 10);
+                return (ship.angle - 180) + v;
+            }
+        },
+        scale: { start: 0.6, end: 0 },
+        //blendMode: 'ADD'
+    });
+    if(punteroColor>colors.length){
+        punteroColor=0
+    }else{
+        punteroColor++;
+    }
+    emitters[id]=particles;
+    emitter.startFollow(ship);
 }
 
 function hitAsteroide(player,asteroide) {
@@ -325,12 +326,16 @@ window.onload = function () {
                 if (leave) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-                    delete emitters[id];
+                    //delete emitters[id];
+                    
                 }
                 if (destroy) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-                    delete emitters[id]; // no funciona buscar solucion 
+                    if(emitters[id]!==null && emitters[id]!=="undefined"){
+                        emitters[id].destroy();
+                    }
+                    
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%% Asteroides %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/ 
