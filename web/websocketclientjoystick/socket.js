@@ -22,7 +22,7 @@ window.onload = function () {
         //console.log(socket);
         //console.log(event.data);
         var gameState = JSON.parse(event.data);
-        console.log(gameState);
+        //console.log(gameState);
 
         if (typeof gameState !== "undefined") {
             //console.log(game2State);
@@ -37,14 +37,14 @@ window.onload = function () {
                     var dead = gameState[i]["NavePlayer"]["dead"];
                     if (id == socketID){                        
                         var health = gameState[i]["NavePlayer"]["health"];
-                        console.log(health);
+                        //console.log(health);
                         if (health != null) {
                             updateHealth(health);
                         }
                         if(dead){
                             socket.send("died");
                         }
-                        var pregunta = gameState[i]["pregunta"];
+                        var pregunta = gameState[i]["NavePlayer"]["pregunta"];
                         if(pregunta !== "")
                         {
                             console.log(pregunta);

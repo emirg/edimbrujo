@@ -59,7 +59,7 @@ public class NavePlayer extends Nave {
                         switch (accion.getName()) {
                             case "fire":
                                 String idAux = id + "" + idBullets;
-                                Vector2 velocidadProyectil = velocidad.copy().setMagnitude(60);
+                                Vector2 velocidadProyectil = velocidad.copy().setMagnitude(60); // Temporal
                                 Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidadProyectil.x, velocidadProyectil.y, direccion.x, direccion.y, angulo, 0);
                                 listProyectil.add(proyectil);
                                 idBullets++;
@@ -99,7 +99,7 @@ public class NavePlayer extends Nave {
 
                         Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id);
                         this.addEvent("desafiar");
-                        listProyectil.add(desa);
+                        listProyectil.add(desa); // Por que agregar el desafio a la lista de proyectiles?
 
                     }
 
