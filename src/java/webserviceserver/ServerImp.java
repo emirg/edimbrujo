@@ -81,6 +81,19 @@ public class ServerImp {
     }
 
     @GET
+    @Path("/actionFire")
+    public String fire(@QueryParam("x") String x, @QueryParam("y") String y,
+            @QueryParam("session") String session) {
+
+        lobby = Lobby.startGame();
+        String fire = "{\"name\": \"fire\", \"priority\": \"0\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
+
+        System.out.println(fire);
+        lobby.addAction(session, fire);
+        return "okey";
+    }
+
+    @GET
     @Path("/getFullState")
     public String getFullState() throws InterruptedException {
         lobby = Lobby.startGame();
