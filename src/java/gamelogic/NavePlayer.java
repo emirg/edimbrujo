@@ -59,8 +59,8 @@ public class NavePlayer extends Nave {
                         switch (accion.getName()) {
                             case "fire":
                                 String idAux = id + "" + idBullets;
-                                Vector2 velocidadProyectil = velocidad.copy().setMagnitude(60); // Temporal
-                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidadProyectil.x, velocidadProyectil.y, direccion.x, direccion.y, angulo, 0);
+                                //Vector2 velocidadProyectil = velocidad.copy().setMagnitude(60); // Temporal
+                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
                                 listProyectil.add(proyectil);
                                 idBullets++;
                         }
