@@ -33,7 +33,7 @@ public class Desafio extends State {
         this.opciones[0] = "5";
         this.opciones[1] = "6";
         this.opciones[2] = "7";
-        this.correcta = 1;
+        this.correcta = 1; // 0 
     }
 
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
@@ -62,7 +62,7 @@ public class Desafio extends State {
 
                             if (res == correcta) {
 
-                                neutra.addEvent("destruir");
+                                neutra.addEvent("destruir"); // Por que destruir la neutra? 
 
                                 neutras.add(new NaveNeutra(neutra.name, neutra.destroy, this.idNaveNeutra, neutra.x, neutra.y, neutra.velocidad.x, neutra.velocidad.y,
                                         neutra.direccion.x, neutra.direccion.y, neutra.countProyectil, true, this.idNavePlayer, neutra.idBullets));

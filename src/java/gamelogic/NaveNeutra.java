@@ -17,67 +17,61 @@ public class NaveNeutra extends Nave {
     //si propietario es nulo es por que no fue reclutado
 
     //private String propietario; // Podria ser una NavePlayer tambien
-   // public NavePlayer propietario;
-    
+    // public NavePlayer propietario;
     public String idPropietario;
     public boolean disponible;
     protected int idBullets;
 
-
-    public NaveNeutra(String name, boolean destroy, String id, double x, double y, double velocidadX, 
+    public NaveNeutra(String name, boolean destroy, String id, double x, double y, double velocidadX,
             double velocidadY, double xDir, double yDir, int cantProj,
-             boolean d, String p, int idB) {
+            boolean d, String p, int idB) {
+        
         super("NaveNeutra", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
 
- /*   public NaveNeutra(String name,boolean d, String id, double x, double y, double velocidadX, 
+        /*   public NaveNeutra(String name,boolean d, String id, double x, double y, double velocidadX, 
             double velocidadY,double xDir,double yDir, int cantProj, NavePlayer prop
            , String posible,String p) {
         super("NaveNeutra",d, id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);*/
-
-       // this.propietario = prop;
+        // this.propietario = prop;
         //this.idPosP = posible;
         this.disponible = d;
         this.idPropietario = p;
-        this.idBullets = idB; 
+        this.idBullets = idB;
     }
 
     @Override
     public LinkedList<State> generate(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
         LinkedList<State> listProyectil = new LinkedList();
-        if(disponible)
-        {
-        if (!this.idPropietario.equalsIgnoreCase("")) {
-            //   System.out.println("TIENE PROPIETARIO  "+(idProp));
-            LinkedList<Action> listAccion = acciones.get(this.idPropietario);
+        if (disponible) {
+            if (!this.idPropietario.equalsIgnoreCase("")) {
+                //   System.out.println("TIENE PROPIETARIO  "+(idProp));
+                LinkedList<Action> listAccion = acciones.get(this.idPropietario);
 
-            if (listAccion != null) {
+                if (listAccion != null) {
 
-                for (Action accion : listAccion) {
-                    switch (accion.getName()) {
-                        case "fire":
-                            String idAux = id + "" + idBullets;
-                            Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
-                            listProyectil.add(proyectil);
-                            idBullets++;
-                        break;
+                    for (Action accion : listAccion) {
+                        switch (accion.getName()) {
+                            case "fire":
+                                String idAux = id + "" + idBullets;
+                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
+                                listProyectil.add(proyectil);
+                                idBullets++;
+                                break;
+                        }
                     }
                 }
-            }
 
-        }
-        for(State estado: estados)
-        {
-            if(estado !=null && estado != this && estado.getName().equalsIgnoreCase("Desafio"))
-            {
-                Desafio des = (Desafio)estado;
-                if(des.idNaveNeutra.equalsIgnoreCase(id))
-                {
-                    this.addEvent("desafiado");
-                    
-                }
-                
             }
-        }
+            for (State estado : estados) {
+                if (estado != null && estado != this && estado.getName().equalsIgnoreCase("Desafio")) {
+                    Desafio des = (Desafio) estado;
+                    if (des.idNaveNeutra.equalsIgnoreCase(id)) {
+                        this.addEvent("desafiado");
+
+                    }
+
+                }
+            }
         }
         return listProyectil;
     }
@@ -100,87 +94,81 @@ public class NaveNeutra extends Nave {
         boolean nuevaDis = disponible;
         int resp;
         int nuevoIdB = this.idBullets;
-        if(disponible)
-        {
-        for(State estado : estados)
-        {
-            if(estado.getId().equalsIgnoreCase(nuevoIdP))
-            {
-                nuevoPropietario = (NavePlayer) estado;
+        if (disponible) {
+            for (State estado : estados) {
+                if (estado.getId().equalsIgnoreCase(nuevoIdP)) {
+                    nuevoPropietario = (NavePlayer) estado;
+                }
             }
-        }
 
-        if (nuevoPropietario != null && !nuevoPropietario.dead) {
-            LinkedList<Action> listAccion = acciones.get(nuevoPropietario.id); // Obtengo las acciones del propietario
-            if (listAccion != null) {
-                for (Action accion : listAccion) {
-                    if (accion != null) {
-                        System.out.println(accion.getName());
-                        hasChanged = true;
-                        //System.out.println("has change");
+            if (nuevoPropietario != null && !nuevoPropietario.dead) {
+                LinkedList<Action> listAccion = acciones.get(nuevoPropietario.id); // Obtengo las acciones del propietario
+                if (listAccion != null) {
+                    for (Action accion : listAccion) {
+                        if (accion != null) {
+                            System.out.println(accion.getName());
+                            hasChanged = true;
+                            //System.out.println("has change");
 
-                        switch (accion.getName()) {
-                            case "move":
-                                LinkedList<Nave> navesAliadas = new LinkedList();
-                                for(State estado:estados)
-                                {
-                                    if(estado.getName().equalsIgnoreCase("NaveNeutra"))
-                                    {
-                                        NaveNeutra naveA = (NaveNeutra)estado;
-                                        if(naveA.disponible && naveA.idPropietario.equalsIgnoreCase(nuevoIdP))
-                                            navesAliadas.add(naveA);
+                            switch (accion.getName()) {
+                                case "move":
+                                    LinkedList<Nave> navesAliadas = new LinkedList();
+                                    for (State estado : estados) {
+                                        if (estado.getName().equalsIgnoreCase("NaveNeutra")) {
+                                            NaveNeutra naveA = (NaveNeutra) estado;
+                                            if (naveA.disponible && naveA.idPropietario.equalsIgnoreCase(nuevoIdP)) {
+                                                navesAliadas.add(naveA);
+                                            }
+                                        }
                                     }
-                                }
                                     nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                     nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                                     nuevaDirX = nuevaVelX;
                                     nuevaDirY = nuevaVelY;
-                                break;
-                            case "stop":
-                                
-                                nuevaVelX = 0;
-                                nuevaVelY = 0;
-                                break;
-                            case "fire":
-                                nuevosProyectiles++;
-                                break;
-                           
+                                    break;
+                                case "stop":
+
+                                    nuevaVelX = 0;
+                                    nuevaVelY = 0;
+                                    break;
+                                case "fire":
+                                    nuevosProyectiles++;
+                                    break;
+
+                            }
                         }
                     }
                 }
-            }
-            nuevoX = nuevoX + nuevaVelX;
-            nuevoY = nuevoY + nuevaVelY; 
-        } else if (nuevoPropietario != null && nuevoPropietario.dead) {
+                nuevoX = nuevoX + nuevaVelX;
+                nuevoY = nuevoY + nuevaVelY;
+            } else if (nuevoPropietario != null && nuevoPropietario.dead) {
 
-            nuevoPropietario = null;
-            nuevoIdP = "";
-            nuevoX = 1000;
-            nuevoY = 1000;
-            nuevaVelX = 0;
-            nuevaVelY = 0;
-            nuevaDirX = 0;
-            nuevaDirY = 1;
-            nuevaDis = true;
-        }
-        
-        //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
+                nuevoPropietario = null;
+                nuevoIdP = "";
+                nuevoX = 1000;
+                nuevoY = 1000;
+                nuevaVelX = 0;
+                nuevaVelY = 0;
+                nuevaDirX = 0;
+                nuevaDirY = 1;
+                nuevaDis = true;
+            }
+
+            //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
         }
         LinkedList<String> eventos = getEvents();
 
-        if (!eventos.isEmpty()) 
-        {
+        if (!eventos.isEmpty()) {
             hasChanged = true;
-           
+
             //System.out.println(eventos);
             for (String evento : eventos) {
-                switch (evento) 
-                {
+                switch (evento) {
                     case "desafiado":
                         nuevaDis = false;
                         break;
                     case "liberar":
-                    //    nuevaDis = true;
+                        //    nuevaDis = true;
                         break;
                     case "destruir":
                         destruido = true;
@@ -192,29 +180,26 @@ public class NaveNeutra extends Nave {
         NaveNeutra nuevaNeutra = new NaveNeutra(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
                 nuevaDirX, nuevaDirY, nuevosProyectiles, nuevaDis, nuevoIdP, nuevoIdB);
 
-       /* NaveNeutra nuevaNeutra = new NaveNeutra(name,destruido, id, nuevoX, nuevoY, nuevaVelX, 
+        /* NaveNeutra nuevaNeutra = new NaveNeutra(name,destruido, id, nuevoX, nuevoY, nuevaVelX, 
                 nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario,nuevoPos,nuevoIdP);*/
-
         return nuevaNeutra;
     }
 
-    
-    
     public Vector2 flock(NavePlayer nuevoPropietario, LinkedList<Nave> navesAliadas) {
-        
+
         navesAliadas.add(nuevoPropietario);
         Vector2 alignment = computeAlignment(this, navesAliadas).multiply(2); // De donde saco los vecinos?
         Vector2 cohesion = computeCohesion(this, navesAliadas).multiply(5);
         Vector2 separation = computeSeparation(this, navesAliadas);
         Vector2 aux = alignment.sum(cohesion.sum(separation));
         aux.setMagnitude(100);
-         this.velocidad.x = aux.x;
+        this.velocidad.x = aux.x;
         this.velocidad.y = aux.y;
         return aux;
     }
 
     public Vector2 computeAlignment(NaveNeutra miAgente, LinkedList<Nave> agentes) {
-        
+
         Vector2 vectorAlignment = new Vector2(0, 0);
         int vecinos = 0;
 
@@ -228,7 +213,7 @@ public class NaveNeutra extends Nave {
 
                 Vector2 vectorDistancia = new Vector2(xAgente, yAgente).subtract(new Vector2(xAgenteVecino, yAgenteVecino));
                 double distanceToTarget = vectorDistancia.getMagnitude();
-                
+
                 if (distanceToTarget < 300) {
                     vectorAlignment.sum(agente.velocidad);
                     vecinos++;
@@ -239,7 +224,7 @@ public class NaveNeutra extends Nave {
         if (vecinos == 0) {
             return vectorAlignment;
         }
-        
+
         vectorAlignment.x /= vecinos;
         vectorAlignment.y /= vecinos;
         vectorAlignment.normalize();
@@ -313,7 +298,6 @@ public class NaveNeutra extends Nave {
         this.id = ((NaveNeutra) neutra).id;
         this.disponible = ((NaveNeutra) neutra).disponible;
         this.idPropietario = ((NaveNeutra) neutra).idPropietario;
-        
 
         // this.countProyectil= ((NaveNeutra)neutra).countProyectil;
     }

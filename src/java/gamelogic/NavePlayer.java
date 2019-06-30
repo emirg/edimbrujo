@@ -5,6 +5,7 @@ import engine.State;
 import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
 public class NavePlayer extends Nave {
@@ -58,7 +59,8 @@ public class NavePlayer extends Nave {
                         switch (accion.getName()) {
                             case "fire":
                                 String idAux = id + "" + idBullets;
-                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
+                                Vector2 velocidadProyectil = velocidad.copy().setMagnitude(60);
+                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidadProyectil.x, velocidadProyectil.y, direccion.x, direccion.y, angulo, 0);
                                 listProyectil.add(proyectil);
                                 idBullets++;
                         }
@@ -182,8 +184,8 @@ public class NavePlayer extends Nave {
                                         nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                                         nuevaDirX = nuevaVelX;
                                         nuevaDirY = nuevaVelY;
-                                        System.out.println(nuevaDirX);
-                                        System.out.println(nuevaDirY);
+                                        //System.out.println(nuevaDirX);
+                                        //System.out.println(nuevaDirY);
                                     }
                                     break;
                                 case "stop":
@@ -311,7 +313,7 @@ public class NavePlayer extends Nave {
     public JSONObject toJSON() {
         JSONObject jJugador = new JSONObject();
         JSONObject atributo = new JSONObject();
-        JSONObject navesAliadas = new JSONObject();
+        //JSONObject navesAliadas = new JSONObject();
         //JSONObject opciones = new JSONObject();
 
         // No van mas las opciones en NavePlayer?
@@ -331,10 +333,10 @@ public class NavePlayer extends Nave {
         atributo.put("dead", dead);
         atributo.put("puntaje", puntaje);
         atributo.put("bloqueado", bloqueado);
-        atributo.put("navesAliadas", navesAliadas);
+        //atributo.put("navesAliadas", navesAliadas);
         atributo.put("idBullets", idBullets);
         atributo.put("pregunta", pregunta);
-        atributo.put("opciones", opciones);
+        //atributo.put("opciones", opciones);
         atributo.put("respuesta", respuesta);
         atributo.put("idDesafio", idDesafio);
 
