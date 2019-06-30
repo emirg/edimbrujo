@@ -28,15 +28,14 @@ body {
     flex-direction: column;
     width: 100%;
     justify-content: center; /* aligns on vertical for column */
-  align-items: center; /* aligns on horizontal for column */
-
+    align-items: center; /* aligns on horizontal for column */
 }
 
 .opcion{
-
     width: 50%;
     height: 50px;
     margin-bottom: 20px; 
+    border-radius: 5px;
 }
 
 /*Media queries*/
