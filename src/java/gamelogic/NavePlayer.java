@@ -16,7 +16,7 @@ public class NavePlayer extends Nave {
     protected boolean leave;
     protected boolean dead;
     protected int puntaje;
-    protected LinkedList<String> navesAliadas;
+    // protected LinkedList<String> navesAliadas; // Las naves aliadas no iban en NavePlayer tambien? No esta mas en el constructor
     protected int idBullets;
     private String pregunta;
     private String[] opciones;
@@ -27,8 +27,7 @@ public class NavePlayer extends Nave {
     public NavePlayer(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir,
             double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op,
             boolean bq, int resp) {
-        super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj
-        );
+        super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
 
         /*public NavePlayer(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,
             double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, int [] op,
@@ -313,15 +312,17 @@ public class NavePlayer extends Nave {
         JSONObject jJugador = new JSONObject();
         JSONObject atributo = new JSONObject();
         JSONObject navesAliadas = new JSONObject();
-        JSONObject opciones = new JSONObject();
+        //JSONObject opciones = new JSONObject();
 
-        for (int i = 0; i < this.opciones.length; i++) {
+        // No van mas las opciones en NavePlayer?
+        /*for (int i = 0; i < this.opciones.length; i++) {
             opciones.put("opcion" + i, this.opciones[i]);
-        }
-
-        for (int i = 0; i < this.navesAliadas.size(); i++) {
+        }*/
+        
+        // Idem opciones
+        /*for (int i = 0; i < this.navesAliadas.size(); i++) {
             navesAliadas.put("naveAliada" + i, this.navesAliadas.get(i));
-        }
+        }*/
 
         atributo.put("super", super.toJSON());
         atributo.put("health", health);
