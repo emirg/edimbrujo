@@ -20,7 +20,7 @@ function createJoystick(parent) {
     stick.addEventListener("touchend", handleMouseUp, false);
 
     let dragStart = null;
-    let currentPos = {x: 0, y: 0};
+    let currentPos = { x: 0, y: 0 };
 
     function handleMouseDown(event) {
         stick.style.transition = "0s";
@@ -52,14 +52,14 @@ function createJoystick(parent) {
         const xNew = distance * Math.cos(angle);
         const yNew = distance * Math.sin(angle);
         stick.style.transform = `translate3d(${xNew}px, ${yNew}px, 0px)`; // Actualizo la posicion
-        currentPos = {x: xNew, y: yNew};
+        currentPos = { x: xNew, y: yNew };
         //posSend = {name: "move", x: yNew, y: -xNew};
         //jsonPos = JSON.stringify(posSend);
         //console.log(jsonPos);
         // Los x/y estan cambiados aproposito
         socket.send('{"name": "move", "priority": "0","parameters": [{"name": "x", "value": "' + xNew + '"},\n\
                                                                      {"name": "y", "value": "' + yNew + '"}]}');
-        
+
     }
 
     function handleMouseUp(event) {
@@ -68,7 +68,7 @@ function createJoystick(parent) {
         stick.style.transition = ".2s";
         stick.style.transform = `translate3d(0px, 0px, 0px)`;
         dragStart = null;
-        currentPos = {x: 0, y: 0};
+        currentPos = { x: 0, y: 0 };
         socket.send("stop");
     }
     parent.appendChild(stick);
