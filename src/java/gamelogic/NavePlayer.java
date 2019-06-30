@@ -318,7 +318,7 @@ public class NavePlayer extends Nave {
 
         if (this.opciones != null) {
             for (int i = 0; i < this.opciones.length; i++) {
-                opciones.put("opcion" + i + 1, this.opciones[i]);
+                opciones.put("opcion" + i, this.opciones[i]);
             }
         }
 
@@ -326,6 +326,7 @@ public class NavePlayer extends Nave {
         /*for (int i = 0; i < this.navesAliadas.size(); i++) {
             navesAliadas.put("naveAliada" + i, this.navesAliadas.get(i));
         }*/
+        
         atributo.put("super", super.toJSON());
         atributo.put("health", health);
         atributo.put("healthMax", healthMax);

@@ -79,9 +79,12 @@ window.onload = function () {
                         }
                         var pregunta = gameState[i]["NavePlayer"]["pregunta"];
                         if (pregunta !== "") {
-                            var opcion1 = gameState[i]["NavePlayer"]["opciones"]["opcion1"];
-                            var opcion2 = gameState[i]["NavePlayer"]["pregunta"]["opcion2"];
-                            var opcion3 = gameState[i]["NavePlayer"]["pregunta"]["opcion3"];
+                            var opcion1 = gameState[i]["NavePlayer"]["opciones"]["opcion0"];
+                            var opcion2 = gameState[i]["NavePlayer"]["opciones"]["opcion1"];
+                            var opcion3 = gameState[i]["NavePlayer"]["opciones"]["opcion2"];
+                            console.log(opcion1);
+                            console.log(opcion2);
+                            console.log(opcion3);
                             $("#preguntaContainer").css('display', 'block');
                             $("#pregunta").text(pregunta);
                             $("#opcion1").text(opcion1);

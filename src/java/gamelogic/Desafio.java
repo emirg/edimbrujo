@@ -10,6 +10,7 @@ import engine.State;
 import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Random;
 import org.json.simple.JSONObject;
 
 /**
@@ -25,15 +26,26 @@ public class Desafio extends State {
     public int correcta;
 
     public Desafio(String name, boolean destroy, String id, String idNeutra, String idPlayer) {
-        super(name, destroy, id);
+        super(name, destroy, id);   
         this.idNaveNeutra = idNeutra;
         this.idNavePlayer = idPlayer;
-        this.opciones = new String[3];
-        this.pregunta = "2 + 3";
-        this.opciones[0] = "5";
-        this.opciones[1] = "6";
-        this.opciones[2] = "7";
-        this.correcta = 0; // 0 
+        this.opciones = new String[] { "" , "" , "" };
+
+        Random r = new Random();
+        int numeroPregunta1 = r.nextInt(100);
+        int numeroPregunta2 = r.nextInt(100);
+        int respuestaCorrecta = numeroPregunta1 + numeroPregunta2;
+        int posicionCorrecta = r.nextInt(3);
+        opciones[posicionCorrecta] = "" + respuestaCorrecta;
+        for (int i = 0; i < opciones.length; i++) {
+            if (!opciones[i].equalsIgnoreCase("" + respuestaCorrecta)) {
+                int signo = r.nextDouble() > 0.5 ? 1 : -1;
+                opciones[i] = "" + (respuestaCorrecta + ((r.nextInt(5) + 1)* signo));
+            }
+        }
+
+        this.pregunta = numeroPregunta1 + "+" + numeroPregunta2;
+        this.correcta = posicionCorrecta;
     }
 
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
