@@ -33,7 +33,7 @@ public class Desafio extends State {
         this.opciones[0] = "5";
         this.opciones[1] = "6";
         this.opciones[2] = "7";
-        this.correcta = 1; // 0 
+        this.correcta = 0; // 0 
     }
 
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
@@ -48,7 +48,7 @@ public class Desafio extends State {
                     switch (accion.getName()) {
                         case "respuesta":
 
-                            int res = Integer.parseInt(accion.getParameter("x"));
+                            int res = Integer.parseInt(accion.getParameter("opcionElegida"));
                             for (State estado : states) {
                                 if (estado != null && estado.id.equalsIgnoreCase(this.idNavePlayer)) {
                                     jugador = (NavePlayer) estado;

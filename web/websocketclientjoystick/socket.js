@@ -79,9 +79,18 @@ window.onload = function () {
                         }
                         var pregunta = gameState[i]["NavePlayer"]["pregunta"];
                         if (pregunta !== "") {
+                            var opcion1 = gameState[i]["NavePlayer"]["opciones"]["opcion1"];
+                            var opcion2 = gameState[i]["NavePlayer"]["pregunta"]["opcion2"];
+                            var opcion3 = gameState[i]["NavePlayer"]["pregunta"]["opcion3"];
                             $("#preguntaContainer").css('display', 'block');
+                            $("#pregunta").text(pregunta);
+                            $("#opcion1").text(opcion1);
+                            $("#opcion2").text(opcion2);
+                            $("#opcion3").text(opcion3);
                             // updatePregunta(pregunta);
                             //socket.send('{"name": "respuesta", "priority": "0","parameters": \n\[{"name": "x", "value": "' + 1 + '"},\n\]}');
+                        } else {
+                            $("#preguntaContainer").css('display', 'none');
                         }
                     }
                 }
