@@ -122,11 +122,11 @@ function create() {
     this.physics.world.setBounds(0, 0, width, height);
 
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
-    //background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
+    background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
     //  agrego planetas ,etc
     this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    //var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
 
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
@@ -153,14 +153,14 @@ function create() {
     //this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
     //animacion galaxia
-    /*
+    
     this.tweens.add({
         targets: galaxy,
         angle: 360,
         duration: 100000,
         ease: 'Linear',
         loop: -1
-    });*/
+    });
     tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '42px', fill: '#fff' });    
 
     cursors = this.input.keyboard.createCursorKeys();
@@ -205,14 +205,9 @@ function update(time, delta)
                 asteroides[i].anims.play('asteroid4-anim', true);
                 break;
         }
-        //var sprite=asteroides[i];
-        //console.log(sprite.anims);
     }
 }
-//var particles= game.scene.scenes[0].add.particles('space');
 function particle(ship,id){
-    //game.scene.scenes[0].load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
-    //console.log(game.scene.scenes[0]);
     emitter = particles.createEmitter({
         frame: ''+colors[punteroColor],
         speed: 100,
