@@ -21,13 +21,14 @@ public class NavePlayer extends Nave {
     protected int idBullets;
     private String pregunta;
     private String[] opciones;
-    private boolean bloqueado;
+    public boolean bloqueado;
     private int respuesta;
     private String idDesafio;
+    private int tiempo;
 
     public NavePlayer(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir,
             double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op,
-            boolean bq, int resp) {
+            boolean bq, int resp,int t) {
         super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
 
         /*public NavePlayer(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,
@@ -45,6 +46,7 @@ public class NavePlayer extends Nave {
         this.opciones = op;
         this.bloqueado = bq;
         this.respuesta = resp;
+        this.tiempo = t;
         // this.idDesafio = des;
     }
 
@@ -95,7 +97,8 @@ public class NavePlayer extends Nave {
                 } else if (estado != this && estado.getName().equalsIgnoreCase("naveneutra")) {
                     NaveNeutra neutra = (NaveNeutra) estado;
                     double dist = Math.sqrt((futuraPos[0] - neutra.x) * (futuraPos[0] - neutra.x) + (futuraPos[1] - neutra.y) * (futuraPos[1] - neutra.y));
-                    if (dist <= DISTANCIA_ALIANZA && neutra.idPropietario.equalsIgnoreCase("")) {
+                    if (dist <= DISTANCIA_ALIANZA && neutra.idPropietario.equalsIgnoreCase("")&&neutra.disponible && tiempo == 0) 
+                    {
 
                         Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id);
                         this.addEvent("desafiar");
@@ -166,8 +169,10 @@ public class NavePlayer extends Nave {
         int nuevaRespuesta = respuesta;
         String nuevaPregunta = pregunta;
         String nuevoDesafio = this.idDesafio;
+        int nuevoTiempo = tiempo - 1;
 
-        if (!bloqueado) {
+        if (!bloqueado) 
+        {
             if (listAccion != null) {
                 for (Action accion : listAccion) {
 
@@ -232,18 +237,23 @@ public class NavePlayer extends Nave {
             for (String evento : eventos) {
                 switch (evento) {
                     case "hit":
-                        nuevaVida = nuevaVida - 10;
-                        System.out.println(nuevaVida);
-                        if (nuevaVida <= 0) {
-                            nuevaVelX = 0;
-                            nuevaVelY = 0;
-                            muerto = true;
+                        if(!bloqueado)
+                        {
+                            nuevaVida = nuevaVida - 10;
+                            System.out.println(nuevaVida);
+                            if (nuevaVida <= 0) 
+                            {
+                                nuevaVelX = 0;
+                                nuevaVelY = 0;
+                                muerto = true;
                             //this.addEvent("respawn"); ser rompe cuando trata de tratarlo 
-                        }
+                            }
+                        }    
                         break;
                     //ver colisiones
                     case "collide":
-                        if (!revivir) {
+                        
+                        if (!revivir ) {
                             nuevaVelX = velocidad.x;
                             nuevaVelY = velocidad.y;
                             nuevoX = x;
@@ -256,6 +266,9 @@ public class NavePlayer extends Nave {
                     case "liberar":
                         estaBloqueado = false;
 
+                        break;
+                    case "incorrecta":
+                        nuevoTiempo = 10;
                         break;
                     case "respawn":
                         revivir = true;
@@ -272,6 +285,8 @@ public class NavePlayer extends Nave {
                         break;
                     case "desafiar":
                         estaBloqueado = true;
+                        nuevaVelX = 0;
+                        nuevaVelY = 0;
                         for (State estado : estados) {
                             if (estado != null && estado.getName().equalsIgnoreCase("desafio") && ((Desafio) estado).idNavePlayer.equalsIgnoreCase(id)) {
                                 Desafio des = (Desafio) estado;
@@ -285,10 +300,13 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-
+        if(nuevoTiempo<=0)
+        {
+            nuevoTiempo = 0;
+        }
         NavePlayer nuevoJugador = new NavePlayer(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
                 nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,
-                nuevaPregunta, op, estaBloqueado, nuevaRespuesta);
+                nuevaPregunta, op, estaBloqueado, nuevaRespuesta, nuevoTiempo);
 
         //  NavePlayer nuevoJugador = new NavePlayer(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,pregunta,opciones,estaBq,respuesta);
         return nuevoJugador;
@@ -307,6 +325,7 @@ public class NavePlayer extends Nave {
         this.pregunta = ((NavePlayer) newPlayer).pregunta;
         this.opciones = ((NavePlayer) newPlayer).opciones;
         this.respuesta = ((NavePlayer) newPlayer).respuesta;
+        this.tiempo = ((NavePlayer) newPlayer).tiempo;
     }
 
     @Override

@@ -108,6 +108,8 @@ public class NaveNeutra extends Nave {
 
                             switch (accion.getName()) {
                                 case "move":
+                                    if(!nuevoPropietario.bloqueado)
+                                    {
                                     LinkedList<Nave> navesAliadas = new LinkedList();
                                     for (State estado : estados) {
                                         if (estado.getName().equalsIgnoreCase("NaveNeutra")) {
@@ -117,11 +119,13 @@ public class NaveNeutra extends Nave {
                                             }
                                         }
                                     }
+                                  //  this.flock(nuevoPropietario, navesAliadas);
                                     nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                     nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                                     nuevaDirX = nuevaVelX;
-                                    nuevaDirY = nuevaVelY;
+                                    nuevaDirY = nuevaVelY;}
                                     break;
+                                    
                                 case "stop":
 
                                     nuevaVelX = 0;
@@ -142,8 +146,6 @@ public class NaveNeutra extends Nave {
                 nuevoIdPropietario = "";
                 nuevaVelX = 0;
                 nuevaVelY = 0;
-                nuevoX = 1000;
-                nuevoY = 1000;
                 nuevaDirX = 0;
                 nuevaDirY = 1;
                 nuevaDisponibilidad = true;

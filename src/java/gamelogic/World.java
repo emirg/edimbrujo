@@ -31,7 +31,8 @@ public class World extends State {
                     case "start":
 
                        
-                        NavePlayer newPlayer = new NavePlayer("NavePlayer", false, id, 200, 200, 0, 0, 1, 0, 100, 100, 0, 0, false, false, "", null, false, -1);
+                        NavePlayer newPlayer = new NavePlayer("NavePlayer", false, id, 200, 200, 0, 0, 1, 0, 100, 100,
+                                0, 0, false, false, "", null, false, -1,0);
 
                    /*     int [] op = new int [3];
                         NavePlayer newPlayer = new NavePlayer("NavePlayer",false, id, 200, 200, 0, 0,1,0, 100, 100, 0, 0, false, false,"",op,false,-1);
