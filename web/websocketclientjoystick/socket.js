@@ -1,14 +1,19 @@
 var socket;
 var socketID = "";
+var nombreJugador;
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 //%%%%%%%%%%%%%%%% esta de adorno %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function empezar() {
+    socket.send('{"name": "nombreJugador", "priority": "0","parameters": \n\[{"name": "nombreElegido", "value": "' + nombreJugador + '"},\n\]}');
     socket.send("start");
+
 }
 
 window.onload = function () {
+    nombreJugador = prompt("Ingresa tu nombre", "");
+
     var page = document.createElement("a");
     page.href = window.location.href;
     // Define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
