@@ -73,7 +73,7 @@ public class NavePlayer extends Nave {
             double[] futuraPos = futuraPosicion(acciones);
             for (State estado : estados) {
                 //Choque contra otra nave
-
+                
                 if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
                     Asteroide ast = (Asteroide) estado;
                     double xFuturaAsteroide = ast.x + ast.velocidad.x;
@@ -99,11 +99,34 @@ public class NavePlayer extends Nave {
                     double dist = Math.sqrt((futuraPos[0] - neutra.x) * (futuraPos[0] - neutra.x) + (futuraPos[1] - neutra.y) * (futuraPos[1] - neutra.y));
                     if (dist <= DISTANCIA_ALIANZA && neutra.idPropietario.equalsIgnoreCase("")&&neutra.disponible && tiempo == 0) 
                     {
-
-                        Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id);
-                        this.addEvent("desafiar");
-                        listProyectil.add(desa); // Por que agregar el desafio a la lista de proyectiles?
-
+                        boolean creaDesafio = true;
+                       
+                       //este for recorre los estados 
+                        for(State estAux:estados)
+                        {
+                           
+                            if(estAux != null && estAux != this && estAux.getName().equalsIgnoreCase("naveplayer") && 
+                                    !((NavePlayer)estAux).bloqueado)
+                            {
+                                NavePlayer est = ((NavePlayer)estAux);
+                                double[] futuraPosAux = est.futuraPosicion(acciones);
+                                double distAux = Math.sqrt((futuraPosAux[0] - neutra.x) * (futuraPosAux[0] - neutra.x) + 
+                                        (futuraPosAux[1] - neutra.y) * (futuraPosAux[1] - neutra.y));
+                                if(dist > distAux)
+                                {
+                                    creaDesafio = false;
+                                   // System.out.println("dist "+dist+"-------------------- distAux"+distAux);
+                                }
+                               
+                            }
+                           
+                        }
+                        if(creaDesafio)
+                        {
+                            Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id);
+                            this.addEvent("desafiar");
+                            listProyectil.add(desa); // Por que agregar el desafio a la lista de proyectiles?
+                        }
                     }
 
                 }
@@ -268,7 +291,7 @@ public class NavePlayer extends Nave {
 
                         break;
                     case "incorrecta":
-                        nuevoTiempo = 10;
+                        nuevoTiempo = 50;
                         break;
                     case "respawn":
                         revivir = true;
