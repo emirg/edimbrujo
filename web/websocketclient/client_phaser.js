@@ -46,7 +46,6 @@ var players = [];
 var neutras = [];
 var coins = [];
 var particles;
-var emitter;
 var bullets=[];
 var tablaPuntajes =[];
 var colors = [];
@@ -122,11 +121,11 @@ function create() {
     this.physics.world.setBounds(0, 0, width, height);
 
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
-    //background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
+    background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
     //  agrego planetas ,etc
     this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    //var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
 
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
@@ -153,19 +152,19 @@ function create() {
     //this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
     //animacion galaxia
-    /*
+    
     this.tweens.add({
         targets: galaxy,
         angle: 360,
         duration: 100000,
         ease: 'Linear',
         loop: -1
-    });*/
+    });
     tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '42px', fill: '#fff' });    
 
     cursors = this.input.keyboard.createCursorKeys();
 
-    colors=['blue','red','green','orage','purple'];
+    colors=['red','green','blue','yellow','white'];
 }
 
 // Retorna un entero aleatorio entre min (incluido) y max (excluido)
@@ -205,15 +204,10 @@ function update(time, delta)
                 asteroides[i].anims.play('asteroid4-anim', true);
                 break;
         }
-        //var sprite=asteroides[i];
-        //console.log(sprite.anims);
     }
 }
-//var particles= game.scene.scenes[0].add.particles('space');
 function particle(ship,id){
-    //game.scene.scenes[0].load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
-    //console.log(game.scene.scenes[0]);
-    emitter = particles.createEmitter({
+    var emitter = particles.createEmitter({
         frame: ''+colors[punteroColor],
         speed: 100,
         lifespan: {
@@ -238,10 +232,9 @@ function particle(ship,id){
         scale: { start: 0.6, end: 0 },
         blendMode: 'ADD'
     });
-    if(punteroColor>colors.length){
+    punteroColor++;
+    if(punteroColor>=colors.length){
         punteroColor=0
-    }else{
-        punteroColor++;
     }
     emitters[id]=[particles,emitter];
     emitter.startFollow(ship);
@@ -310,9 +303,9 @@ window.onload = function () {
                     for (let i = 0; i < coins.length; i++) {     
                         game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
                     }
-                    //if(particles!==undefined){
-                    //    particle(players[id],id);
-                    //}   
+                    if(particles!==undefined){
+                        particle(players[id],id);
+                    }   
                 }
                 /* cargo puntaje en tabla de puntaje */
                 tablaPuntajes[id]=puntaje;
@@ -332,21 +325,17 @@ window.onload = function () {
                 if (destroy) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-                    /*
-                    if(emitters[id][1]!=="undefined" ){
-                        emitters[id][0].destroy();
-                        //emitters[id][1].killAll()
-                        console.log(emitters[id][0].emitters.list.length);
-        
-                        console.log(emitters[id][0].emitters.list);
-                        //console.log(emitters[id][0].emitters.list[0]);
-                        console.log(emitters[id][0].emitters.list.pop(1));
-                        console.log(emitters[id][0].emitters.list);
+                    
+                    if(emitters[id]!=="undefined" ){
+              
+                        for(var i=0; i<emitters[id][0].emitters.list.length;i++){
+                            if(emitters[id][1]==emitters[id][0].emitters.list[i]){
+                                emitters[id][0].emitters.list.pop(i)
+                            }
+                        }
                         delete emitters[id][0];
                         delete emitters[id][1];
-                        particles= game.scene.scenes[0].add.particles('space');
-
-                    }*/
+                    }
                     
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {

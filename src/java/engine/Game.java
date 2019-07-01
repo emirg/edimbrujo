@@ -131,8 +131,7 @@ public class Game implements Runnable {
             double velocidadY, double xDir, double yDir, int cantProj, NavePlayer prop,
              String posible, boolean d, String p)
          */
-        states.add(new NaveNeutra("NaveNeutra",false, "neutra1", 1000, 1000, 0, 0,1,0, 0,true, "",0));
-        states.add(new NaveNeutra("NaveNeutra",false, "neutra2", 2000, 1000, 0, 0,1,0, 0,true, "",0));
+        //states.add(new NaveNeutra("NaveNeutra",false, "neutra1", 1000, 1000, 0, 0,1,0, 0,true, "",0));
     }
 
     private void createStaticState() {
