@@ -6,8 +6,8 @@ var config = {
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 4500,
-        height: 2048,
+        //width: 4500,
+        //height: 2048,
     },
     physics: {
         default: "arcade",
@@ -37,8 +37,8 @@ var objetosNuevos = [];
 var cursors;
 
 //dimensiones juego
-var width = 4500;
-var height = 2048;
+var width = window.innerWidth;
+var height = window.innerHeight;
 
 
 //arreglos
@@ -95,6 +95,8 @@ function preload() {
 }
 
 function create() {
+    console.log(width);
+    console.log(height);
     //console.log(game.scene.scenes[0]==this);
     //console.log(this);
   
@@ -122,19 +124,34 @@ function create() {
     this.physics.world.setBounds(0, 0, width, height);
 
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
-    background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
+    background = this.add.tileSprite(0, 0, 2000, 2000, 'background').setScrollFactor(0);
     //  agrego planetas ,etc
-    this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
-    this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    var bluePlanet=this.add.image(100, 100, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
+    var sun=this.add.image(600, 100, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
+    var galaxy = this.add.image(700, 400, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    
+    //escalas
+    galaxy.scaleX=0.2;
+    galaxy.scaleY=0.2;
+
+    sun.scaleX=0.2;
+    sun.scaleY=0.2;
+
+    bluePlanet.scaleX=0.3;
+    bluePlanet.scaleY=0.3;
 
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
-        this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
+        var eyes=this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
+        eyes.scaleX=0.4;
+        eyes.scaleY=0.4;
     }
     //estrellas
-    stars = this.add.tileSprite(400, 300, 2000, 2000, 'stars').setScrollFactor(0);
+    stars = this.add.tileSprite(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 2000, 2000, 'stars').setScrollFactor(0);
+
+    stars.scaleX=0.2;
+    stars.scaleY=0.2;
 
     particles = this.add.particles('space');
 
@@ -161,7 +178,7 @@ function create() {
         ease: 'Linear',
         loop: -1
     });
-    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '42px', fill: '#fff' });    
+    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '10px', fill: '#fff' });    
 
     cursors = this.input.keyboard.createCursorKeys();
 
@@ -230,7 +247,7 @@ function particle(ship,id){
                 return (ship.angle - 180) + v;
             }
         },
-        scale: { start: 0.6, end: 0 },
+        scale: { start: 0.2, end: 0 },
         blendMode: 'ADD'
     });
     punteroColor++;
@@ -296,6 +313,11 @@ window.onload = function () {
                 /* Sino existe el jugador lo creo junto con sus colliders */
                 if (players[id] == null) {
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
+                    players[id].setDepth(1);
+                    players[id].setCollideWorldBounds(true);
+                    players[id].scaleX=0.2;
+                    players[id].scaleY=0.2;
+
                     /* Genero colision visual asteroide player*/
                     for (let i = 0; i < asteroides.length; i++) {
                         game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
@@ -348,6 +370,8 @@ window.onload = function () {
                 if (asteroides[id] == null) {
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
+                    asteroides[id].scaleX=0.5;
+                    asteroides[id].scaleY=0.5;
 
                 }
                 asteroides[id].y = y;
@@ -394,12 +418,15 @@ window.onload = function () {
                 /* si no exitia un bala con ese mismo id la creo*/
                 if(bullets[id]==null){
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
+                    bullets[id].scaleX=0.2;
+                    bullets[id].scaleY=0.2;
                 }
                 /* cargo angulo y seteo coordenadas*/
                 bullets[id].angle = angulo;
                 bullets[id].y = y;
                 bullets[id].x = x;
                 bullets[id].z = y;
+                
 
                 if (destroy) {
                     bullets[id].destroy();
@@ -414,6 +441,8 @@ window.onload = function () {
                 if(coins[id]==null){
                     coins[id]=game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     coins[id].setDepth(1);
+                    coins[id].scaleX=0.3;
+                    coins[id].scaleY=0.3;
                 }
                 
                 coins[id].y = y;

@@ -112,14 +112,14 @@ public class Game implements Runnable {
 
     public void createSpawns() {
         Random r = new Random();
-        int width = 4500; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
-        int height = 2048;
+        int width = 800; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
+        int height = 600;
         int x, y;
 
-        states.add(new Asteroide("Asteroide", false, "0", 200, 500, 30, 0)); // Capaz convenga que el id sea 
-        states.add(new Asteroide("Asteroide", false, "1", 500, 650, 30, 0)); // algo mas significativo como
-        states.add(new Asteroide("Asteroide", false, "2", 400, 800, 30, 0)); // "asteroideX" con X el numero
-        states.add(new Asteroide("Asteroide", false, "3", 100, 950, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "0", 0, 100, 30, 0)); // Capaz convenga que el id sea 
+        states.add(new Asteroide("Asteroide", false, "1", 100, 250, 30, 0)); // algo mas significativo como
+        states.add(new Asteroide("Asteroide", false, "2", 50, 350, 30, 0)); // "asteroideX" con X el numero
+        states.add(new Asteroide("Asteroide", false, "3", 200, 550, 30, 0));
 
         for (int i = 0; i < 10; i++) {
             x = r.nextInt(width);
