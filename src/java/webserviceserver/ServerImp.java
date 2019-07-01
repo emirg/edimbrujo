@@ -80,17 +80,6 @@ public class ServerImp {
         return "okey";
     }
 
-    @GET
-    @Path("/actionFire")
-    public String rangeAtack(@QueryParam("x") String x, @QueryParam("y") String y, @QueryParam("session") String session) {
-        
-        lobby = Lobby.startGame();
-        String fire = "{\"name\": \"fire\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
-        System.out.println(fire);
-        lobby.addAction(session, fire);
-        return "okey";
-
-    }
 
     @GET
     @Path("/getFullState")
