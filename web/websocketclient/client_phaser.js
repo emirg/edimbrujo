@@ -25,8 +25,7 @@ var config = {
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMENTARIOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// * falta barriles o monedas logicas 
-// problemas con id bullet como es el mismo que la nave solo permite una bala a la vez 
+//error particulas , se rompe con tres 
 
 var game = new Phaser.Game(config);
 
@@ -47,6 +46,7 @@ var players = [];
 var neutras = [];
 var coins = [];
 var particles;
+var emitter;
 var bullets=[];
 var tablaPuntajes =[];
 var colors = [];
@@ -122,7 +122,7 @@ function create() {
     this.physics.world.setBounds(0, 0, width, height);
 
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
-    background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
+    //background = this.add.tileSprite(0, 0, 9000, 5000, 'background').setScrollFactor(0);
     //  agrego planetas ,etc
     this.add.image(512, 680, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     this.add.image(2048, 1024, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
@@ -209,11 +209,11 @@ function update(time, delta)
         //console.log(sprite.anims);
     }
 }
-
+//var particles= game.scene.scenes[0].add.particles('space');
 function particle(ship,id){
-    game.scene.scenes[0].load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
-    var particles= game.scene.scenes[0].add.particles('space');
-    var emitter = particles.createEmitter({
+    //game.scene.scenes[0].load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
+    //console.log(game.scene.scenes[0]);
+    emitter = particles.createEmitter({
         frame: ''+colors[punteroColor],
         speed: 100,
         lifespan: {
@@ -236,14 +236,14 @@ function particle(ship,id){
             }
         },
         scale: { start: 0.6, end: 0 },
-        //blendMode: 'ADD'
+        blendMode: 'ADD'
     });
     if(punteroColor>colors.length){
         punteroColor=0
     }else{
         punteroColor++;
     }
-    emitters[id]=particles;
+    emitters[id]=[particles,emitter];
     emitter.startFollow(ship);
 }
 
@@ -310,9 +310,9 @@ window.onload = function () {
                     for (let i = 0; i < coins.length; i++) {     
                         game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
                     }
-                    if(particles!==undefined){
-                        particle(players[id],id);
-                    }   
+                    //if(particles!==undefined){
+                    //    particle(players[id],id);
+                    //}   
                 }
                 /* cargo puntaje en tabla de puntaje */
                 tablaPuntajes[id]=puntaje;
@@ -332,9 +332,21 @@ window.onload = function () {
                 if (destroy) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-                    if(emitters[id]!==null && emitters[id]!=="undefined"){
-                        emitters[id].destroy();
-                    }
+                    /*
+                    if(emitters[id][1]!=="undefined" ){
+                        emitters[id][0].destroy();
+                        //emitters[id][1].killAll()
+                        console.log(emitters[id][0].emitters.list.length);
+        
+                        console.log(emitters[id][0].emitters.list);
+                        //console.log(emitters[id][0].emitters.list[0]);
+                        console.log(emitters[id][0].emitters.list.pop(1));
+                        console.log(emitters[id][0].emitters.list);
+                        delete emitters[id][0];
+                        delete emitters[id][1];
+                        particles= game.scene.scenes[0].add.particles('space');
+
+                    }*/
                     
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
