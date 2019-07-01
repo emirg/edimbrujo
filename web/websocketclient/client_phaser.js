@@ -13,7 +13,7 @@ var config = {
         default: "arcade",
         arcade: {
             fps: 60,
-            gravity: {y: 0}
+            gravity: { y: 0 }
         }
     },
     scene: {
@@ -47,11 +47,11 @@ var players = [];
 var neutras = [];
 var coins = [];
 var particles;
-var bullets=[];
-var tablaPuntajes =[];
+var bullets = [];
+var tablaPuntajes = [];
 var colors = [];
-var emitters=[];
-var punteroColor=0;
+var emitters = [];
+var punteroColor = 0;
 
 
 function preload() {
@@ -97,26 +97,26 @@ function preload() {
 function create() {
     //console.log(game.scene.scenes[0]==this);
     //console.log(this);
-  
+
 
     //console.log("CREATE");
     //  Prepare some spritesheets and animations
-    this.textures.addSpriteSheetFromAtlas('mine-sheet', {atlas: 'space', frame: 'mine', frameWidth: 64});
-    this.textures.addSpriteSheetFromAtlas('asteroid1-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
-    this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', {atlas: 'space', frame: 'asteroid2', frameWidth: 96});
-    this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', {atlas: 'space', frame: 'asteroid3', frameWidth: 96});
-    this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', {atlas: 'space', frame: 'asteroid4', frameWidth: 64});
+    this.textures.addSpriteSheetFromAtlas('mine-sheet', { atlas: 'space', frame: 'mine', frameWidth: 64 });
+    this.textures.addSpriteSheetFromAtlas('asteroid1-sheet', { atlas: 'space', frame: 'asteroid1', frameWidth: 96 });
+    this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', { atlas: 'space', frame: 'asteroid2', frameWidth: 96 });
+    this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', { atlas: 'space', frame: 'asteroid3', frameWidth: 96 });
+    this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', { atlas: 'space', frame: 'asteroid4', frameWidth: 64 });
     //this.textures.addSpriteSheetFromAtlas('explosion-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
 
 
 
-    this.anims.create({key: 'mine-anim', frames: this.anims.generateFrameNumbers('mine-sheet', {start: 0, end: 15}), frameRate: 20, repeat: -1});
-    this.anims.create({key: 'asteroid1-anim', frames: this.anims.generateFrameNumbers('asteroid1-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
-    this.anims.create({key: 'asteroid2-anim', frames: this.anims.generateFrameNumbers('asteroid2-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
-    this.anims.create({key: 'asteroid3-anim', frames: this.anims.generateFrameNumbers('asteroid3-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
-    this.anims.create({key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
-    this.anims.create({key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 5}), frameRate: 10, repeat: -1});
-    this.anims.create({key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 23}), frameRate: 100, repeat: 1});
+    this.anims.create({ key: 'mine-anim', frames: this.anims.generateFrameNumbers('mine-sheet', { start: 0, end: 15 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid1-anim', frames: this.anims.generateFrameNumbers('asteroid1-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid2-anim', frames: this.anims.generateFrameNumbers('asteroid2-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid3-anim', frames: this.anims.generateFrameNumbers('asteroid3-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
+    this.anims.create({ key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 5 }), frameRate: 10, repeat: -1 });
+    this.anims.create({ key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 23 }), frameRate: 100, repeat: 1 });
 
     //world 2048*2048
     this.physics.world.setBounds(0, 0, width, height);
@@ -129,8 +129,7 @@ function create() {
     var galaxy = this.add.image(3500, 1500, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
 
     //efecto estres de luz
-    for (var i = 0; i < 6; i++)
-    {
+    for (var i = 0; i < 6; i++) {
         this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
     }
     //estrellas
@@ -144,16 +143,16 @@ function create() {
     //coins.setCollideWorldBounds(true);
 
     this.anims.create({
-    key: "efectoMoneda",
-    frames: this.anims.generateFrameNumbers("coin", { start: 0, end: 5 }),
-    frameRate: 10,
-    repeat: -1
+        key: "efectoMoneda",
+        frames: this.anims.generateFrameNumbers("coin", { start: 0, end: 5 }),
+        frameRate: 10,
+        repeat: -1
     });
 
     //this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
     //animacion galaxia
-    
+
     this.tweens.add({
         targets: galaxy,
         angle: 360,
@@ -161,27 +160,26 @@ function create() {
         ease: 'Linear',
         loop: -1
     });
-    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '42px', fill: '#fff' });    
+    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '42px', fill: '#fff' });
 
     cursors = this.input.keyboard.createCursorKeys();
 
-    colors=['red','green','blue','yellow','white'];
+    colors = ['red', 'green', 'blue', 'yellow', 'white'];
 }
 
 // Retorna un entero aleatorio entre min (incluido) y max (excluido)
 // ¡Usando Math.round() te dará una distribución no-uniforme!
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
-  }
+}
 
-function update(time, delta)
-{   
+function update(time, delta) {
     // falta ver de unir cada nave a un color fijo y unico para poder diferenciar la nave de la tabla
     // o permitir ingresar un nombre asociado al id nave
     tablaPosiciones.setText('Tabla Posiciones \n');
     for (var key in tablaPuntajes) {
         if (tablaPuntajes.hasOwnProperty(key)) {
-            tablaPosiciones.text+='Player '+key+' score: '+tablaPuntajes[key]+'\n';
+            tablaPosiciones.text += tablaPuntajes[key][0] + ' score: ' + tablaPuntajes[key][1] + '\n';
             //console.log(key + " -> " + tablaPuntajes[key]);
         }
     }
@@ -207,25 +205,22 @@ function update(time, delta)
         }
     }
 }
-function particle(ship,id){
+function particle(ship, id) {
     var emitter = particles.createEmitter({
-        frame: ''+colors[punteroColor],
+        frame: '' + colors[punteroColor],
         speed: 100,
         lifespan: {
-            onEmit: function (particle, key, t, value)
-            {
+            onEmit: function (particle, key, t, value) {
                 return 500;
             }
         },
         alpha: {
-            onEmit: function (particle, key, t, value)
-            {
+            onEmit: function (particle, key, t, value) {
                 return 90;
             }
         },
         angle: {
-            onEmit: function (particle, key, t, value)
-            {
+            onEmit: function (particle, key, t, value) {
                 var v = Phaser.Math.Between(-10, 10);
                 return (ship.angle - 180) + v;
             }
@@ -234,16 +229,16 @@ function particle(ship,id){
         blendMode: 'ADD'
     });
     punteroColor++;
-    if(punteroColor>=colors.length){
-        punteroColor=0
+    if (punteroColor >= colors.length) {
+        punteroColor = 0
     }
-    emitters[id]=[particles,emitter];
+    emitters[id] = [particles, emitter];
     emitter.startFollow(ship);
 }
 
-function hitAsteroide(player,asteroide) {
-    game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim'); 
-  }
+function hitAsteroide(player, asteroide) {
+    game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim');
+}
 
 
 window.onload = function () {
@@ -273,8 +268,8 @@ window.onload = function () {
                 if (players[id] != null) {
                     players[id].destroy;
                     players[id] = null;
-                }else{
-                    if(bullets[id]!=null){
+                } else {
+                    if (bullets[id] != null) {
                         bullets[id].destroy;
                         bullets[id] = null;
                     }
@@ -287,6 +282,7 @@ window.onload = function () {
                 var dead = gameState[i]["NavePlayer"]["dead"];
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
+                var nombreJugador = gameState[i]["NavePlayer"]["nombreJugador"];
                 //var health = gameState[i]["NavePlayer"]["health"];
                 var puntaje = gameState[i]["NavePlayer"]["puntaje"];
                 //var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
@@ -301,15 +297,15 @@ window.onload = function () {
                         game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
                     }
                     /* Genero colision visual moneda player */
-                    for (let i = 0; i < coins.length; i++) {     
+                    for (let i = 0; i < coins.length; i++) {
                         game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
                     }
-                    if(particles!==undefined){
-                        particle(players[id],id);
-                    }   
+                    if (particles !== undefined) {
+                        particle(players[id], id);
+                    }
                 }
                 /* cargo puntaje en tabla de puntaje */
-                tablaPuntajes[id]=puntaje;
+                tablaPuntajes[id] = [nombreJugador, puntaje];
 
                 /* seteo angulo y coordenadas de la nave */
                 players[id].angle = angulo;
@@ -321,26 +317,26 @@ window.onload = function () {
                     players[id].destroy();
                     delete tablaPuntajes[id];
                     //delete emitters[id];
-                    
+
                 }
                 if (destroy) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-                    
-                    if(emitters[id]!=="undefined" ){
-              
-                        for(var i=0; i<emitters[id][0].emitters.list.length;i++){
-                            if(emitters[id][1]==emitters[id][0].emitters.list[i]){
+
+                    if (emitters[id] !== "undefined") {
+
+                        for (var i = 0; i < emitters[id][0].emitters.list.length; i++) {
+                            if (emitters[id][1] == emitters[id][0].emitters.list[i]) {
                                 emitters[id][0].emitters.list.pop(i)
                             }
                         }
                         delete emitters[id][0];
                         delete emitters[id][1];
                     }
-                    
+
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
-                /* %%%%%%%%%%%%%%%%%%%%%%%%%% Asteroides %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/ 
+                /* %%%%%%%%%%%%%%%%%%%%%%%%%% Asteroides %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 var id = gameState[i]["Asteroide"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Asteroide"]['super']["Entity"]["x"];
                 var y = gameState[i]["Asteroide"]['super']["Entity"]["y"];
@@ -354,7 +350,7 @@ window.onload = function () {
                 asteroides[id].x = x;
                 asteroides[id].z = y;
 
-            }else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
+            } else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5 Nave Neutra %%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
                 /* leo informacion JSON */
@@ -369,11 +365,11 @@ window.onload = function () {
                 if (neutras[id] == null) {
                     neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
                     neutras[id].setDepth(1);
-                    neutras[id].scaleX=2;
-                    neutras[id].scaleY=2;
+                    neutras[id].scaleX = 2;
+                    neutras[id].scaleY = 2;
 
                     /* Genero colision visual moneda player */
-                    for (let i = 0; i < coins.length; i++) {     
+                    for (let i = 0; i < coins.length; i++) {
                         game.scene.scenes[0].physics.add.collider(neutras[id], coins[i], null, null, this);
                     }
 
@@ -384,15 +380,15 @@ window.onload = function () {
                 neutras[id].x = x;
                 neutras[id].z = y;
 
-            }else if (typeof gameState[i]["Proyectil"] !== "undefined") {
+            } else if (typeof gameState[i]["Proyectil"] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%% Proyectil %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Proyectil"]['super']["Entity"]["x"];
                 var y = gameState[i]["Proyectil"]['super']["Entity"]["y"];
-                var destroy =gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
+                var destroy = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["destroy"];
                 var angulo = gameState[i]["Proyectil"]['angulo'];
                 /* si no exitia un bala con ese mismo id la creo*/
-                if(bullets[id]==null){
+                if (bullets[id] == null) {
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
                 }
                 /* cargo angulo y seteo coordenadas*/
@@ -405,17 +401,17 @@ window.onload = function () {
                     bullets[id].destroy();
                 }
 
-            }else if (typeof gameState[i]["Moneda"] !== "undefined") {
+            } else if (typeof gameState[i]["Moneda"] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%% Monedas %%%%%%%%%%%%%%%%%%%%%%%%%%%%%5*/
                 var id = gameState[i]["Moneda"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Moneda"]['super']["Entity"]["x"];
                 var y = gameState[i]["Moneda"]['super']["Entity"]["y"];
 
-                if(coins[id]==null){
-                    coins[id]=game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
+                if (coins[id] == null) {
+                    coins[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     coins[id].setDepth(1);
                 }
-                
+
                 coins[id].y = y;
                 coins[id].x = x;
                 coins[id].z = y;

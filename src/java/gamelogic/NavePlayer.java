@@ -12,6 +12,7 @@ public class NavePlayer extends Nave {
 
     private final int DISTANCIA_ALIANZA = 150;
 
+    protected String nombreJugador;
     protected int health;
     protected int healthMax;
     protected boolean leave;
@@ -26,9 +27,7 @@ public class NavePlayer extends Nave {
     private String idDesafio;
     private int tiempo;
 
-    public NavePlayer(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir,
-            double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op,
-            boolean bq, int resp,int t) {
+    public NavePlayer(String name, String nombreJugador, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op, boolean bq, int resp, int t) {
         super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
 
         /*public NavePlayer(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,
@@ -47,6 +46,7 @@ public class NavePlayer extends Nave {
         this.bloqueado = bq;
         this.respuesta = resp;
         this.tiempo = t;
+        this.nombreJugador = nombreJugador;
         // this.idDesafio = des;
     }
 
@@ -73,7 +73,7 @@ public class NavePlayer extends Nave {
             double[] futuraPos = futuraPosicion(acciones);
             for (State estado : estados) {
                 //Choque contra otra nave
-                
+
                 if (estado != this && estado.getName().equalsIgnoreCase("asteroide")) { // Choque contra asteroide
                     Asteroide ast = (Asteroide) estado;
                     double xFuturaAsteroide = ast.x + ast.velocidad.x;
@@ -97,32 +97,27 @@ public class NavePlayer extends Nave {
                 } else if (estado != this && estado.getName().equalsIgnoreCase("naveneutra")) {
                     NaveNeutra neutra = (NaveNeutra) estado;
                     double dist = Math.sqrt((futuraPos[0] - neutra.x) * (futuraPos[0] - neutra.x) + (futuraPos[1] - neutra.y) * (futuraPos[1] - neutra.y));
-                    if (dist <= DISTANCIA_ALIANZA && neutra.idPropietario.equalsIgnoreCase("")&&neutra.disponible && tiempo == 0) 
-                    {
+                    if (dist <= DISTANCIA_ALIANZA && neutra.idPropietario.equalsIgnoreCase("") && neutra.disponible && tiempo == 0) {
                         boolean creaDesafio = true;
-                       
-                       //este for recorre los estados 
-                        for(State estAux:estados)
-                        {
-                           
-                            if(estAux != null && estAux != this && estAux.getName().equalsIgnoreCase("naveplayer") && 
-                                    !((NavePlayer)estAux).bloqueado)
-                            {
-                                NavePlayer est = ((NavePlayer)estAux);
+
+                        //este for recorre los estados 
+                        for (State estAux : estados) {
+
+                            if (estAux != null && estAux != this && estAux.getName().equalsIgnoreCase("naveplayer")
+                                    && !((NavePlayer) estAux).bloqueado) {
+                                NavePlayer est = ((NavePlayer) estAux);
                                 double[] futuraPosAux = est.futuraPosicion(acciones);
-                                double distAux = Math.sqrt((futuraPosAux[0] - neutra.x) * (futuraPosAux[0] - neutra.x) + 
-                                        (futuraPosAux[1] - neutra.y) * (futuraPosAux[1] - neutra.y));
-                                if(dist > distAux)
-                                {
+                                double distAux = Math.sqrt((futuraPosAux[0] - neutra.x) * (futuraPosAux[0] - neutra.x)
+                                        + (futuraPosAux[1] - neutra.y) * (futuraPosAux[1] - neutra.y));
+                                if (dist > distAux) {
                                     creaDesafio = false;
-                                   // System.out.println("dist "+dist+"-------------------- distAux"+distAux);
+                                    // System.out.println("dist "+dist+"-------------------- distAux"+distAux);
                                 }
-                               
+
                             }
-                           
+
                         }
-                        if(creaDesafio)
-                        {
+                        if (creaDesafio) {
                             Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id);
                             this.addEvent("desafiar");
                             listProyectil.add(desa); // Por que agregar el desafio a la lista de proyectiles?
@@ -192,10 +187,10 @@ public class NavePlayer extends Nave {
         int nuevaRespuesta = respuesta;
         String nuevaPregunta = pregunta;
         String nuevoDesafio = this.idDesafio;
+        String nuevoNombreJugador = this.nombreJugador;
         int nuevoTiempo = tiempo - 1;
 
-        if (!bloqueado) 
-        {
+        if (!bloqueado) {
             if (listAccion != null) {
                 for (Action accion : listAccion) {
 
@@ -237,7 +232,8 @@ public class NavePlayer extends Nave {
                                     destruido = true;
                                     //System.out.println("salir "+salir);
                                     break;
-
+                                case "nombreJugador":
+                                    nuevoNombreJugador = accion.getParameter("nombreElegido");
                             }
 
                         } else {
@@ -260,23 +256,21 @@ public class NavePlayer extends Nave {
             for (String evento : eventos) {
                 switch (evento) {
                     case "hit":
-                        if(!bloqueado)
-                        {
+                        if (!bloqueado) {
                             nuevaVida = nuevaVida - 10;
                             System.out.println(nuevaVida);
-                            if (nuevaVida <= 0) 
-                            {
+                            if (nuevaVida <= 0) {
                                 nuevaVelX = 0;
                                 nuevaVelY = 0;
                                 muerto = true;
-                            //this.addEvent("respawn"); ser rompe cuando trata de tratarlo 
+                                //this.addEvent("respawn"); ser rompe cuando trata de tratarlo 
                             }
-                        }    
+                        }
                         break;
                     //ver colisiones
                     case "collide":
-                        
-                        if (!revivir ) {
+
+                        if (!revivir) {
                             nuevaVelX = velocidad.x;
                             nuevaVelY = velocidad.y;
                             nuevoX = x;
@@ -323,11 +317,10 @@ public class NavePlayer extends Nave {
                 }
             }
         }
-        if(nuevoTiempo<=0)
-        {
+        if (nuevoTiempo <= 0) {
             nuevoTiempo = 0;
         }
-        NavePlayer nuevoJugador = new NavePlayer(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
+        NavePlayer nuevoJugador = new NavePlayer(name, nuevoNombreJugador, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
                 nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,
                 nuevaPregunta, op, estaBloqueado, nuevaRespuesta, nuevoTiempo);
 
@@ -338,6 +331,7 @@ public class NavePlayer extends Nave {
     @Override
     public void setState(State newPlayer) {
         super.setState(newPlayer);
+        this.nombreJugador = ((NavePlayer) newPlayer).nombreJugador;
         this.id = ((NavePlayer) newPlayer).id;
         this.leave = ((NavePlayer) newPlayer).leave;
         this.health = ((NavePlayer) newPlayer).health;
@@ -368,8 +362,8 @@ public class NavePlayer extends Nave {
         /*for (int i = 0; i < this.navesAliadas.size(); i++) {
             navesAliadas.put("naveAliada" + i, this.navesAliadas.get(i));
         }*/
-        
         atributo.put("super", super.toJSON());
+        atributo.put("nombreJugador", nombreJugador);
         atributo.put("health", health);
         atributo.put("healthMax", healthMax);
         atributo.put("leave", leave);
