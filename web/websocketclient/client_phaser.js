@@ -40,6 +40,7 @@ var cursors;
 var width = 4500;
 var height = 2048;
 
+
 //arreglos
 var asteroides = [];
 var players = [];
