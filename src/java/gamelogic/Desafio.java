@@ -79,7 +79,7 @@ public class Desafio extends State {
                                 neutras.add(new NaveNeutra(neutra.name, neutra.destroy, this.idNaveNeutra, neutra.x, neutra.y, neutra.velocidad.x, neutra.velocidad.y,
                                         neutra.direccion.x, neutra.direccion.y, neutra.countProyectil, true, this.idNavePlayer, neutra.idBullets));
                             } else {
-
+                                jugador.addEvent("incorrecta");
                                 neutra.addEvent("destruir");
 
                                 neutras.add(new NaveNeutra(neutra.name, neutra.destroy, this.idNaveNeutra, neutra.x, neutra.y, neutra.velocidad.x, neutra.velocidad.y,
