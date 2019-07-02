@@ -326,7 +326,7 @@ window.onload = function () {
                 if (players[id] == null) {
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
                     players[id].setDepth(1);
-                    players[id].setCollideWorldBounds(true);
+                    //players[id].setCollideWorldBounds(true);
                     //players[id].scaleX=0.25;
                     //players[id].scaleY=0.25;
                     //console.log(players[id].height);

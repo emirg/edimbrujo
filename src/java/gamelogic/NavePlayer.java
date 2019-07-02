@@ -245,7 +245,22 @@ public class NavePlayer extends Nave {
                 }
             }
             nuevoX = nuevoX + nuevaVelX;
+            /* correccion limitaciones mapa se va a poder hacer un modulo para que quede mas prolijo*/
+            if(nuevoX<0){
+                nuevoX=0;
+            }
+            if(nuevoX>worldWidth){
+                nuevoX=worldWidth;
+            }
             nuevoY = nuevoY + nuevaVelY;
+            System.out.println(nuevoY);
+            if(nuevoY<0){
+                nuevoY=0;
+            }
+            if(nuevoY>worldHeight){
+                nuevoY=worldHeight;
+            }
+            
             //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
         }
         LinkedList<String> eventos = getEvents();
