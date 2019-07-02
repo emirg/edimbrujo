@@ -19,7 +19,7 @@ public class Proyectil extends Entity {
     protected int worldHeight;
 
     public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, double angulo, int number,int worldWidth,int worldHeight) {
-        super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 64*(64/((worldWidth-worldHeight)*0.1)), 12*(12/((worldWidth-worldHeight)*0.1)));
+        super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 12*(12/((worldWidth)*0.2)), 64*(64/((worldHeight)*0.2)));
         this.velocidad.set(xDir, yDir).setMagnitude(VELOCIDAD_MAX);
         this.number = number;
         this.idPlayer = idPlayer;

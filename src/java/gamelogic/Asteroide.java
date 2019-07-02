@@ -22,7 +22,7 @@ public class Asteroide extends Entity {
     protected int worldHeight;
 
     public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int worldWidth,int worldHeight) {
-        super(name, false, id, x, y, velocidadX, velocidadY, 32*(32/((worldWidth-worldHeight)*0.1)), 32*(32/((worldWidth-worldHeight)*0.1)));
+        super(name, false, id, x, y, velocidadX, velocidadY, 32*(32/((worldWidth)*0.1)), 32*(32/((worldWidth)*0.1)));
         this.worldWidth=worldWidth;
         this.worldHeight=worldHeight;
     }

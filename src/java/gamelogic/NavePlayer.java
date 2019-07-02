@@ -31,7 +31,7 @@ public class NavePlayer extends Nave {
 
     public NavePlayer(String name, String nombreJugador, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op, boolean bq, int resp, int t, int worldWidth,int worldHeight) {
         super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj,
-        64*(64/((worldWidth-worldHeight)*0.25)),64*(64/((worldWidth-worldHeight)*0.25)));
+        64*(64/((worldWidth)*0.25)),64*(64/((worldWidth)*0.25)));
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;

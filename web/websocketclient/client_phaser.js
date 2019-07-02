@@ -133,22 +133,22 @@ function create() {
     var galaxy = this.add.image((width-(width/4)), (height-(height/3)), 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
     
     //escalas
-    galaxy.scaleX=galaxy.height/(scale*10);
-    galaxy.scaleY=galaxy.width/(scale*10);
+    galaxy.scaleX=galaxy.height/(width*10);
+    galaxy.scaleY=galaxy.width/(width*10);
     //galaxy.scaleX=0.2;
     //galaxy.scaleY=0.2;
     //galaxy.setDepth(0);
 
     //sun.scaleX=0.2;
     //sun.scaleY=0.2;
-    sun.scaleX=sun.height/(scale*3);
-    sun.scaleY=sun.width/(scale*3);
+    sun.scaleX=sun.height/(width*3);
+    sun.scaleY=sun.width/(width*3);
     //sun.setDepth(0);
 
     //bluePlanet.scaleX=0.3;
     //bluePlanet.scaleY=0.3;
-    bluePlanet.scaleX=bluePlanet.height/(scale*6);
-    bluePlanet.scaleY=bluePlanet.width/(scale*6);
+    bluePlanet.scaleX=bluePlanet.height/(width*6);
+    bluePlanet.scaleY=bluePlanet.width/(width*6);
     background.setDepth(0);
 
     //efecto estres de luz
@@ -157,16 +157,16 @@ function create() {
         var eyes=this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
         //eyes.scaleY=0.4;
         //eyes.scaleY=0.4;
-        eyes.scaleX=eyes.height/(scale*2);
-        eyes.scaleY=eyes.width/(scale*2);
+        eyes.scaleX=eyes.height/(width*2);
+        eyes.scaleY=eyes.width/(width*2);
     }
     //estrellas
     stars = this.add.tileSprite(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 2000, 2000, 'stars').setScrollFactor(0);
 
     //stars.scaleX=0.2;
     //stars.scaleY=0.2;
-    stars.scaleX=stars.height/(scale*2);
-    stars.scaleY=stars.width/(scale*2);
+    stars.scaleX=stars.height/(width*2);
+    stars.scaleY=stars.width/(width*2);
 
     particles = this.add.particles('space');
 
@@ -258,7 +258,7 @@ function particle(ship, id) {
                 return (ship.angle - 180) + v;
             }
         },
-        scale: { start: (ship.height/(scale*0.30)), end: 0 },
+        scale: { start: (ship.width/(width*0.30)), end: 0 },
         blendMode: 'ADD'
     });
     punteroColor++;
@@ -331,8 +331,8 @@ window.onload = function () {
                     //players[id].scaleY=0.25;
                     //console.log(players[id].height);
                     //console.log(players[id].width);
-                    players[id].scaleX=players[id].height/(scale*0.25);
-                    players[id].scaleY=players[id].width/(scale*0.25);
+                    players[id].scaleX=players[id].height/(width*0.25);
+                    players[id].scaleY=players[id].width/(width*0.25);
 
                     /* Genero colision visual asteroide player*/
                     //for (let i = 0; i < asteroides.length; i++) {
@@ -392,8 +392,8 @@ window.onload = function () {
                     //console.log(asteroides[id].height);
                     //console.log(asteroides[id].width);
                     //console.log(scale/asteroides[id].height);
-                    asteroides[id].scaleX=asteroides[id].height/(scale*0.1);
-                    asteroides[id].scaleY=asteroides[id].width/(scale*0.1);
+                    asteroides[id].scaleX=asteroides[id].height/(width*0.1);
+                    asteroides[id].scaleY=asteroides[id].width/(width*0.1);
 
                 }
                 asteroides[id].y = y;
@@ -417,8 +417,8 @@ window.onload = function () {
                     neutras[id].setDepth(1);
                     //neutras[id].scaleX = 2;
                     //neutras[id].scaleY = 2;
-                    neutras[id].scaleX=neutras[id].height/(scale*0.1);
-                    neutras[id].scaleY=neutras[id].width/(scale*0.1);
+                    neutras[id].scaleX=neutras[id].height/(width*0.1);
+                    neutras[id].scaleY=neutras[id].width/(width*0.1);
 
                     /* Genero colision visual moneda player */
                     for (let i = 0; i < coins.length; i++) {
@@ -444,10 +444,10 @@ window.onload = function () {
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
                     //bullets[id].scaleX=0.2;
                     //bullets[id].scaleY=0.2;
-                    console.log(bullets[id].height);
-                    console.log(bullets[id].width);
-                    bullets[id].scaleX=bullets[id].width/(scale*0.2);
-                    bullets[id].scaleY=bullets[id].width/(scale*0.2);
+                    //console.log(bullets[id].height);
+                    //console.log(bullets[id].width);
+                    bullets[id].scaleX=bullets[id].width/(width*0.2);
+                    bullets[id].scaleY=bullets[id].width/(width*0.2);
                 }
                 /* cargo angulo y seteo coordenadas*/
                 bullets[id].angle = angulo;
@@ -473,8 +473,8 @@ window.onload = function () {
                     //coins[id].scaleY=0.3;
                     //console.log(coins[id].height/(scale*0.1));
                     //console.log(coins[id].width/(scale*0.1));
-                    coins[id].scaleX=coins[id].height/(scale*0.1);
-                    coins[id].scaleY=coins[id].width/(scale*0.1);
+                    coins[id].scaleX=coins[id].height/(height*0.1);
+                    coins[id].scaleY=coins[id].width/(height*0.1);
                 }
 
                 coins[id].y = y;

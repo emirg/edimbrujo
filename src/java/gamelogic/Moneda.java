@@ -22,7 +22,7 @@ public class Moneda extends Entity {
     protected int worldHeight;
 
     public Moneda(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int worldWidth, int worldHeight) {
-        super("Moneda", destroy, id, x, y, 0, 0, 32*(32/((worldWidth-worldHeight)*0.1)), 32*(32/((worldWidth-worldHeight)*0.1)));
+        super("Moneda", destroy, id, x, y, 0, 0, 32*(32/((worldHeight)*0.1)), 32*(32/((worldHeight)*0.1)));
         this.worldWidth=worldWidth;
         this.worldHeight=worldHeight;
     }

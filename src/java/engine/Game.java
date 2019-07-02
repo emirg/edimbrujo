@@ -33,7 +33,10 @@ public class Game implements Runnable {
 
     private Lobby lobby;
     private int width=1366;
-    private int height=639;
+    private int height=768;
+
+    //private int width=800;
+    //private int height=600;
 
     //constructor
     public Game(Lobby lobby) {
