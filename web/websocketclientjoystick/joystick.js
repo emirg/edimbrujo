@@ -42,15 +42,15 @@ function createJoystick(parent) {
             return;
         event.preventDefault();
         if (event.changedTouches) {
-            event.clientX = event.changedTouches[0].clientX;
-            event.clientY = event.changedTouches[0].clientY;
+            event.clientX = (event.changedTouches[0].clientX);
+            event.clientY = (event.changedTouches[0].clientY);
         }
-        const xDiff = event.clientX - dragStart.x;
-        const yDiff = event.clientY - dragStart.y;
+        const xDiff = (event.clientX - dragStart.x);
+        const yDiff = (event.clientY - dragStart.y);
         const angle = Math.atan2(yDiff, xDiff);
         const distance = Math.min(maxDiff, Math.hypot(xDiff, yDiff));
-        const xNew = distance * Math.cos(angle);
-        const yNew = distance * Math.sin(angle);
+        const xNew = (distance * Math.cos(angle))*0.2;
+        const yNew = (distance * Math.sin(angle))*0.2;
         stick.style.transform = `translate3d(${xNew}px, ${yNew}px, 0px)`; // Actualizo la posicion
         currentPos = { x: xNew, y: yNew };
         //posSend = {name: "move", x: yNew, y: -xNew};

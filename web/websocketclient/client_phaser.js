@@ -124,7 +124,8 @@ function create() {
     this.physics.world.setBounds(0, 0, width, height);
 
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
-    background = this.add.tileSprite(0, 0, 2000, 2000, 'background').setScrollFactor(0);
+    background = this.add.tileSprite(0, 0, screen.width*2, screen.height*2, 'background').setScrollFactor(0);
+    background.setDepth(0);
     //  agrego planetas ,etc
     var bluePlanet=this.add.image(100, 100, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
     var sun=this.add.image(600, 100, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
@@ -133,12 +134,15 @@ function create() {
     //escalas
     galaxy.scaleX=0.2;
     galaxy.scaleY=0.2;
+    background.setDepth(0);
 
     sun.scaleX=0.2;
     sun.scaleY=0.2;
+    background.setDepth(0);
 
     bluePlanet.scaleX=0.3;
     bluePlanet.scaleY=0.3;
+    background.setDepth(0);
 
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
@@ -225,7 +229,7 @@ function update(time, delta) {
 function particle(ship, id) {
     var emitter = particles.createEmitter({
         frame: '' + colors[punteroColor],
-        speed: 100,
+        speed: 15,
         lifespan: {
             onEmit: function (particle, key, t, value) {
                 return 500;
@@ -233,7 +237,7 @@ function particle(ship, id) {
         },
         alpha: {
             onEmit: function (particle, key, t, value) {
-                return 90;
+                return 100;
             }
         },
         angle: {
@@ -253,9 +257,9 @@ function particle(ship, id) {
     emitter.startFollow(ship);
 }
 
-function hitAsteroide(player, asteroide) {
-    game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim');
-}
+//function hitAsteroide(player, asteroide) {
+//    game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim');
+//}
 
 
 window.onload = function () {
@@ -311,17 +315,17 @@ window.onload = function () {
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
                     players[id].setDepth(1);
                     players[id].setCollideWorldBounds(true);
-                    players[id].scaleX=0.2;
-                    players[id].scaleY=0.2;
+                    players[id].scaleX=0.25;
+                    players[id].scaleY=0.25;
 
                     /* Genero colision visual asteroide player*/
-                    for (let i = 0; i < asteroides.length; i++) {
-                        game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
-                    }
+                    //for (let i = 0; i < asteroides.length; i++) {
+                    //    game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
+                    //}
                     /* Genero colision visual moneda player */
-                    for (let i = 0; i < coins.length; i++) {
-                        game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
-                    }
+                    //for (let i = 0; i < coins.length; i++) {
+                    //    game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
+                    //}
                     if (particles !== undefined) {
                         particle(players[id], id);
                     }
@@ -333,7 +337,7 @@ window.onload = function () {
                 players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
-                players[id].z = 0;
+                players[id].z = y;
 
                 if (leave) {
                     players[id].destroy();
@@ -366,8 +370,8 @@ window.onload = function () {
                 if (asteroides[id] == null) {
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
-                    asteroides[id].scaleX=0.5;
-                    asteroides[id].scaleY=0.5;
+                    asteroides[id].scaleX=0.4;
+                    asteroides[id].scaleY=0.4;
 
                 }
                 asteroides[id].y = y;
