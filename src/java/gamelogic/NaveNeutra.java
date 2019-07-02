@@ -21,16 +21,21 @@ public class NaveNeutra extends Nave {
     public String idPropietario;
     public boolean disponible;
     protected int idBullets;
+    protected int worldWidth;
+    protected int worldHeight;
 
     public NaveNeutra(String name, boolean destroy, String id, double x, double y, double velocidadX,
             double velocidadY, double xDir, double yDir, int cantProj,
-            boolean disponible, String idPropietario, int idBullets) {
+            boolean disponible, String idPropietario, int idBullets, int worldWidth,int worldHeight) {
 
-        super("NaveNeutra", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
+        super("NaveNeutra", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj,
+            64*(64/((worldWidth-worldHeight)*0.25)),12*(12/((worldWidth-worldHeight)*0.25)));
 
         this.disponible = disponible;
         this.idPropietario = idPropietario;
         this.idBullets = idBullets;
+        this.worldWidth=worldWidth;
+        this.worldHeight=worldHeight;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class NaveNeutra extends Nave {
                             case "fire":
                                 String idAux = id + "" + idBullets; // id de la bala
                                 // Temporalmente, los proyectiles generados por la nave neutra tienen el mismo id del propietario (sino la bala cuenta como la de un enemigo)
-                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, idPropietario, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
+                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, idPropietario, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0,worldWidth,worldHeight);
                                 listProyectil.add(proyectil);
                                 idBullets++;
                                 break;
@@ -182,7 +187,7 @@ public class NaveNeutra extends Nave {
         }
 
         NaveNeutra nuevaNeutra = new NaveNeutra(name, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
-                nuevaDirX, nuevaDirY, nuevosProyectiles, nuevaDisponibilidad, nuevoIdPropietario, nuevoIdBullets);
+                nuevaDirX, nuevaDirY, nuevosProyectiles, nuevaDisponibilidad, nuevoIdPropietario, nuevoIdBullets,worldWidth,worldHeight);
 
         /* NaveNeutra nuevaNeutra = new NaveNeutra(name,destruido, id, nuevoX, nuevoY, nuevaVelX, 
                 nuevaVelY,nuevaDirX,nuevaDirY, nuevosProyectiles, nuevoPropietario,nuevoPos,nuevoIdP);*/

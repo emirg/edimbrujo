@@ -13,11 +13,14 @@ import engine.StaticState;
 public class World extends State {
 
     protected LinkedList<String> players;
+    protected int width;
+    protected int height;
 
-    public World(LinkedList<String> players,
-            String name, boolean destroy, String id) {
+    public World(LinkedList<String> players,String name, boolean destroy, String id,int worldWidth,int worldHeight) {
         super(name, destroy, id == null ? UUID.randomUUID().toString() : id);
         this.players = players;
+        this.width=worldWidth;
+        this.height=worldHeight;
     }
 
     private void updatePlayers(LinkedList<State> states, LinkedList<State> newStates, HashMap<String, LinkedList<Action>> actions) {
@@ -29,10 +32,8 @@ public class World extends State {
             for (Action action : actionsList) {
                 switch (action.getName()) {
                     case "start":
-
-                       
                         NavePlayer newPlayer = new NavePlayer("NavePlayer", null, false, id, 200, 200, 0, 0, 1, 0, 100, 100,
-                                0, 0, false, false, "", null, false, -1,0);
+                                0, 0, false, false, "", null, false, -1,0,width,height);
 
                    /*     int [] op = new int [3];
                         NavePlayer newPlayer = new NavePlayer("NavePlayer",false, id, 200, 200, 0, 0,1,0, 100, 100, 0, 0, false, false,"",op,false,-1);
@@ -84,7 +85,7 @@ public class World extends State {
                 }
             }
         }
-        World newWorld = new World(newPlayers, name, destroy, id);
+        World newWorld = new World(newPlayers, name, destroy, id,width,height);
         return newWorld;
     }
 
@@ -96,7 +97,7 @@ public class World extends State {
 
     @Override
     protected Object clone() {
-        World clon = new World(players, name, destroy, id);
+        World clon = new World(players, name, destroy, id,width,height);
         return clon;
     }
 

@@ -24,12 +24,16 @@ public class Desafio extends State {
     public String pregunta;
     public String[] opciones;
     public int correcta;
+    protected int worldWidth;
+    protected int worldHeight;
 
-    public Desafio(String name, boolean destroy, String id, String idNeutra, String idPlayer) {
+    public Desafio(String name, boolean destroy, String id, String idNeutra, String idPlayer, int worldWidth,int worldHeight) {
         super(name, destroy, id);   
         this.idNaveNeutra = idNeutra;
         this.idNavePlayer = idPlayer;
         this.opciones = new String[] { "" , "" , "" };
+        this.worldWidth=worldWidth;
+        this.worldHeight=worldHeight;
 
         Random r = new Random();
         int numeroPregunta1 = r.nextInt(100);
@@ -77,13 +81,13 @@ public class Desafio extends State {
                                 neutra.addEvent("destruir"); // Por que destruir la neutra? 
 
                                 neutras.add(new NaveNeutra(neutra.name, neutra.destroy, this.idNaveNeutra, neutra.x, neutra.y, neutra.velocidad.x, neutra.velocidad.y,
-                                        neutra.direccion.x, neutra.direccion.y, neutra.countProyectil, true, this.idNavePlayer, neutra.idBullets));
+                                        neutra.direccion.x, neutra.direccion.y, neutra.countProyectil, true, this.idNavePlayer, neutra.idBullets,worldWidth,worldHeight));
                             } else {
                                 jugador.addEvent("incorrecta");
                                 neutra.addEvent("destruir");
 
                                 neutras.add(new NaveNeutra(neutra.name, neutra.destroy, this.idNaveNeutra, neutra.x, neutra.y, neutra.velocidad.x, neutra.velocidad.y,
-                                        neutra.direccion.x, neutra.direccion.y, neutra.countProyectil, true, "", neutra.idBullets));
+                                        neutra.direccion.x, neutra.direccion.y, neutra.countProyectil, true, "", neutra.idBullets,worldWidth,worldHeight));
                             }
                             jugador.addEvent("liberar");
                             this.addEvent("destruir");
@@ -114,7 +118,7 @@ public class Desafio extends State {
                 }
             }
         }
-        Desafio nuevoDesafio = new Desafio(name, nuevoDes, id, this.idNaveNeutra, this.idNavePlayer);
+        Desafio nuevoDesafio = new Desafio(name, nuevoDes, id, this.idNaveNeutra, this.idNavePlayer,worldWidth,worldHeight);
 
         return nuevoDesafio;
     }

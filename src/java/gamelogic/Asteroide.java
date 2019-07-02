@@ -18,9 +18,13 @@ import org.json.simple.JSONObject;
  * @author emiliano
  */
 public class Asteroide extends Entity {
+    protected int worldWidth;
+    protected int worldHeight;
 
-    public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY) {
-        super(name, false, id, x, y, velocidadX, velocidadY, (64*0.4), (64*0.4));
+    public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int worldWidth,int worldHeight) {
+        super(name, false, id, x, y, velocidadX, velocidadY, 32*(32/((worldWidth-worldHeight)*0.1)), 32*(32/((worldWidth-worldHeight)*0.1)));
+        this.worldWidth=worldWidth;
+        this.worldHeight=worldHeight;
     }
 
     @Override
@@ -56,10 +60,10 @@ public class Asteroide extends Entity {
         double nuevoX = x + velocidad.x;
         double nuevoY = y + velocidad.y;
         // La velocidad es constante 
-        if (nuevoX > 800) {
+        if (nuevoX > worldWidth) {
             nuevoX = 0;
         }
-        Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y);
+        Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y,worldWidth,worldHeight);
         return newAsteroide;
     }
 

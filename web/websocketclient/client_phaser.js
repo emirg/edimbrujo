@@ -52,6 +52,7 @@ var tablaPuntajes = [];
 var colors = [];
 var emitters = [];
 var punteroColor = 0;
+var scale=width-height;
 
 
 function preload() {
@@ -124,37 +125,48 @@ function create() {
     this.physics.world.setBounds(0, 0, width, height);
 
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
-    background = this.add.tileSprite(0, 0, screen.width*2, screen.height*2, 'background').setScrollFactor(0);
+    background = this.add.tileSprite(0, 0, width*2, height*2, 'background').setScrollFactor(0);
     background.setDepth(0);
     //  agrego planetas ,etc
-    var bluePlanet=this.add.image(100, 100, 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
-    var sun=this.add.image(600, 100, 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    var galaxy = this.add.image(700, 400, 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
+    var bluePlanet=this.add.image((width-(width/1.1)),(height-(height/1.3)), 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
+    var sun=this.add.image((width-(width/2.1)), (height-(height/1.1)), 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
+    var galaxy = this.add.image((width-(width/4)), (height-(height/3)), 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
     
     //escalas
-    galaxy.scaleX=0.2;
-    galaxy.scaleY=0.2;
-    background.setDepth(0);
+    galaxy.scaleX=galaxy.height/(scale*10);
+    galaxy.scaleY=galaxy.width/(scale*10);
+    //galaxy.scaleX=0.2;
+    //galaxy.scaleY=0.2;
+    //galaxy.setDepth(0);
 
-    sun.scaleX=0.2;
-    sun.scaleY=0.2;
-    background.setDepth(0);
+    //sun.scaleX=0.2;
+    //sun.scaleY=0.2;
+    sun.scaleX=sun.height/(scale*3);
+    sun.scaleY=sun.width/(scale*3);
+    //sun.setDepth(0);
 
-    bluePlanet.scaleX=0.3;
-    bluePlanet.scaleY=0.3;
+    //bluePlanet.scaleX=0.3;
+    //bluePlanet.scaleY=0.3;
+    bluePlanet.scaleX=bluePlanet.height/(scale*6);
+    bluePlanet.scaleY=bluePlanet.width/(scale*6);
     background.setDepth(0);
 
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
         var eyes=this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
-        eyes.scaleY=0.4;
+        //eyes.scaleY=0.4;
+        //eyes.scaleY=0.4;
+        eyes.scaleX=eyes.height/(scale*2);
+        eyes.scaleY=eyes.width/(scale*2);
     }
     //estrellas
     stars = this.add.tileSprite(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 2000, 2000, 'stars').setScrollFactor(0);
 
-    stars.scaleX=0.2;
-    stars.scaleY=0.2;
+    //stars.scaleX=0.2;
+    //stars.scaleY=0.2;
+    stars.scaleX=stars.height/(scale*2);
+    stars.scaleY=stars.width/(scale*2);
 
     particles = this.add.particles('space');
 
@@ -246,7 +258,7 @@ function particle(ship, id) {
                 return (ship.angle - 180) + v;
             }
         },
-        scale: { start: 0.2, end: 0 },
+        scale: { start: (ship.height/(scale*0.30)), end: 0 },
         blendMode: 'ADD'
     });
     punteroColor++;
@@ -315,8 +327,12 @@ window.onload = function () {
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
                     players[id].setDepth(1);
                     players[id].setCollideWorldBounds(true);
-                    players[id].scaleX=0.25;
-                    players[id].scaleY=0.25;
+                    //players[id].scaleX=0.25;
+                    //players[id].scaleY=0.25;
+                    //console.log(players[id].height);
+                    //console.log(players[id].width);
+                    players[id].scaleX=players[id].height/(scale*0.25);
+                    players[id].scaleY=players[id].width/(scale*0.25);
 
                     /* Genero colision visual asteroide player*/
                     //for (let i = 0; i < asteroides.length; i++) {
@@ -370,8 +386,14 @@ window.onload = function () {
                 if (asteroides[id] == null) {
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
-                    asteroides[id].scaleX=0.4;
-                    asteroides[id].scaleY=0.4;
+                    //asteroides[id].scaleX=0.4;
+                    //asteroides[id].scaleY=0.4;
+                    //console.log(scale);
+                    //console.log(asteroides[id].height);
+                    //console.log(asteroides[id].width);
+                    //console.log(scale/asteroides[id].height);
+                    asteroides[id].scaleX=asteroides[id].height/(scale*0.1);
+                    asteroides[id].scaleY=asteroides[id].width/(scale*0.1);
 
                 }
                 asteroides[id].y = y;
@@ -393,8 +415,10 @@ window.onload = function () {
                 if (neutras[id] == null) {
                     neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
                     neutras[id].setDepth(1);
-                    neutras[id].scaleX = 2;
-                    neutras[id].scaleY = 2;
+                    //neutras[id].scaleX = 2;
+                    //neutras[id].scaleY = 2;
+                    neutras[id].scaleX=neutras[id].height/(scale*0.1);
+                    neutras[id].scaleY=neutras[id].width/(scale*0.1);
 
                     /* Genero colision visual moneda player */
                     for (let i = 0; i < coins.length; i++) {
@@ -418,8 +442,12 @@ window.onload = function () {
                 /* si no exitia un bala con ese mismo id la creo*/
                 if (bullets[id] == null) {
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
-                    bullets[id].scaleX=0.2;
-                    bullets[id].scaleY=0.2;
+                    //bullets[id].scaleX=0.2;
+                    //bullets[id].scaleY=0.2;
+                    console.log(bullets[id].height);
+                    console.log(bullets[id].width);
+                    bullets[id].scaleX=bullets[id].width/(scale*0.2);
+                    bullets[id].scaleY=bullets[id].width/(scale*0.2);
                 }
                 /* cargo angulo y seteo coordenadas*/
                 bullets[id].angle = angulo;
@@ -441,8 +469,12 @@ window.onload = function () {
                 if (coins[id] == null) {
                     coins[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     coins[id].setDepth(1);
-                    coins[id].scaleX=0.3;
-                    coins[id].scaleY=0.3;
+                    //coins[id].scaleX=0.3;
+                    //coins[id].scaleY=0.3;
+                    //console.log(coins[id].height/(scale*0.1));
+                    //console.log(coins[id].width/(scale*0.1));
+                    coins[id].scaleX=coins[id].height/(scale*0.1);
+                    coins[id].scaleY=coins[id].width/(scale*0.1);
                 }
 
                 coins[id].y = y;

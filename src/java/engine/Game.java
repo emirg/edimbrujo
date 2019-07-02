@@ -32,6 +32,8 @@ public class Game implements Runnable {
     private boolean endGame;
 
     private Lobby lobby;
+    private int width=1366;
+    private int height=639;
 
     //constructor
     public Game(Lobby lobby) {
@@ -106,25 +108,25 @@ public class Game implements Runnable {
 
     public void init() {
         //TODO crear estados dinamicos y estaticos
-        states.add(new World(new LinkedList(), "World", false, null));
+        states.add(new World(new LinkedList(), "World", false, null,width,height));
         createSpawns();
     }
 
     public void createSpawns() {
         Random r = new Random();
-        int width = 800; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
-        int height = 600;
+        //int width = 1366; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
+        //int height = 639;
         int x, y;
 
-        states.add(new Asteroide("Asteroide", false, "0", 0, 100, 10, 0)); // Capaz convenga que el id sea 
-        states.add(new Asteroide("Asteroide", false, "1", 100, 250, 12, 0)); // algo mas significativo como
-        states.add(new Asteroide("Asteroide", false, "2", 50, 350, 15, 0)); // "asteroideX" con X el numero
-        states.add(new Asteroide("Asteroide", false, "3", 200, 550, 18, 0));
+        states.add(new Asteroide("Asteroide", false, "0", 0, 100, 10, 0,width,height)); // Capaz convenga que el id sea 
+        states.add(new Asteroide("Asteroide", false, "1", 100, 250, 12, 0,width,height)); // algo mas significativo como
+        states.add(new Asteroide("Asteroide", false, "2", 50, 350, 15, 0,width,height)); // "asteroideX" con X el numero
+        states.add(new Asteroide("Asteroide", false, "3", 200, 550, 18, 0,width,height));
 
         for (int i = 0; i < 10; i++) {
             x = r.nextInt(width);
             y = r.nextInt(height);
-            states.add(new Moneda("Moneda", false,""+i, x, y, 0, 0, 0, 0));
+            states.add(new Moneda("Moneda", false,""+i, x, y, 0, 0, width, height));
         }
         /**
          * (String name, boolean destroy, String id, double x, double y, double velocidadX, 

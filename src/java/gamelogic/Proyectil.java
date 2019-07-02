@@ -15,14 +15,18 @@ public class Proyectil extends Entity {
     protected Vector2 direccion;
     protected double angulo;
     protected double VELOCIDAD_MAX = 25;
+    protected int worldWidth;
+    protected int worldHeight;
 
-    public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, double angulo, int number) {
-        super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, (64*0.2), (12*0.2));
+    public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, double angulo, int number,int worldWidth,int worldHeight) {
+        super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 64*(64/((worldWidth-worldHeight)*0.1)), 12*(12/((worldWidth-worldHeight)*0.1)));
         this.velocidad.set(xDir, yDir).setMagnitude(VELOCIDAD_MAX);
         this.number = number;
         this.idPlayer = idPlayer;
         this.angulo = angulo;
         this.direccion = new Vector2(xDir, yDir);
+        this.worldWidth=worldWidth;
+        this.worldHeight=worldHeight;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class Proyectil extends Entity {
                 }
             }
         }
-        Proyectil newArrow = new Proyectil(name, destruido, id, idPlayer, nuevoX, nuevoY, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, number);
+        Proyectil newArrow = new Proyectil(name, destruido, id, idPlayer, nuevoX, nuevoY, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, number,worldWidth,worldHeight);
         return newArrow;
     }
 
@@ -80,7 +84,7 @@ public class Proyectil extends Entity {
 
     @Override
     protected Object clone() {
-        Proyectil clon = new Proyectil(name, destroy, id, idPlayer, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, number);
+        Proyectil clon = new Proyectil(name, destroy, id, idPlayer, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, number,worldWidth,worldHeight);
         return clon;
     }
 

@@ -26,14 +26,12 @@ public class NavePlayer extends Nave {
     private int respuesta;
     private String idDesafio;
     private int tiempo;
+    protected int worldWidth;
+    protected int worldHeight;
 
-    public NavePlayer(String name, String nombreJugador, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op, boolean bq, int resp, int t) {
-        super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj);
-
-        /*public NavePlayer(String name,boolean destroy, String id, double x, double y, double velocidadX, double velocidadY,double xDir,
-            double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, int [] op,
-            boolean bq, int resp) {
-        super("NavePlayer",destroy,id, x, y, velocidadX, velocidadY,xDir,yDir, cantProj);*/
+    public NavePlayer(String name, String nombreJugador, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op, boolean bq, int resp, int t, int worldWidth,int worldHeight) {
+        super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj,
+        64*(64/((worldWidth-worldHeight)*0.25)),64*(64/((worldWidth-worldHeight)*0.25)));
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
@@ -48,6 +46,8 @@ public class NavePlayer extends Nave {
         this.tiempo = t;
         this.nombreJugador = nombreJugador;
         // this.idDesafio = des;
+        this.worldWidth=worldWidth;
+        this.worldHeight=worldHeight;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class NavePlayer extends Nave {
                             case "fire":
                                 String idAux = id + "" + idBullets;
                                 //Vector2 velocidadProyectil = velocidad.copy().setMagnitude(60); // Temporal
-                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0);
+                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0,worldWidth,worldHeight);
                                 listProyectil.add(proyectil);
                                 idBullets++;
                         }
@@ -118,7 +118,7 @@ public class NavePlayer extends Nave {
 
                         }
                         if (creaDesafio) {
-                            Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id);
+                            Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id,worldWidth,worldHeight);
                             this.addEvent("desafiar");
                             listProyectil.add(desa); // Por que agregar el desafio a la lista de proyectiles?
                         }
@@ -322,7 +322,7 @@ public class NavePlayer extends Nave {
         }
         NavePlayer nuevoJugador = new NavePlayer(name, nuevoNombreJugador, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
                 nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,
-                nuevaPregunta, op, estaBloqueado, nuevaRespuesta, nuevoTiempo);
+                nuevaPregunta, op, estaBloqueado, nuevaRespuesta, nuevoTiempo,worldWidth,worldHeight);
 
         //  NavePlayer nuevoJugador = new NavePlayer(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,pregunta,opciones,estaBq,respuesta);
         return nuevoJugador;
