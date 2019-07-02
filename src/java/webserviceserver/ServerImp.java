@@ -80,6 +80,18 @@ public class ServerImp {
         return "okey";
     }
 
+    @GET
+    @Path("/actionAnswer")
+    public String move(@QueryParam("respuesta") String x, @QueryParam("session") String session) {
+
+        lobby = Lobby.startGame();
+        //String move = "{\"name\": \"move\", \"priority\": \"0\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
+        String res = "{\"name\": \"respuesta\", \"priority\": \"0\",\"parameters\": [{\"name\": \"opcionElegida\", \"value\": \"" + x + "\"}]}";
+
+        System.out.println(res);
+        lobby.addAction(session, res);
+        return "okey";
+    }
 
     @GET
     @Path("/getFullState")
