@@ -417,8 +417,8 @@ window.onload = function () {
                     neutras[id].setDepth(1);
                     //neutras[id].scaleX = 2;
                     //neutras[id].scaleY = 2;
-                    neutras[id].scaleX=neutras[id].height/(width*0.1);
-                    neutras[id].scaleY=neutras[id].width/(width*0.1);
+                    neutras[id].scaleX=neutras[id].height/(height*0.09);
+                    neutras[id].scaleY=neutras[id].width/(height*0.09);
 
                     /* Genero colision visual moneda player */
                     for (let i = 0; i < coins.length; i++) {

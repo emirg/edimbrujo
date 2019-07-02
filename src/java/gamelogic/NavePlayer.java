@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 
 public class NavePlayer extends Nave {
 
-    private final int DISTANCIA_ALIANZA = 150;
+    private int DISTANCIA_ALIANZA;
 
     protected String nombreJugador;
     protected int health;
@@ -48,6 +48,7 @@ public class NavePlayer extends Nave {
         // this.idDesafio = des;
         this.worldWidth=worldWidth;
         this.worldHeight=worldHeight;
+        this.DISTANCIA_ALIANZA=(worldWidth-worldHeight)/50;
     }
 
     @Override

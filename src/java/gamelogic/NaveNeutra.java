@@ -29,7 +29,7 @@ public class NaveNeutra extends Nave {
             boolean disponible, String idPropietario, int idBullets, int worldWidth,int worldHeight) {
 
         super("NaveNeutra", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj,
-            64*(64/((worldWidth)*0.25)),12*(12/((worldWidth)*0.25)));
+            64*(64/((worldHeight)*0.25)),12*(12/((worldHeight)*0.25)));
 
         this.disponible = disponible;
         this.idPropietario = idPropietario;
