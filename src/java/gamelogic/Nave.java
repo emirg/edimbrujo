@@ -26,7 +26,7 @@ public abstract class Nave extends Entity {
 
     //depende de como tratemos la orientacion puede no ser un int
     public Nave(String name,boolean destroy ,String id, double x, double y, double velocidadX, double velocidadY,double xDir, double yDir, int cantProj) {
-        super(name, destroy, id, x, y, velocidadX, velocidadY, 64, 64);
+        super(name, destroy, id, x, y, velocidadX, velocidadY, (64*0.25), (64*0.25));
         this.countProyectil = cantProj;
         this.direccion = new Vector2(xDir,yDir);
         this.angulo = direccion.getDirection()*(180/Math.PI);

@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
 public class Moneda extends Entity {
 
     public Moneda(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double width, double height) {
-        super("Moneda", destroy, id, x, y, 0, 0, 32, 32);
+        super("Moneda", destroy, id, x, y, 0, 0, (32*0.3), (32*0.3));
     }
 
     @Override
@@ -48,8 +48,8 @@ public class Moneda extends Entity {
         boolean destruido = false;
         double nuevoX = x;
         double nuevoY = y;
-        int widthWorld = 4500; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
-        int heightWorld = 2048;
+        int widthWorld = 800; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
+        int heightWorld = 600;
         hasChanged = true;
         LinkedList<String> events = getEvents();
         if (!events.isEmpty()) {

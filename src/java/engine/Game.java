@@ -54,7 +54,7 @@ public class Game implements Runnable {
         LinkedList<State> newStates;
         while (!endGame) {
             try {
-                Thread.sleep(70); //time per frame (10 fps)
+                Thread.sleep(100); //time per frame (10 fps)
                 //readPlayers();
                 readActions();
                 //se realizan las comunicaciones a traves de eventos y 
@@ -116,10 +116,10 @@ public class Game implements Runnable {
         int height = 600;
         int x, y;
 
-        states.add(new Asteroide("Asteroide", false, "0", 0, 100, 30, 0)); // Capaz convenga que el id sea 
-        states.add(new Asteroide("Asteroide", false, "1", 100, 250, 30, 0)); // algo mas significativo como
-        states.add(new Asteroide("Asteroide", false, "2", 50, 350, 30, 0)); // "asteroideX" con X el numero
-        states.add(new Asteroide("Asteroide", false, "3", 200, 550, 30, 0));
+        states.add(new Asteroide("Asteroide", false, "0", 0, 100, 10, 0)); // Capaz convenga que el id sea 
+        states.add(new Asteroide("Asteroide", false, "1", 100, 250, 12, 0)); // algo mas significativo como
+        states.add(new Asteroide("Asteroide", false, "2", 50, 350, 15, 0)); // "asteroideX" con X el numero
+        states.add(new Asteroide("Asteroide", false, "3", 200, 550, 18, 0));
 
         for (int i = 0; i < 10; i++) {
             x = r.nextInt(width);

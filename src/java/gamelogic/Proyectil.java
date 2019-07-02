@@ -17,7 +17,7 @@ public class Proyectil extends Entity {
     protected double VELOCIDAD_MAX = 25;
 
     public Proyectil(String name, boolean destroy, String id, String idPlayer, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, double angulo, int number) {
-        super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, 64, 12);
+        super("Proyectil", destroy, id, x, y, velocidadX, velocidadY, (64*0.2), (12*0.2));
         this.velocidad.set(xDir, yDir).setMagnitude(VELOCIDAD_MAX);
         this.number = number;
         this.idPlayer = idPlayer;

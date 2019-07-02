@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
 public class Asteroide extends Entity {
 
     public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY) {
-        super(name, false, id, x, y, velocidadX, velocidadY, 64, 64);
+        super(name, false, id, x, y, velocidadX, velocidadY, (64*0.4), (64*0.4));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Asteroide extends Entity {
         double nuevoX = x + velocidad.x;
         double nuevoY = y + velocidad.y;
         // La velocidad es constante 
-        if (nuevoX > 5000) {
+        if (nuevoX > 800) {
             nuevoX = 0;
         }
         Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y);
