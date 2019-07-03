@@ -13,7 +13,7 @@ var config = {
         default: "arcade",
         arcade: {
             fps: 60,
-            gravity: { y: 0 }
+            gravity: {y: 0}
         }
     },
     scene: {
@@ -22,25 +22,20 @@ var config = {
         update: update
     }
 };
-
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMENTARIOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //error particulas , se rompe con tres 
 
 var game = new Phaser.Game(config);
-
 //coneccion
 var socket;
 var socketID = "";
 var objetosNuevos = [];
 //cursor
 var cursors;
-
 //dimensiones juego
 var width = window.innerWidth;
 var height = window.innerHeight;
-
-
 //arreglos
 var asteroides = [];
 var players = [];
@@ -52,9 +47,8 @@ var tablaPuntajes = [];
 var colors = [];
 var emitters = [];
 var punteroColor = 0;
-var scale=width-height;
-
-
+var scale = width - height;
+var canvas = document.querySelector("canvas");
 function preload() {
     //backgroud
     this.load.image('background', 'assets/space/nebula.jpg');
@@ -71,13 +65,11 @@ function preload() {
         frameWidth: 64,
         frameHeight: 12
     });
-
     // nave neutra
     this.load.spritesheet('shipNeutra', 'assets/sprites/thrust_ship.png', {
         frameWidth: 21,
         frameHeight: 28
     });
-
     //coins
     this.load.spritesheet("coin", "assets/sprites/coin.png", {
         frameWidth: 32,
@@ -104,73 +96,66 @@ function create() {
 
     //console.log("CREATE");
     //  Prepare some spritesheets and animations
-    this.textures.addSpriteSheetFromAtlas('mine-sheet', { atlas: 'space', frame: 'mine', frameWidth: 64 });
-    this.textures.addSpriteSheetFromAtlas('asteroid1-sheet', { atlas: 'space', frame: 'asteroid1', frameWidth: 96 });
-    this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', { atlas: 'space', frame: 'asteroid2', frameWidth: 96 });
-    this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', { atlas: 'space', frame: 'asteroid3', frameWidth: 96 });
-    this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', { atlas: 'space', frame: 'asteroid4', frameWidth: 64 });
+    this.textures.addSpriteSheetFromAtlas('mine-sheet', {atlas: 'space', frame: 'mine', frameWidth: 64});
+    this.textures.addSpriteSheetFromAtlas('asteroid1-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
+    this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', {atlas: 'space', frame: 'asteroid2', frameWidth: 96});
+    this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', {atlas: 'space', frame: 'asteroid3', frameWidth: 96});
+    this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', {atlas: 'space', frame: 'asteroid4', frameWidth: 64});
     //this.textures.addSpriteSheetFromAtlas('explosion-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
 
 
 
-    this.anims.create({ key: 'mine-anim', frames: this.anims.generateFrameNumbers('mine-sheet', { start: 0, end: 15 }), frameRate: 20, repeat: -1 });
-    this.anims.create({ key: 'asteroid1-anim', frames: this.anims.generateFrameNumbers('asteroid1-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
-    this.anims.create({ key: 'asteroid2-anim', frames: this.anims.generateFrameNumbers('asteroid2-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
-    this.anims.create({ key: 'asteroid3-anim', frames: this.anims.generateFrameNumbers('asteroid3-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
-    this.anims.create({ key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
-    this.anims.create({ key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 5 }), frameRate: 10, repeat: -1 });
-    this.anims.create({ key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 23 }), frameRate: 100, repeat: 1 });
-    this.anims.create({ key: 'neutra-anim', frames: this.anims.generateFrameNumbers('shipNeutra', { start: 0, end: 0 }), frameRate: 20, repeat: -1 });
-
+    this.anims.create({key: 'mine-anim', frames: this.anims.generateFrameNumbers('mine-sheet', {start: 0, end: 15}), frameRate: 20, repeat: -1});
+    this.anims.create({key: 'asteroid1-anim', frames: this.anims.generateFrameNumbers('asteroid1-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
+    this.anims.create({key: 'asteroid2-anim', frames: this.anims.generateFrameNumbers('asteroid2-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
+    this.anims.create({key: 'asteroid3-anim', frames: this.anims.generateFrameNumbers('asteroid3-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
+    this.anims.create({key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
+    this.anims.create({key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 5}), frameRate: 10, repeat: -1});
+    this.anims.create({key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 23}), frameRate: 100, repeat: 1});
+    this.anims.create({key: 'neutra-anim', frames: this.anims.generateFrameNumbers('shipNeutra', {start: 0, end: 0}), frameRate: 20, repeat: -1});
     //world 2048*2048
     this.physics.world.setBounds(0, 0, width, height);
-
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
-    background = this.add.tileSprite(0, 0, width*2, height*2, 'background').setScrollFactor(0);
+    background = this.add.tileSprite(0, 0, width * 2, height * 2, 'background').setScrollFactor(0);
     background.setDepth(0);
     //  agrego planetas ,etc
-    var bluePlanet=this.add.image((width-(width/1.1)),(height-(height/1.3)), 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
-    var sun=this.add.image((width-(width/2.1)), (height-(height/1.1)), 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
-    var galaxy = this.add.image((width-(width/4)), (height-(height/3)), 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
-    
+    var bluePlanet = this.add.image((width - (width / 1.1)), (height - (height / 1.3)), 'space', 'blue-planet').setOrigin(0).setScrollFactor(0.6);
+    var sun = this.add.image((width - (width / 2.1)), (height - (height / 1.1)), 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
+    var galaxy = this.add.image((width - (width / 4)), (height - (height / 3)), 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
     //escalas
-    galaxy.scaleX=galaxy.height/(width*10);
-    galaxy.scaleY=galaxy.width/(width*10);
+    galaxy.scaleX = galaxy.height / (width * 10);
+    galaxy.scaleY = galaxy.width / (width * 10);
     //galaxy.scaleX=0.2;
     //galaxy.scaleY=0.2;
     //galaxy.setDepth(0);
 
     //sun.scaleX=0.2;
     //sun.scaleY=0.2;
-    sun.scaleX=sun.height/(width*3);
-    sun.scaleY=sun.width/(width*3);
+    sun.scaleX = sun.height / (width * 3);
+    sun.scaleY = sun.width / (width * 3);
     //sun.setDepth(0);
 
     //bluePlanet.scaleX=0.3;
     //bluePlanet.scaleY=0.3;
-    bluePlanet.scaleX=bluePlanet.height/(width*6);
-    bluePlanet.scaleY=bluePlanet.width/(width*6);
+    bluePlanet.scaleX = bluePlanet.height / (width * 6);
+    bluePlanet.scaleY = bluePlanet.width / (width * 6);
     background.setDepth(0);
-
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
-        var eyes=this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
+        var eyes = this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
         //eyes.scaleY=0.4;
         //eyes.scaleY=0.4;
-        eyes.scaleX=eyes.height/(width*2);
-        eyes.scaleY=eyes.width/(width*2);
+        eyes.scaleX = eyes.height / (width * 2);
+        eyes.scaleY = eyes.width / (width * 2);
     }
-    //estrellas
+//estrellas
     stars = this.add.tileSprite(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 2000, 2000, 'stars').setScrollFactor(0);
-
     //stars.scaleX=0.2;
     //stars.scaleY=0.2;
-    stars.scaleX=stars.height/(width*2);
-    stars.scaleY=stars.width/(width*2);
-
+    stars.scaleX = stars.height / (width * 2);
+    stars.scaleY = stars.width / (width * 2);
     particles = this.add.particles('space');
-
     // coins
     //coins = this.physics.add.sprite(900, 450, 'coin');
 
@@ -178,11 +163,10 @@ function create() {
 
     this.anims.create({
         key: "efectoMoneda",
-        frames: this.anims.generateFrameNumbers("coin", { start: 0, end: 5 }),
+        frames: this.anims.generateFrameNumbers("coin", {start: 0, end: 5}),
         frameRate: 10,
         repeat: -1
     });
-
     //this.physics.add.overlap(ship, coins,collectCoins, null, this);
 
     //animacion galaxia
@@ -194,10 +178,8 @@ function create() {
         ease: 'Linear',
         loop: -1
     });
-    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', { fontSize: '10px', fill: '#fff' });    
-
+    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', {fontSize: '10px', fill: '#fff'});
     cursors = this.input.keyboard.createCursorKeys();
-
     colors = ['red', 'green', 'blue', 'yellow', 'white'];
 }
 
@@ -208,8 +190,8 @@ function getRandomInt(min, max) {
 }
 
 function update(time, delta) {
-    // falta ver de unir cada nave a un color fijo y unico para poder diferenciar la nave de la tabla
-    // o permitir ingresar un nombre asociado al id nave
+// falta ver de unir cada nave a un color fijo y unico para poder diferenciar la nave de la tabla
+// o permitir ingresar un nombre asociado al id nave
     tablaPosiciones.setText('Tabla Posiciones \n');
     for (var key in tablaPuntajes) {
         if (tablaPuntajes.hasOwnProperty(key)) {
@@ -219,11 +201,10 @@ function update(time, delta) {
     }
     for (let i = 0; i < coins.length; i++) {
         coins[i].anims.play("efectoMoneda", true);
-
     }
 
     for (var key in neutras) {
-        neutras[key].anims.play("neutra-anim",true);
+        neutras[key].anims.play("neutra-anim", true);
     }
 
     for (let i = 0; i < asteroides.length; i++) {
@@ -263,7 +244,7 @@ function particle(ship, id) {
                 return (ship.angle - 180) + v;
             }
         },
-        scale: { start: (ship.width/(width*0.30)), end: 0 },
+        scale: {start: (ship.width / (width * 0.30)), end: 0},
         blendMode: 'ADD'
     });
     punteroColor++;
@@ -274,16 +255,23 @@ function particle(ship, id) {
     emitter.startFollow(ship);
 }
 
+function infoPantalla() {
+    socket.send('{"name": "tamañoCanvas", "priority": "0","parameters": [{"name": "width", "value": "' + canvas.style.width + '"},\n\
+                                                                     {"name": "height", "value": "' + canvas.style.height + '"}]}');
+}
+
 //function hitAsteroide(player, asteroide) {
 //    game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim');
 //}
 
 
 window.onload = function () {
-    // Tamaño de la pantalla (no del canvas de phaser)
-    //console.log('Screen resolution is '+screen.width+'x'+screen.height+'.');
-    //
-    //
+// Tamaño de la pantalla (no del canvas de phaser)
+// console.log('Screen resolution is '+screen.width+'x'+screen.height+'.');
+
+// Tamaño canvas 
+    var canv = document.querySelector("canvas");
+    console.log('Screen resolution is ' + canv.style.width + 'x' + canv.style.height + '.');
     // Crea la conexion con WebSocket
     var page = document.createElement('a');
     page.href = window.location.href;
@@ -293,7 +281,7 @@ window.onload = function () {
     //var url = "ws://" + page.hostname + ":60161";
     socket = new WebSocket(url + "/" + window.location.pathname.split('/')[1] + "/GameWebSocket");
     socket.onmessage = stateUpdate;
-
+    socket.onopen = infoPantalla;
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
     function stateUpdate(event) {
         //console.log(socket);
@@ -330,7 +318,6 @@ window.onload = function () {
                 //var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
                 //var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
                 var angulo = gameState[i]["NavePlayer"]["super"]['Nave']['angulo'];
-
                 /* Sino existe el jugador lo creo junto con sus colliders */
                 if (players[id] == null) {
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
@@ -340,9 +327,8 @@ window.onload = function () {
                     //players[id].scaleY=0.25;
                     //console.log(players[id].height);
                     //console.log(players[id].width);
-                    players[id].scaleX=players[id].height/(width*0.25);
-                    players[id].scaleY=players[id].width/(width*0.25);
-
+                    players[id].scaleX = players[id].height / (width * 0.25);
+                    players[id].scaleY = players[id].width / (width * 0.25);
                     /* Genero colision visual asteroide player*/
                     //for (let i = 0; i < asteroides.length; i++) {
                     //    game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
@@ -357,13 +343,11 @@ window.onload = function () {
                 }
                 /* cargo puntaje en tabla de puntaje */
                 tablaPuntajes[id] = [nombreJugador, puntaje];
-
                 /* seteo angulo y coordenadas de la nave */
                 players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = y;
-
                 if (leave) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
@@ -373,7 +357,6 @@ window.onload = function () {
                 if (destroy) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-
                     if (emitters[id] !== "undefined") {
 
                         for (var i = 0; i < emitters[id][0].emitters.list.length; i++) {
@@ -391,7 +374,6 @@ window.onload = function () {
                 var id = gameState[i]["Asteroide"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Asteroide"]['super']["Entity"]["x"];
                 var y = gameState[i]["Asteroide"]['super']["Entity"]["y"];
-
                 if (asteroides[id] == null) {
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
@@ -401,14 +383,12 @@ window.onload = function () {
                     //console.log(asteroides[id].height);
                     //console.log(asteroides[id].width);
                     //console.log(scale/asteroides[id].height);
-                    asteroides[id].scaleX=asteroides[id].height/(width*0.1);
-                    asteroides[id].scaleY=asteroides[id].width/(width*0.1);
-
+                    asteroides[id].scaleX = asteroides[id].height / (width * 0.1);
+                    asteroides[id].scaleY = asteroides[id].width / (width * 0.1);
                 }
                 asteroides[id].y = y;
                 asteroides[id].x = x;
                 asteroides[id].z = y;
-
             } else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5 Nave Neutra %%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
 
@@ -419,16 +399,14 @@ window.onload = function () {
                 var x = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["y"];
                 var angulo = gameState[i]["NaveNeutra"]["super"]['Nave']['angulo'];
-
                 /* Si no existia la creo */
                 if (neutras[id] == null) {
                     neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
                     neutras[id].setDepth(1);
                     //neutras[id].scaleX = 2;
                     //neutras[id].scaleY = 2;
-                    neutras[id].scaleX=neutras[id].height/(height*0.09);
-                    neutras[id].scaleY=neutras[id].width/(height*0.09);
-
+                    neutras[id].scaleX = neutras[id].height / (height * 0.09);
+                    neutras[id].scaleY = neutras[id].width / (height * 0.09);
                     /* Genero colision visual moneda player */
                     for (let i = 0; i < coins.length; i++) {
                         game.scene.scenes[0].physics.add.collider(neutras[id], coins[i], null, null, this);
@@ -440,7 +418,6 @@ window.onload = function () {
                 neutras[id].y = y;
                 neutras[id].x = x;
                 neutras[id].z = y;
-
             } else if (typeof gameState[i]["Proyectil"] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%% Proyectil %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 var id = gameState[i]["Proyectil"]['super']["Entity"]["super"]["State"]["id"];
@@ -455,16 +432,14 @@ window.onload = function () {
                     //bullets[id].scaleY=0.2;
                     //console.log(bullets[id].height);
                     //console.log(bullets[id].width);
-                    bullets[id].scaleX=bullets[id].width/(width*0.2);
-                    bullets[id].scaleY=bullets[id].width/(width*0.2);
+                    bullets[id].scaleX = bullets[id].width / (width * 0.2);
+                    bullets[id].scaleY = bullets[id].width / (width * 0.2);
                 }
                 /* cargo angulo y seteo coordenadas*/
                 bullets[id].angle = angulo;
                 bullets[id].y = y;
                 bullets[id].x = x;
                 bullets[id].z = y;
-                
-
                 if (destroy) {
                     bullets[id].destroy();
                 }
@@ -474,7 +449,6 @@ window.onload = function () {
                 var id = gameState[i]["Moneda"]['super']["Entity"]["super"]["State"]["id"];
                 var x = gameState[i]["Moneda"]['super']["Entity"]["x"];
                 var y = gameState[i]["Moneda"]['super']["Entity"]["y"];
-
                 if (coins[id] == null) {
                     coins[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     coins[id].setDepth(1);
@@ -482,8 +456,8 @@ window.onload = function () {
                     //coins[id].scaleY=0.3;
                     //console.log(coins[id].height/(scale*0.1));
                     //console.log(coins[id].width/(scale*0.1));
-                    coins[id].scaleX=coins[id].height/(height*0.1);
-                    coins[id].scaleY=coins[id].width/(height*0.1);
+                    coins[id].scaleX = coins[id].height / (height * 0.1);
+                    coins[id].scaleY = coins[id].width / (height * 0.1);
                 }
 
                 coins[id].y = y;
@@ -494,3 +468,4 @@ window.onload = function () {
         }
     }
 };
+        

@@ -16,11 +16,11 @@ public class World extends State {
     protected int width;
     protected int height;
 
-    public World(LinkedList<String> players,String name, boolean destroy, String id,int worldWidth,int worldHeight) {
+    public World(LinkedList<String> players, String name, boolean destroy, String id, int worldWidth, int worldHeight) {
         super(name, destroy, id == null ? UUID.randomUUID().toString() : id);
         this.players = players;
-        this.width=worldWidth;
-        this.height=worldHeight;
+        this.width = worldWidth;
+        this.height = worldHeight;
     }
 
     private void updatePlayers(LinkedList<State> states, LinkedList<State> newStates, HashMap<String, LinkedList<Action>> actions) {
@@ -33,14 +33,8 @@ public class World extends State {
                 switch (action.getName()) {
                     case "start":
                         NavePlayer newPlayer = new NavePlayer("NavePlayer", null, false, id, 200, 200, 0, 0, 1, 0, 100, 100,
-                                0, 0, false, false, "", null, false, -1,0,width,height);
+                                0, 0, false, false, "", null, false, -1, 0, width, height);
 
-                   /*     int [] op = new int [3];
-                        NavePlayer newPlayer = new NavePlayer("NavePlayer",false, id, 200, 200, 0, 0,1,0, 100, 100, 0, 0, false, false,"",op,false,-1);
->>>>>>> Stashed changes*/
-                        //String name, String id, double x, double y, double velocidadX, double velocidadY,double xDir,
-                        //  double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, int [] op,
-                        //boolean bq, int resp
                         newStates.add(newPlayer);
                         //newPlayer.addEvent("spawn");
                         break;
@@ -67,6 +61,8 @@ public class World extends State {
     @Override
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         hasChanged = false;
+        int nuevoWidth = this.width;
+        int nuevoHeight = this.height;
         LinkedList<String> newPlayers = (LinkedList<String>) players.clone();
         for (Map.Entry<String, LinkedList<Action>> actionEntry : actions.entrySet()) {
             String id = actionEntry.getKey();
@@ -82,10 +78,13 @@ public class World extends State {
                         hasChanged = true;
                         newPlayers.remove(id);
                         break;
+                    case "tamañoCanvas":
+                        nuevoWidth = Integer.parseInt(action.getParameter("width"));
+                        nuevoHeight = Integer.parseInt(action.getParameter("height"));
                 }
             }
         }
-        World newWorld = new World(newPlayers, name, destroy, id,width,height);
+        World newWorld = new World(newPlayers, name, destroy, id, nuevoWidth, nuevoHeight);
         return newWorld;
     }
 
@@ -97,7 +96,7 @@ public class World extends State {
 
     @Override
     protected Object clone() {
-        World clon = new World(players, name, destroy, id,width,height);
+        World clon = new World(players, name, destroy, id, width, height);
         return clon;
     }
 
