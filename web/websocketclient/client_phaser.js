@@ -280,6 +280,10 @@ function particle(ship, id) {
 
 
 window.onload = function () {
+    // Tamaño de la pantalla (no del canvas de phaser)
+    //console.log('Screen resolution is '+screen.width+'x'+screen.height+'.');
+    //
+    //
     // Crea la conexion con WebSocket
     var page = document.createElement('a');
     page.href = window.location.href;
