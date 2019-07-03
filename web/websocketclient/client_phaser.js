@@ -57,11 +57,11 @@ var scale=width-height;
 
 function preload() {
     //backgroud
-    this.load.image('background', 'assets/tests/space/nebula.jpg');
+    this.load.image('background', 'assets/space/nebula.jpg');
     //starts
-    this.load.image('stars', 'assets/tests/space/stars.png');
+    this.load.image('stars', 'assets/space/stars.png');
     //space 
-    this.load.atlas('space', 'assets/tests/space/space.png', 'assets/tests/space/space.json');
+    this.load.atlas('space', 'assets/space/space.png', 'assets/space/space.json');
     // nave
     this.load.spritesheet('ship', 'assets/sprites/ship1.png', {
         frameWidth: 64,
@@ -120,6 +120,7 @@ function create() {
     this.anims.create({ key: 'asteroid4-anim', frames: this.anims.generateFrameNumbers('asteroid4-sheet', { start: 0, end: 24 }), frameRate: 20, repeat: -1 });
     this.anims.create({ key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 5 }), frameRate: 10, repeat: -1 });
     this.anims.create({ key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 23 }), frameRate: 100, repeat: 1 });
+    this.anims.create({ key: 'neutra-anim', frames: this.anims.generateFrameNumbers('shipNeutra', { start: 0, end: 0 }), frameRate: 20, repeat: -1 });
 
     //world 2048*2048
     this.physics.world.setBounds(0, 0, width, height);
@@ -219,6 +220,10 @@ function update(time, delta) {
     for (let i = 0; i < coins.length; i++) {
         coins[i].anims.play("efectoMoneda", true);
 
+    }
+
+    for (var key in neutras) {
+        neutras[key].anims.play("neutra-anim",true);
     }
 
     for (let i = 0; i < asteroides.length; i++) {

@@ -5,6 +5,7 @@ import engine.State;
 import engine.StaticState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Random;
 import org.dyn4j.geometry.Vector2;
 import org.json.simple.JSONObject;
 
@@ -305,8 +306,8 @@ public class NavePlayer extends Nave {
                         break;
                     case "respawn":
                         revivir = true;
-                        nuevoX = 200;
-                        nuevoY = 200;
+                        nuevoX = Math.random() * (worldWidth - 100) + 100;
+                        nuevoY = Math.random() * (worldHeight - 100) + 100;
                         nuevaVelX = 0;
                         nuevaVelY = 0;
                         muerto = false;
