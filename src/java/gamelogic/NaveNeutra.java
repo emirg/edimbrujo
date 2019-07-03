@@ -29,7 +29,7 @@ public class NaveNeutra extends Nave {
             boolean disponible, String idPropietario, int idBullets, int worldWidth,int worldHeight) {
 
         super("NaveNeutra", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj,
-            64*(64/((worldHeight)*0.25)),12*(12/((worldHeight)*0.25)));
+            64*(64/((worldHeight)*0.09)),12*(12/((worldHeight)*0.09)));
 
         this.disponible = disponible;
         this.idPropietario = idPropietario;
@@ -124,7 +124,7 @@ public class NaveNeutra extends Nave {
                                             }
                                         }
                                     }
-                                  //  this.flock(nuevoPropietario, navesAliadas);
+                                    //this.flock(nuevoPropietario, navesAliadas);
                                     nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                     nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                                     nuevaDirX = nuevaVelX;
