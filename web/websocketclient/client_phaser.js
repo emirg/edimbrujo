@@ -47,8 +47,8 @@ var tablaPuntajes = [];
 var colors = [];
 var emitters = [];
 var punteroColor = 0;
-var scale = width - height;
-var canvas = document.querySelector("canvas");
+//var canvas = document.querySelector("canvas");
+
 function preload() {
     //backgroud
     this.load.image('background', 'assets/space/nebula.jpg');
@@ -256,8 +256,8 @@ function particle(ship, id) {
 }
 
 function infoPantalla() {
-    socket.send('{"name": "tamañoCanvas", "priority": "0","parameters": [{"name": "width", "value": "' + canvas.style.width + '"},\n\
-                                                                     {"name": "height", "value": "' + canvas.style.height + '"}]}');
+    socket.send('{"name": "tamañoCanvas", "priority": "0","parameters": [{"name": "width", "value": "' + width + '"},\n\
+                                                                     {"name": "height", "value": "' + height + '"}]}');
 }
 
 //function hitAsteroide(player, asteroide) {
@@ -270,8 +270,9 @@ window.onload = function () {
 // console.log('Screen resolution is '+screen.width+'x'+screen.height+'.');
 
 // Tamaño canvas 
-    var canv = document.querySelector("canvas");
-    console.log('Screen resolution is ' + canv.style.width + 'x' + canv.style.height + '.');
+    //var canv = document.querySelector("canvas");
+    //console.log('Screen resolution is ' + canv.style.width + 'x' + canv.style.height + '.');
+    //console.log('Screen resolution is ' + width + 'x' + height + '.');
     // Crea la conexion con WebSocket
     var page = document.createElement('a');
     page.href = window.location.href;
