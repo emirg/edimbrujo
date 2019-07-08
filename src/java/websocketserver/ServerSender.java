@@ -35,7 +35,7 @@ public class ServerSender implements Runnable {
                 if (session.isOpen() && states != null) {
                     session.getAsyncRemote().sendText(states);
                     //System.out.println("Send state changes to player " + session.getId());
-                }//String estado = "{\"cell\":{\"x\":1,\"y\":1,\"jugador\":\"" + i + "\"}}";//juego.getEstado();
+                }
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(ServerSender.class.getName()).log(Level.SEVERE, null, ex);

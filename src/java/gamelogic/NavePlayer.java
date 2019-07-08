@@ -19,7 +19,6 @@ public class NavePlayer extends Nave {
     protected boolean leave;
     protected boolean dead;
     protected int puntaje;
-    // protected LinkedList<String> navesAliadas; // Las naves aliadas no iban en NavePlayer tambien? No esta mas en el constructor
     protected int idBullets;
     private String pregunta;
     private String[] opciones;
@@ -38,7 +37,6 @@ public class NavePlayer extends Nave {
         this.leave = leave;
         this.dead = dead;
         this.puntaje = puntaje;
-        // this.navesAliadas = aliadas;
         this.idBullets = 0;
         this.pregunta = preg;
         this.opciones = op;
@@ -46,7 +44,6 @@ public class NavePlayer extends Nave {
         this.respuesta = resp;
         this.tiempo = t;
         this.nombreJugador = nombreJugador;
-        // this.idDesafio = des;
         this.worldWidth=worldWidth;
         this.worldHeight=worldHeight;
         this.DISTANCIA_ALIANZA=(worldWidth-worldHeight)/50;
@@ -63,7 +60,6 @@ public class NavePlayer extends Nave {
                         switch (accion.getName()) {
                             case "fire":
                                 String idAux = id + "" + idBullets;
-                                //Vector2 velocidadProyectil = velocidad.copy().setMagnitude(60); // Temporal
                                 Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0,worldWidth,worldHeight);
                                 listProyectil.add(proyectil);
                                 idBullets++;
@@ -85,9 +81,9 @@ public class NavePlayer extends Nave {
                     }
                 } else if (estado != this && estado.getName().equalsIgnoreCase("proyectil")) { // Choque contra proyectil
                     Proyectil proj = (Proyectil) estado;
-                    double xFuturaAsteroide = proj.x + proj.velocidad.x;
-                    double yFuturaAsteroide = proj.y + proj.velocidad.y;
-                    if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
+                    double xFuturaProyectil = proj.x + proj.velocidad.x;
+                    double yFuturaProyectil = proj.y + proj.velocidad.y;
+                    if (futuraPos[0] == xFuturaProyectil && futuraPos[1] == yFuturaProyectil) {
                         this.addEvent("hit");
                     }
                 } else if (estado != this && estado.getName().equalsIgnoreCase("moneda")) { // Choque contra moneda
@@ -104,7 +100,6 @@ public class NavePlayer extends Nave {
 
                         //este for recorre los estados 
                         for (State estAux : estados) {
-
                             if (estAux != null && estAux != this && estAux.getName().equalsIgnoreCase("naveplayer")
                                     && !((NavePlayer) estAux).bloqueado) {
                                 NavePlayer est = ((NavePlayer) estAux);
@@ -113,11 +108,8 @@ public class NavePlayer extends Nave {
                                         + (futuraPosAux[1] - neutra.y) * (futuraPosAux[1] - neutra.y));
                                 if (dist > distAux) {
                                     creaDesafio = false;
-                                    // System.out.println("dist "+dist+"-------------------- distAux"+distAux);
                                 }
-
                             }
-
                         }
                         if (creaDesafio) {
                             Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id,worldWidth,worldHeight);
@@ -157,7 +149,6 @@ public class NavePlayer extends Nave {
                             nuevaVelX = 0;
                             nuevaVelY = 0;
                             break;
-
                     }
                 }
             }
@@ -199,22 +190,17 @@ public class NavePlayer extends Nave {
                     if (accion != null) {
                         System.out.println(accion.getName());
                         hasChanged = true;
-                        //System.out.println("has change");
                         if (!dead) {
                             switch (accion.getName()) {
                                 case "move":
-                                    //System.out.println("Llegue al move");
                                     if (accion.getParameter("x") != null && accion.getParameter("y") != null) {
                                         nuevaVelX = Double.parseDouble(accion.getParameter("x"));
                                         nuevaVelY = Double.parseDouble(accion.getParameter("y"));
                                         nuevaDirX = nuevaVelX;
                                         nuevaDirY = nuevaVelY;
-                                        //System.out.println(nuevaDirX);
-                                        //System.out.println(nuevaDirY);
                                     }
                                     break;
                                 case "stop":
-                                    //System.out.println("Llegue al stop");
                                     nuevaVelX = 0;
                                     nuevaVelY = 0;
                                     break;
@@ -222,7 +208,6 @@ public class NavePlayer extends Nave {
                                     op = null;
                                     nuevaRespuesta = -1;
                                     nuevaPregunta = "";
-
                                     break;
                                 case "fire":
                                     nuevosProyectiles++;
@@ -232,7 +217,6 @@ public class NavePlayer extends Nave {
                                     break;
                                 case "leave":
                                     destruido = true;
-                                    //System.out.println("salir "+salir);
                                     break;
                                 case "nombreJugador":
                                     nuevoNombreJugador = accion.getParameter("nombreElegido");
@@ -261,15 +245,12 @@ public class NavePlayer extends Nave {
             if(nuevoY>worldHeight){
                 nuevoY=worldHeight;
             }
-            
-            //System.out.println("(velX,velY): " + nuevaVelX + "," + nuevaVelY);
         }
         LinkedList<String> eventos = getEvents();
 
         if (!eventos.isEmpty()) {
             hasChanged = true;
             boolean revivir = false;
-            //System.out.println(eventos);
             for (String evento : eventos) {
                 switch (evento) {
                     case "hit":
@@ -280,13 +261,12 @@ public class NavePlayer extends Nave {
                                 nuevaVelX = 0;
                                 nuevaVelY = 0;
                                 muerto = true;
-                                //this.addEvent("respawn"); ser rompe cuando trata de tratarlo 
+                                nuevoPuntaje=nuevoPuntaje-5;
                             }
                         }
                         break;
                     //ver colisiones
                     case "collide":
-
                         if (!revivir) {
                             nuevaVelX = velocidad.x;
                             nuevaVelY = velocidad.y;
@@ -295,11 +275,10 @@ public class NavePlayer extends Nave {
                         }
                         break;
                     case "collect":
-                        nuevoPuntaje = nuevoPuntaje + 10; // Si esto se hace dos veces cuando recolecta moneda entonces hay que sacar el state.addEvent de Moneda
+                        nuevoPuntaje = nuevoPuntaje + 10; 
                         break;
                     case "liberar":
                         estaBloqueado = false;
-
                         break;
                     case "incorrecta":
                         nuevoTiempo = 50;
@@ -341,7 +320,6 @@ public class NavePlayer extends Nave {
                 nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,
                 nuevaPregunta, op, estaBloqueado, nuevaRespuesta, nuevoTiempo,worldWidth,worldHeight);
 
-        //  NavePlayer nuevoJugador = new NavePlayer(name,destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,nuevaDirX,nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,pregunta,opciones,estaBq,respuesta);
         return nuevoJugador;
     }
 
@@ -366,7 +344,6 @@ public class NavePlayer extends Nave {
     public JSONObject toJSON() {
         JSONObject jJugador = new JSONObject();
         JSONObject atributo = new JSONObject();
-        //JSONObject navesAliadas = new JSONObject();
         JSONObject opciones = new JSONObject();
 
         if (this.opciones != null) {
@@ -375,10 +352,6 @@ public class NavePlayer extends Nave {
             }
         }
 
-        // Idem opciones
-        /*for (int i = 0; i < this.navesAliadas.size(); i++) {
-            navesAliadas.put("naveAliada" + i, this.navesAliadas.get(i));
-        }*/
         atributo.put("super", super.toJSON());
         atributo.put("nombreJugador", nombreJugador);
         atributo.put("health", health);
@@ -387,7 +360,6 @@ public class NavePlayer extends Nave {
         atributo.put("dead", dead);
         atributo.put("puntaje", puntaje);
         atributo.put("bloqueado", bloqueado);
-        //atributo.put("navesAliadas", navesAliadas);
         atributo.put("idBullets", idBullets);
         atributo.put("pregunta", pregunta);
         atributo.put("opciones", opciones);

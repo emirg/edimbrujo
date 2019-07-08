@@ -8,6 +8,7 @@
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/org/netbeans/rest/application/config/ApplicationConfig.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/gamelogic/Desafio.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/engine/Action.java</file>
+            <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/engine/StaticState.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/web/websocketclient/client_phaser.js</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/gamelogic/NavePlayer.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/webserviceserver/Server.java</file>
@@ -16,6 +17,7 @@
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/gamelogic/Proyectil.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/engine/Game.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/gamelogic/Entity.java</file>
+            <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/engine/Lobby.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/gamelogic/Moneda.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/src/java/gamelogic/NaveNeutra.java</file>
             <file>file:/home/german/Escritorio/Edimbrujo2019/edimbrujo2019/nbproject/build-impl.xml</file>

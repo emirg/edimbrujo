@@ -24,7 +24,10 @@ var config = {
 };
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMENTARIOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//error particulas , se rompe con tres 
+/*
+Para un futuro faltaria corregir la nave player no desaparace por completo, los agentes aun las detectan
+Pasa lo mismo con las balas ?
+*/
 
 var game = new Phaser.Game(config);
 //coneccion
@@ -101,10 +104,8 @@ function create() {
     this.textures.addSpriteSheetFromAtlas('asteroid2-sheet', {atlas: 'space', frame: 'asteroid2', frameWidth: 96});
     this.textures.addSpriteSheetFromAtlas('asteroid3-sheet', {atlas: 'space', frame: 'asteroid3', frameWidth: 96});
     this.textures.addSpriteSheetFromAtlas('asteroid4-sheet', {atlas: 'space', frame: 'asteroid4', frameWidth: 64});
-    //this.textures.addSpriteSheetFromAtlas('explosion-sheet', {atlas: 'space', frame: 'asteroid1', frameWidth: 96});
 
-
-
+    //animaciones
     this.anims.create({key: 'mine-anim', frames: this.anims.generateFrameNumbers('mine-sheet', {start: 0, end: 15}), frameRate: 20, repeat: -1});
     this.anims.create({key: 'asteroid1-anim', frames: this.anims.generateFrameNumbers('asteroid1-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
     this.anims.create({key: 'asteroid2-anim', frames: this.anims.generateFrameNumbers('asteroid2-sheet', {start: 0, end: 24}), frameRate: 20, repeat: -1});
@@ -113,6 +114,7 @@ function create() {
     this.anims.create({key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 5}), frameRate: 10, repeat: -1});
     this.anims.create({key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 23}), frameRate: 100, repeat: 1});
     this.anims.create({key: 'neutra-anim', frames: this.anims.generateFrameNumbers('shipNeutra', {start: 0, end: 0}), frameRate: 20, repeat: -1});
+    this.anims.create({key: "efectoMoneda",frames: this.anims.generateFrameNumbers("coin", {start: 0, end: 5}),frameRate: 10,repeat: -1});
     //world 2048*2048
     this.physics.world.setBounds(0, 0, width, height);
     //fondo con dimesiones port encima de las dimensiones del world para que no queden partes sin fondo
@@ -123,54 +125,33 @@ function create() {
     var sun = this.add.image((width - (width / 2.1)), (height - (height / 1.1)), 'space', 'sun').setOrigin(0).setScrollFactor(0.6);
     var galaxy = this.add.image((width - (width / 4)), (height - (height / 3)), 'space', 'galaxy').setBlendMode(1).setScrollFactor(0.6);
     //escalas
+    //galaxy
     galaxy.scaleX = galaxy.height / (width * 10);
     galaxy.scaleY = galaxy.width / (width * 10);
-    //galaxy.scaleX=0.2;
-    //galaxy.scaleY=0.2;
-    //galaxy.setDepth(0);
-
-    //sun.scaleX=0.2;
-    //sun.scaleY=0.2;
+    //Sol
     sun.scaleX = sun.height / (width * 3);
     sun.scaleY = sun.width / (width * 3);
-    //sun.setDepth(0);
-
-    //bluePlanet.scaleX=0.3;
-    //bluePlanet.scaleY=0.3;
+    //planeta
     bluePlanet.scaleX = bluePlanet.height / (width * 6);
     bluePlanet.scaleY = bluePlanet.width / (width * 6);
     background.setDepth(0);
+
     //efecto estres de luz
     for (var i = 0; i < 6; i++)
     {
         var eyes = this.add.image(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 'space', 'eyes').setBlendMode(1).setScrollFactor(0.8);
-        //eyes.scaleY=0.4;
-        //eyes.scaleY=0.4;
         eyes.scaleX = eyes.height / (width * 2);
         eyes.scaleY = eyes.width / (width * 2);
     }
-//estrellas
-    stars = this.add.tileSprite(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 2000, 2000, 'stars').setScrollFactor(0);
-    //stars.scaleX=0.2;
-    //stars.scaleY=0.2;
+    //estrellas
+    var stars = this.add.tileSprite(Phaser.Math.Between(0, width), Phaser.Math.Between(0, height), 2000, 2000, 'stars').setScrollFactor(0);
     stars.scaleX = stars.height / (width * 2);
     stars.scaleY = stars.width / (width * 2);
+
+    //particulas 
     particles = this.add.particles('space');
-    // coins
-    //coins = this.physics.add.sprite(900, 450, 'coin');
 
-    //coins.setCollideWorldBounds(true);
-
-    this.anims.create({
-        key: "efectoMoneda",
-        frames: this.anims.generateFrameNumbers("coin", {start: 0, end: 5}),
-        frameRate: 10,
-        repeat: -1
-    });
-    //this.physics.add.overlap(ship, coins,collectCoins, null, this);
-
-    //animacion galaxia
-
+    //animacion galaxy
     this.tweens.add({
         targets: galaxy,
         angle: 360,
@@ -178,8 +159,11 @@ function create() {
         ease: 'Linear',
         loop: -1
     });
+    //tabla score
     tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', {fontSize: '10px', fill: '#fff'});
     cursors = this.input.keyboard.createCursorKeys();
+
+    //colores para las particulas
     colors = ['red', 'green', 'blue', 'yellow', 'white'];
 }
 
@@ -190,9 +174,8 @@ function getRandomInt(min, max) {
 }
 
 function update(time, delta) {
-// falta ver de unir cada nave a un color fijo y unico para poder diferenciar la nave de la tabla
-// o permitir ingresar un nombre asociado al id nave
     tablaPosiciones.setText('Tabla Posiciones \n');
+    var maxScore=0;
     for (var key in tablaPuntajes) {
         if (tablaPuntajes.hasOwnProperty(key)) {
             tablaPosiciones.text += tablaPuntajes[key][0] + ' score: ' + tablaPuntajes[key][1] + '\n';
@@ -224,6 +207,7 @@ function update(time, delta) {
         }
     }
 }
+
 function particle(ship, id) {
     var emitter = particles.createEmitter({
         frame: '' + colors[punteroColor],
@@ -260,24 +244,15 @@ function infoPantalla() {
                                                                      {"name": "height", "value": "' + height + '"}]}');
 }
 
-//function hitAsteroide(player, asteroide) {
-//    game.scene.scenes[0].add.sprite(player.x, player.y).play('explosion-anim');
-//}
-
-
 window.onload = function () {
-// Tamaño de la pantalla (no del canvas de phaser)
-// console.log('Screen resolution is '+screen.width+'x'+screen.height+'.');
-
-// Tamaño canvas 
-    //var canv = document.querySelector("canvas");
-    //console.log('Screen resolution is ' + canv.style.width + 'x' + canv.style.height + '.');
-    //console.log('Screen resolution is ' + width + 'x' + height + '.');
     // Crea la conexion con WebSocket
     var page = document.createElement('a');
     page.href = window.location.href;
+
     //define la url del servidor como la hostname de la pagina y el puerto definido 8080 del ws
+    //servidor local
     var url = "ws://" + page.hostname + ":8080";
+
     //servidor Edimbrujo
     //var url = "ws://" + page.hostname + ":60161";
     socket = new WebSocket(url + "/" + window.location.pathname.split('/')[1] + "/GameWebSocket");
@@ -285,11 +260,7 @@ window.onload = function () {
     socket.onopen = infoPantalla;
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
     function stateUpdate(event) {
-        //console.log(socket);
-        //console.log(event.data);
         var gameState = JSON.parse(event.data);
-        //console.log(gameState);
-
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
             //console.log(gameState);
@@ -314,61 +285,47 @@ window.onload = function () {
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
                 var nombreJugador = gameState[i]["NavePlayer"]["nombreJugador"];
-                //var health = gameState[i]["NavePlayer"]["health"];
+                var health = gameState[i]["NavePlayer"]["health"]; //puedo usarlo para saber cuando hay colisiones
                 var puntaje = gameState[i]["NavePlayer"]["puntaje"];
-                //var xDir = gameState[i]["NavePlayer"]["super"]['Nave']['xDir'];
-                //var yDir = gameState[i]["NavePlayer"]["super"]['Nave']['yDir'];
                 var angulo = gameState[i]["NavePlayer"]["super"]['Nave']['angulo'];
-                /* Sino existe el jugador lo creo junto con sus colliders */
+
                 if (players[id] == null) {
                     players[id] = game.scene.scenes[0].physics.add.sprite(x, y, "ship");
                     players[id].setDepth(1);
-                    //players[id].setCollideWorldBounds(true);
-                    //players[id].scaleX=0.25;
-                    //players[id].scaleY=0.25;
-                    //console.log(players[id].height);
-                    //console.log(players[id].width);
                     players[id].scaleX = players[id].height / (width * 0.25);
                     players[id].scaleY = players[id].width / (width * 0.25);
-                    /* Genero colision visual asteroide player*/
-                    //for (let i = 0; i < asteroides.length; i++) {
-                    //    game.scene.scenes[0].physics.add.collider(players[id], asteroides[i], hitAsteroide, null, this);
-                    //}
-                    /* Genero colision visual moneda player */
-                    //for (let i = 0; i < coins.length; i++) {
-                    //    game.scene.scenes[0].physics.add.collider(players[id], coins[i], null, null, this);
-                    //}
+
                     if (particles !== undefined) {
                         particle(players[id], id);
                     }
                 }
                 /* cargo puntaje en tabla de puntaje */
+                if(nombreJugador==null){
+                    nombreJugador==id;
+                }
                 tablaPuntajes[id] = [nombreJugador, puntaje];
                 /* seteo angulo y coordenadas de la nave */
                 players[id].angle = angulo;
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = y;
+                //se usa ?
                 if (leave) {
                     players[id].destroy();
                     delete tablaPuntajes[id];
-                    //delete emitters[id];
-
                 }
                 if (destroy) {
-                    players[id].destroy();
+                    players[id].destroy(); // no esta funcionando, averiguar porque
                     delete tablaPuntajes[id];
                     if (emitters[id] !== "undefined") {
-
                         for (var i = 0; i < emitters[id][0].emitters.list.length; i++) {
                             if (emitters[id][1] == emitters[id][0].emitters.list[i]) {
                                 emitters[id][0].emitters.list.pop(i)
                             }
                         }
-                        delete emitters[id][0];
-                        delete emitters[id][1];
+                        delete emitters[id][0]; //elimino del arreglo
+                        delete emitters[id][1]; //elimino del arreglo
                     }
-
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%% Asteroides %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -378,12 +335,6 @@ window.onload = function () {
                 if (asteroides[id] == null) {
                     asteroides[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     asteroides[id].setDepth(1);
-                    //asteroides[id].scaleX=0.4;
-                    //asteroides[id].scaleY=0.4;
-                    //console.log(scale);
-                    //console.log(asteroides[id].height);
-                    //console.log(asteroides[id].width);
-                    //console.log(scale/asteroides[id].height);
                     asteroides[id].scaleX = asteroides[id].height / (width * 0.1);
                     asteroides[id].scaleY = asteroides[id].width / (width * 0.1);
                 }
@@ -392,7 +343,6 @@ window.onload = function () {
                 asteroides[id].z = y;
             } else if (typeof gameState[i]["NaveNeutra"] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5 Nave Neutra %%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-
                 /* leo informacion JSON */
                 var id = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
                 var destroy = gameState[i]["NaveNeutra"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
@@ -404,15 +354,8 @@ window.onload = function () {
                 if (neutras[id] == null) {
                     neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
                     neutras[id].setDepth(1);
-                    //neutras[id].scaleX = 2;
-                    //neutras[id].scaleY = 2;
                     neutras[id].scaleX = neutras[id].height / (height * 0.09);
                     neutras[id].scaleY = neutras[id].width / (height * 0.09);
-                    /* Genero colision visual moneda player */
-                    for (let i = 0; i < coins.length; i++) {
-                        game.scene.scenes[0].physics.add.collider(neutras[id], coins[i], null, null, this);
-                    }
-
                 }
                 /* seteo coordenadas */
                 neutras[id].angle = angulo;
@@ -429,10 +372,6 @@ window.onload = function () {
                 /* si no exitia un bala con ese mismo id la creo*/
                 if (bullets[id] == null) {
                     bullets[id] = game.scene.scenes[0].add.sprite(x, y, 'bullet');
-                    //bullets[id].scaleX=0.2;
-                    //bullets[id].scaleY=0.2;
-                    //console.log(bullets[id].height);
-                    //console.log(bullets[id].width);
                     bullets[id].scaleX = bullets[id].width / (width * 0.2);
                     bullets[id].scaleY = bullets[id].width / (width * 0.2);
                 }
@@ -453,10 +392,6 @@ window.onload = function () {
                 if (coins[id] == null) {
                     coins[id] = game.scene.scenes[0].physics.add.sprite(x, y, "asteroid1");
                     coins[id].setDepth(1);
-                    //coins[id].scaleX=0.3;
-                    //coins[id].scaleY=0.3;
-                    //console.log(coins[id].height/(scale*0.1));
-                    //console.log(coins[id].width/(scale*0.1));
                     coins[id].scaleX = coins[id].height / (height * 0.1);
                     coins[id].scaleY = coins[id].width / (height * 0.1);
                 }
