@@ -58,11 +58,15 @@ public class ServerImp {
         if (action.equalsIgnoreCase("move")) { // Si es un "move" hay que indicar la dirección/velocidad
             String move = "{\"name\": \"move\", \"priority\": \"1\",\"parameters\": [{\"name\": \"x\", \"value\": \""
                     + 1 + "\"},{\"name\": \"y\", \"value\": \"" + 1 + "\"}]}";
+
             System.out.println(move);
             lobby.addAction(session, move);
-        } else { // Si es un "fire" no hay que hacer nada sobre la accion
+        } else if (action.equalsIgnoreCase("respuesta")) { // Si es un "fire" no hay que hacer nada sobre la accion
+            String res = "{\"name\": \"respuesta\", \"priority\": \"0\",\"parameters\": [{\"name\": \"opcionElegida\", \"value\": \"" + 1 + "\"}]}";
+            System.out.println(res);
+            lobby.addAction(session, res);
+        } else {
             lobby.addAction(session, action);
-
         }
         return "okey";
     }
@@ -82,7 +86,7 @@ public class ServerImp {
 
     @GET
     @Path("/actionAnswer")
-    public String move(@QueryParam("respuesta") String x, @QueryParam("session") String session) {
+    public String answer(@QueryParam("respuesta") String x, @QueryParam("session") String session) {
 
         lobby = Lobby.startGame();
         //String move = "{\"name\": \"move\", \"priority\": \"0\",\"parameters\": [{\"name\": \"x\", \"value\": \"" + x + "\"},{\"name\": \"y\", \"value\": \"" + y + "\"}]}";
