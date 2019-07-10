@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import java.util.Map;
 import engine.State;
 import engine.StaticState;
+import java.util.Random;
 
 public class World extends State {
 
@@ -23,7 +24,47 @@ public class World extends State {
         this.height = worldHeight;
     }
 
-    private void updatePlayers(LinkedList<State> states, LinkedList<State> newStates, HashMap<String, LinkedList<Action>> actions) {
+    public LinkedList<State> createSpawns(LinkedList<State> states) {
+        Random r = new Random();
+        LinkedList<State> newStates = new LinkedList<>();
+        //int width = 1366; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
+        //int height = 639;
+        int x, y, v;
+        int cantAsteroides = height / 50;
+
+        for (int i = 0; i < cantAsteroides; i++) {
+            x = r.nextInt(width);
+            y = r.nextInt(height);
+            v = r.nextInt(5) + 10;
+            newStates.add(new Asteroide("Asteroide", false, "" + i, x, y, v, 0, width, height));
+        }
+
+        //states.add(new Asteroide("Asteroide", false, "0", 0, 100, 10, 0,width,height)); // Capaz convenga que el id sea 
+        //states.add(new Asteroide("Asteroide", false, "1", 100, 250, 12, 0,width,height)); // algo mas significativo como
+        //states.add(new Asteroide("Asteroide", false, "2", 50, 350, 15, 0,width,height)); // "asteroideX" con X el numero
+        //states.add(new Asteroide("Asteroide", false, "3", 200, 550, 18, 0,width,height));
+        for (int i = 0; i < 10; i++) {
+            x = r.nextInt(width);
+            y = r.nextInt(height);
+            newStates.add(new Moneda("Moneda", false, "" + i, x, y, 0, 0, width, height));
+        }
+        /**
+         * (String name, boolean destroy, String id, double x, double y, double
+         * velocidadX, double velocidadY, double xDir, double yDir, int
+         * cantProj, NavePlayer prop, String posible, boolean d, String p)
+         */
+        for (int i = 0; i < 5; i++) {
+            //System.out.println("cargando naves neutras");
+            x = r.nextInt(width);
+            y = r.nextInt(height - 50);
+            newStates.add(new NaveNeutra("NaveNeutra", false, "neutra" + i, x, y, 0, 0, 1, 0, 0, true, "", 0, width, height));
+        }
+
+        return newStates;
+
+    }
+
+    private LinkedList<State> updatePlayers(LinkedList<State> states, LinkedList<State> newStates, HashMap<String, LinkedList<Action>> actions) {
         //obtiene los puntos de spawn para personajes que atacan y defienden, y para las torres
 
         for (Map.Entry<String, LinkedList<Action>> actionEntry : actions.entrySet()) {
@@ -46,15 +87,23 @@ public class World extends State {
                             }
                         }
                         break;
+
+                    case "restart":
+                        newStates = new LinkedList<State>();
+                        players = new LinkedList<String>();
                 }
             }
         }
+        return newStates;
     }
 
     @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         LinkedList<State> newStates = new LinkedList<>();
-        updatePlayers(states, newStates, actions);
+        if (states.size() < 2) {
+            newStates.addAll(createSpawns(states));
+        }
+        newStates.addAll(updatePlayers(states, newStates, actions));
         return newStates;
     }
 

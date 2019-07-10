@@ -112,7 +112,7 @@ public class Game implements Runnable {
     public void init() {
         //TODO crear estados dinamicos y estaticos
         states.add(new World(new LinkedList(), "World", false, null,width,height));
-        createSpawns();
+        //createSpawns();
     }
 
     public void createSpawns() {
