@@ -16,12 +16,14 @@ public class World extends State {
     protected LinkedList<String> players;
     protected int width;
     protected int height;
+    protected boolean spawn;
 
     public World(LinkedList<String> players, String name, boolean destroy, String id, int worldWidth, int worldHeight) {
         super(name, destroy, id == null ? UUID.randomUUID().toString() : id);
         this.players = players;
         this.width = worldWidth;
         this.height = worldHeight;
+        this.spawn = false;
     }
 
     public LinkedList<State> createSpawns(LinkedList<State> states) {
@@ -100,8 +102,13 @@ public class World extends State {
     @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         LinkedList<State> newStates = new LinkedList<>();
-        if (states.size() < 2) {
+        //System.out.println(states);
+        if (spawn) {
+            System.out.println("createspawn");
+            System.out.println("width"+width);
+            System.out.println("height"+height);
             newStates.addAll(createSpawns(states));
+            this.spawn=false;
         }
         newStates.addAll(updatePlayers(states, newStates, actions));
         return newStates;
@@ -129,7 +136,12 @@ public class World extends State {
                         break;
                     case "tamañoCanvas":
                         nuevoWidth = Integer.parseInt(action.getParameter("width"));
+                        this.width = Integer.parseInt(action.getParameter("width"));
+                        System.out.println(nuevoWidth);
                         nuevoHeight = Integer.parseInt(action.getParameter("height"));
+                        this.height = Integer.parseInt(action.getParameter("height"));
+                        System.out.println(nuevoHeight);
+                        this.spawn=true;
                 }
             }
         }

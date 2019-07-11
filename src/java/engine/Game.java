@@ -114,7 +114,7 @@ public class Game implements Runnable {
         states.add(new World(new LinkedList(), "World", false, null,width,height));
         //createSpawns();
     }
-
+/*
     public void createSpawns() {
         Random r = new Random();
         //int width = 1366; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
@@ -143,7 +143,7 @@ public class Game implements Runnable {
          * (String name, boolean destroy, String id, double x, double y, double velocidadX, 
             double velocidadY, double xDir, double yDir, int cantProj, NavePlayer prop,
              String posible, boolean d, String p)
-         */
+         
         for (int i = 0; i < 5; i++) {
             //System.out.println("cargando naves neutras");
             x = r.nextInt(width);
@@ -152,7 +152,7 @@ public class Game implements Runnable {
         }
         
 
-    }
+}*/
 
     private void createStaticState() {
         JSONObject jsonStaticStates = new JSONObject();

@@ -257,6 +257,8 @@ window.onload = function () {
     //var url = "ws://" + page.hostname + ":60161";
     socket = new WebSocket(url + "/" + window.location.pathname.split('/')[1] + "/GameWebSocket");
     socket.onmessage = stateUpdate;
+    console.log(width);
+    console.log(height);
     socket.onopen = infoPantalla;
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
     function stateUpdate(event) {
