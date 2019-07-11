@@ -111,48 +111,9 @@ public class Game implements Runnable {
 
     public void init() {
         //TODO crear estados dinamicos y estaticos
-        states.add(new World(new LinkedList(), "World", false, null,width,height));
-        //createSpawns();
+        states.add(new World(new LinkedList(), "World", false, null,width,height,false));
     }
-/*
-    public void createSpawns() {
-        Random r = new Random();
-        //int width = 1366; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
-        //int height = 639;
-        int x, y,v;
-        int cantAsteroides=height/50;
 
-        for (int i = 0; i < cantAsteroides; i++) {
-            x = r.nextInt(width);
-            y = r.nextInt(height);
-            v= r.nextInt(5)+10;
-            states.add(new Asteroide("Asteroide", false, ""+i, x, y, v, 0,width,height));
-        }
-
-        //states.add(new Asteroide("Asteroide", false, "0", 0, 100, 10, 0,width,height)); // Capaz convenga que el id sea 
-        //states.add(new Asteroide("Asteroide", false, "1", 100, 250, 12, 0,width,height)); // algo mas significativo como
-        //states.add(new Asteroide("Asteroide", false, "2", 50, 350, 15, 0,width,height)); // "asteroideX" con X el numero
-        //states.add(new Asteroide("Asteroide", false, "3", 200, 550, 18, 0,width,height));
-
-        for (int i = 0; i < 10; i++) {
-            x = r.nextInt(width);
-            y = r.nextInt(height);
-            states.add(new Moneda("Moneda", false,""+i, x, y, 0, 0, width, height));
-        }
-        /**
-         * (String name, boolean destroy, String id, double x, double y, double velocidadX, 
-            double velocidadY, double xDir, double yDir, int cantProj, NavePlayer prop,
-             String posible, boolean d, String p)
-         
-        for (int i = 0; i < 5; i++) {
-            //System.out.println("cargando naves neutras");
-            x = r.nextInt(width);
-            y = r.nextInt(height-50);
-            states.add(new NaveNeutra("NaveNeutra",false, "neutra"+i, x, y, 0, 0,1,0, 0,true, "",0,width,height));
-        }
-        
-
-}*/
 
     private void createStaticState() {
         JSONObject jsonStaticStates = new JSONObject();

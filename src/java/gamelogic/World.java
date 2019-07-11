@@ -18,12 +18,14 @@ public class World extends State {
     protected int height;
     protected boolean spawn;
 
-    public World(LinkedList<String> players, String name, boolean destroy, String id, int worldWidth, int worldHeight) {
+    public World(LinkedList<String> players, String name, boolean destroy, String id, int worldWidth, int worldHeight,boolean spawn) {
         super(name, destroy, id == null ? UUID.randomUUID().toString() : id);
         this.players = players;
         this.width = worldWidth;
         this.height = worldHeight;
-        this.spawn = false;
+        this.spawn = spawn;
+        //System.out.println(spawn);
+        
     }
 
     public LinkedList<State> createSpawns(LinkedList<State> states) {
@@ -102,15 +104,15 @@ public class World extends State {
     @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         LinkedList<State> newStates = new LinkedList<>();
-        //System.out.println(states);
-        if (spawn) {
+        //System.out.println(spawn);
+        if (states.size()==1 && spawn) {
             System.out.println("createspawn");
-            System.out.println("width"+width);
-            System.out.println("height"+height);
+            //System.out.println("width"+width);
+            //System.out.println("height"+height);
             newStates.addAll(createSpawns(states));
             this.spawn=false;
         }
-        newStates.addAll(updatePlayers(states, newStates, actions));
+        updatePlayers(states, newStates, actions);
         return newStates;
     }
 
@@ -119,6 +121,7 @@ public class World extends State {
         hasChanged = false;
         int nuevoWidth = this.width;
         int nuevoHeight = this.height;
+        boolean newSpawn = this.spawn;
         LinkedList<String> newPlayers = (LinkedList<String>) players.clone();
         for (Map.Entry<String, LinkedList<Action>> actionEntry : actions.entrySet()) {
             String id = actionEntry.getKey();
@@ -135,17 +138,20 @@ public class World extends State {
                         newPlayers.remove(id);
                         break;
                     case "tamañoCanvas":
+                        hasChanged =true;
                         nuevoWidth = Integer.parseInt(action.getParameter("width"));
-                        this.width = Integer.parseInt(action.getParameter("width"));
-                        System.out.println(nuevoWidth);
+                        //this.width = Integer.parseInt(action.getParameter("width"));
                         nuevoHeight = Integer.parseInt(action.getParameter("height"));
-                        this.height = Integer.parseInt(action.getParameter("height"));
-                        System.out.println(nuevoHeight);
-                        this.spawn=true;
+                        //this.height = Integer.parseInt(action.getParameter("height"));
+                        //System.out.println("width "+nuevoWidth);
+                        //System.out.println("height "+nuevoHeight);
+                        newSpawn = true;
+                        //this.spawn = true;
+                        break;
                 }
             }
-        }
-        World newWorld = new World(newPlayers, name, destroy, id, nuevoWidth, nuevoHeight);
+        }   
+        World newWorld = new World(newPlayers, name, destroy, id, nuevoWidth, nuevoHeight,newSpawn);
         return newWorld;
     }
 
@@ -153,11 +159,14 @@ public class World extends State {
     public void setState(State newWorld) {
         super.setState(newWorld);
         players = ((World) newWorld).players;
+        width = ((World) newWorld).width;
+        height = ((World) newWorld).height;
+        spawn = ((World) newWorld).spawn;
     }
 
     @Override
     protected Object clone() {
-        World clon = new World(players, name, destroy, id, width, height);
+        World clon = new World(players, name, destroy, id, width, height,spawn);
         return clon;
     }
 

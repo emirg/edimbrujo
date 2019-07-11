@@ -114,6 +114,7 @@ function create() {
     this.anims.create({key: 'efectoMoneda', frames: this.anims.generateFrameNumbers('coin', {start: 0, end: 5}), frameRate: 10, repeat: -1});
     this.anims.create({key: 'explosion-anim', frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 23}), frameRate: 100, repeat: 1});
     this.anims.create({key: 'neutra-anim', frames: this.anims.generateFrameNumbers('shipNeutra', {start: 0, end: 0}), frameRate: 20, repeat: -1});
+    this.anims.create({key: 'player-anim', frames: this.anims.generateFrameNumbers('ship', {start: 0, end: 0}), frameRate: 20, repeat: -1});
     this.anims.create({key: "efectoMoneda",frames: this.anims.generateFrameNumbers("coin", {start: 0, end: 5}),frameRate: 10,repeat: -1});
     //world 2048*2048
     this.physics.world.setBounds(0, 0, width, height);
@@ -160,7 +161,7 @@ function create() {
         loop: -1
     });
     //tabla score
-    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', {fontSize: '10px', fill: '#fff'});
+    tablaPosiciones = this.add.text(16, 16, 'Tabla Posiciones \n', {fontSize: '50px', fill: '#fff'});
     cursors = this.input.keyboard.createCursorKeys();
 
     //colores para las particulas
@@ -189,6 +190,15 @@ function update(time, delta) {
     for (var key in neutras) {
         neutras[key].anims.play("neutra-anim", true);
     }
+
+    for (var key in players) {
+        if(typeof players[key]!=="undefined"){
+            if(players[key].active){
+                players[key].anims.play("player-anim", true);
+            }
+        }
+    }
+    
 
     for (let i = 0; i < asteroides.length; i++) {
         switch (i) {
@@ -263,6 +273,7 @@ window.onload = function () {
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
     function stateUpdate(event) {
         var gameState = JSON.parse(event.data);
+        //console.log(gameState);
         var i = 0;
         while (typeof gameState[i] !== "undefined") {
             //console.log(gameState);
@@ -282,7 +293,6 @@ window.onload = function () {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Nave Player %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
                 var id = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["id"];
                 var destroy = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["super"]["State"]["destroy"];
-                var leave = gameState[i]["NavePlayer"]["leave"];
                 var dead = gameState[i]["NavePlayer"]["dead"];
                 var x = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["x"];
                 var y = gameState[i]["NavePlayer"]["super"]['Nave']['super']["Entity"]["y"];
@@ -311,23 +321,25 @@ window.onload = function () {
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = y;
-                //se usa ?
-                if (leave) {
-                    players[id].destroy();
-                    delete tablaPuntajes[id];
-                }
+    
                 if (destroy) {
-                    players[id].destroy(); // no esta funcionando, averiguar porque
+                    players[id].destroy();// no esta funcionando, averiguar porque
+                    console.log(players[id]);
                     delete tablaPuntajes[id];
-                    if (emitters[id] !== "undefined") {
+                    if (typeof emitters[id]!== "undefined") {
                         for (var i = 0; i < emitters[id][0].emitters.list.length; i++) {
                             if (emitters[id][1] == emitters[id][0].emitters.list[i]) {
                                 emitters[id][0].emitters.list.pop(i)
                             }
                         }
-                        delete emitters[id][0]; //elimino del arreglo
-                        delete emitters[id][1]; //elimino del arreglo
+                        console.log(emitters);
+
+                        delete emitters[id];
+                        //delete emitters[id][0]; //elimino del arreglo
+                        //delete emitters[id][1]; //elimino del arreglo
                     }
+                    
+                    //delete players[id];
                 }
             } else if (typeof gameState[i]['Asteroide'] !== "undefined") {
                 /* %%%%%%%%%%%%%%%%%%%%%%%%%% Asteroides %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -356,8 +368,8 @@ window.onload = function () {
                 if (neutras[id] == null) {
                     neutras[id] = game.scene.scenes[0].add.sprite(x, y, "shipNeutra");
                     neutras[id].setDepth(1);
-                    neutras[id].scaleX = neutras[id].height / (height * 0.09);
-                    neutras[id].scaleY = neutras[id].width / (height * 0.09);
+                    neutras[id].scaleX = neutras[id].height / (height * 0.05);
+                    neutras[id].scaleY = neutras[id].width / (height * 0.05);
                 }
                 /* seteo coordenadas */
                 neutras[id].angle = angulo;
