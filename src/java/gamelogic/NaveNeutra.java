@@ -78,8 +78,7 @@ public class NaveNeutra extends Nave {
 
     @Override
     public NaveNeutra next(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
-
-        hasChanged = true;
+        //hasChanged = true;
         double nuevoX = x;
         double nuevoY = y;
         int nuevosProyectiles = countProyectil;
@@ -109,7 +108,6 @@ public class NaveNeutra extends Nave {
                         if (accion != null) {
                             System.out.println(accion.getName());
                             hasChanged = true;
-                            //System.out.println("has change");
 
                             switch (accion.getName()) {
                                 case "move":
@@ -169,7 +167,6 @@ public class NaveNeutra extends Nave {
 
         if (!eventos.isEmpty()) {
             hasChanged = true;
-
             //System.out.println(eventos);
             for (String evento : eventos) {
                 switch (evento) {

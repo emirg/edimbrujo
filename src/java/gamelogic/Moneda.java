@@ -18,13 +18,14 @@ import org.json.simple.JSONObject;
  * @author emiliano
  */
 public class Moneda extends Entity {
+
     protected int worldWidth;
     protected int worldHeight;
 
     public Moneda(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int worldWidth, int worldHeight) {
-        super("Moneda", destroy, id, x, y, 0, 0, 32*(32/((worldHeight)*0.1)), 32*(32/((worldHeight)*0.1)));
-        this.worldWidth=worldWidth;
-        this.worldHeight=worldHeight;
+        super("Moneda", destroy, id, x, y, 0, 0, 32 * (32 / ((worldHeight) * 0.1)), 32 * (32 / ((worldHeight) * 0.1)));
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
     }
 
     @Override
@@ -54,13 +55,12 @@ public class Moneda extends Entity {
         double nuevoY = y;
         //int widthWorld = 800; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
         //int heightWorld = 600;
-        hasChanged = true;
         LinkedList<String> events = getEvents();
         if (!events.isEmpty()) {
-            
             for (String event : events) {
                 switch (event) {
                     case "collide":
+                        hasChanged = true;
                         //destruido = true; // En vez de destruirlo, podemos reubicarlo (similar a las naves)
                         Random r = new Random();
                         nuevoX = r.nextInt(worldWidth);

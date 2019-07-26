@@ -162,7 +162,6 @@ public class NavePlayer extends Nave {
     @Override
     public NavePlayer next(LinkedList<State> estados, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> acciones) {
         LinkedList<Action> listAccion = acciones.get(id);
-        hasChanged = true;
         double nuevoX = x;
         double nuevoY = y;
         int nuevosProyectiles = countProyectil;
@@ -186,7 +185,6 @@ public class NavePlayer extends Nave {
         if (!bloqueado) {
             if (listAccion != null) {
                 for (Action accion : listAccion) {
-
                     if (accion != null) {
                         System.out.println(accion.getName());
                         hasChanged = true;
@@ -246,8 +244,8 @@ public class NavePlayer extends Nave {
                 nuevoY=worldHeight;
             }
         }
+        
         LinkedList<String> eventos = getEvents();
-
         if (!eventos.isEmpty()) {
             hasChanged = true;
             boolean revivir = false;
