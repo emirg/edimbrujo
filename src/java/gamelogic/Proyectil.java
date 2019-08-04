@@ -66,6 +66,9 @@ public class Proyectil extends Entity {
                         case "hit":
                             destruido = true;
                             break;
+                        case "despawn":
+                            destruido = true;
+                            break;
                     }
                 }
             }

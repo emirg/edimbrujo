@@ -18,21 +18,19 @@ public class World extends State {
     protected int height;
     protected boolean spawn;
 
-    public World(LinkedList<String> players, String name, boolean destroy, String id, int worldWidth, int worldHeight,boolean spawn) {
+    public World(LinkedList<String> players, String name, boolean destroy, String id, int worldWidth, int worldHeight, boolean spawn) {
         super(name, destroy, id == null ? UUID.randomUUID().toString() : id);
         this.players = players;
         this.width = worldWidth;
         this.height = worldHeight;
         this.spawn = spawn;
         //System.out.println(spawn);
-        
+
     }
 
     public LinkedList<State> createSpawns(LinkedList<State> states) {
         Random r = new Random();
         LinkedList<State> newStates = new LinkedList<>();
-        //int width = 1366; // Esto estaria bueno tenerlo en la clase World y despues poder referenciarlo
-        //int height = 639;
         int x, y, v;
         int cantAsteroides = height / 50;
 
@@ -68,9 +66,8 @@ public class World extends State {
 
     }
 
-    private LinkedList<State> updatePlayers(LinkedList<State> states, LinkedList<State> newStates, HashMap<String, LinkedList<Action>> actions) {
+    private void updatePlayers(LinkedList<State> states, LinkedList<StaticState> staticStates, LinkedList<State> newStates, HashMap<String, LinkedList<Action>> actions) {
         //obtiene los puntos de spawn para personajes que atacan y defienden, y para las torres
-
         for (Map.Entry<String, LinkedList<Action>> actionEntry : actions.entrySet()) {
             String id = actionEntry.getKey();
             LinkedList<Action> actionsList = actionEntry.getValue();
@@ -83,7 +80,7 @@ public class World extends State {
                         newStates.add(newPlayer);
                         //newPlayer.addEvent("spawn");
                         break;
-                    case "leave":
+                    /*case "leave": // TODO: Falta comprobar que este leave sea del World 
                         for (State state : states) {
                             if (state.getName().equals("NavePlayer") && ((NavePlayer) state).id.equals(id)) {
                                 state.addEvent("despawn");
@@ -91,28 +88,26 @@ public class World extends State {
                             }
                         }
                         break;
-
-                    case "restart":
-                        newStates = new LinkedList<State>();
-                        players = new LinkedList<String>();
+                    */
                 }
             }
         }
-        return newStates;
+        //return newStates;
     }
 
     @Override
     public LinkedList<State> generate(LinkedList<State> states, LinkedList<StaticState> staticStates, HashMap<String, LinkedList<Action>> actions) {
         LinkedList<State> newStates = new LinkedList<>();
         //System.out.println(spawn);
-        if (states.size()==1 && spawn) {
+        // System.out.println("Cant states: "+  states.size());
+        if (states.size() == 1 && spawn) {
             System.out.println("createspawn");
             //System.out.println("width"+width);
             //System.out.println("height"+height);
             newStates.addAll(createSpawns(states));
-            this.spawn=false;
+            this.spawn = false;
         }
-        updatePlayers(states, newStates, actions);
+        updatePlayers(states, staticStates, newStates, actions);
         return newStates;
     }
 
@@ -122,6 +117,8 @@ public class World extends State {
         int nuevoWidth = this.width;
         int nuevoHeight = this.height;
         boolean newSpawn = this.spawn;
+        boolean newDestroy = this.destroy;
+        String newId = this.id;
         LinkedList<String> newPlayers = (LinkedList<String>) players.clone();
         for (Map.Entry<String, LinkedList<Action>> actionEntry : actions.entrySet()) {
             String id = actionEntry.getKey();
@@ -134,24 +131,38 @@ public class World extends State {
                         newPlayers.add(id);
                         break;
                     case "leave":
-                        hasChanged = true;
                         newPlayers.remove(id);
+                        if (this.id.equalsIgnoreCase(action.getId())) {
+                            hasChanged = true;
+                            for (int i = 0; i < states.size(); i++) {
+                                if (states.get(i) != this) {
+                                    states.get(i).addEvent("despawn");
+                                }
+                            }
+                        }
+
+                        /* for (int j = 0; j < staticStates.size(); j++) {
+                            staticStates.get(j).setDestroy(true);
+                        } */
                         break;
                     case "tamañoCanvas":
-                        hasChanged =true;
+                        hasChanged = true;
+                        newId = action.getId();
                         nuevoWidth = Integer.parseInt(action.getParameter("width"));
                         //this.width = Integer.parseInt(action.getParameter("width"));
                         nuevoHeight = Integer.parseInt(action.getParameter("height"));
                         //this.height = Integer.parseInt(action.getParameter("height"));
                         //System.out.println("width "+nuevoWidth);
                         //System.out.println("height "+nuevoHeight);
+                        //newPlayers = new LinkedList<String>();
                         newSpawn = true;
                         //this.spawn = true;
                         break;
+
                 }
             }
-        }   
-        World newWorld = new World(newPlayers, name, destroy, id, nuevoWidth, nuevoHeight,newSpawn);
+        }
+        World newWorld = new World(newPlayers, name, newDestroy, newId, nuevoWidth, nuevoHeight, newSpawn);
         return newWorld;
     }
 
@@ -166,7 +177,7 @@ public class World extends State {
 
     @Override
     protected Object clone() {
-        World clon = new World(players, name, destroy, id, width, height,spawn);
+        World clon = new World(players, name, destroy, id, width, height, spawn);
         return clon;
     }
 

@@ -176,7 +176,10 @@ public class NaveNeutra extends Nave {
                     case "liberar":
                         nuevaDisponibilidad = true; //no se esta usando
                         break;
-                    case "destruir":
+                    case "destruir": // No se si se usa
+                        destruido = true;
+                        break;
+                    case "despawn":
                         destruido = true;
                         break;
                 }

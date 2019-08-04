@@ -66,6 +66,9 @@ public class Moneda extends Entity {
                         nuevoX = r.nextInt(worldWidth);
                         nuevoY = r.nextInt(worldHeight);
                         break;
+                    case "despawn":
+                        destruido = true;
+                        break;
                 }
             }
         }

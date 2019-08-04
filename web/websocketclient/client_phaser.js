@@ -254,7 +254,8 @@ function infoPantalla() {
                                                                      {"name": "height", "value": "' + height + '"}]}');
 }
 
-window.onload = function () {
+//$(document).ready(function() { // Prueba 
+window.onload = function(){
     // Crea la conexion con WebSocket
     var page = document.createElement('a');
     page.href = window.location.href;
@@ -270,6 +271,11 @@ window.onload = function () {
     console.log(width);
     console.log(height);
     socket.onopen = infoPantalla;
+
+    /*window.onbeforeunload = function(event) {
+        socket.send("restart");
+    }*/
+
     //actualiza la vista del juego cuando recive un nuevo estado desde el servidor
     function stateUpdate(event) {
         var gameState = JSON.parse(event.data);
@@ -321,7 +327,7 @@ window.onload = function () {
                 players[id].y = y;
                 players[id].x = x;
                 players[id].z = y;
-    
+
                 if (destroy) {
                     players[id].destroy();// no esta funcionando, averiguar porque
                     console.log(players[id]);
@@ -417,5 +423,6 @@ window.onload = function () {
             i++;
         }
     }
-};
+    }; 
+
         

@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import engine.Action;
 import engine.State;
 import engine.StaticState;
+import java.util.Random;
 import org.json.simple.JSONObject;
 
 /**
@@ -22,7 +23,7 @@ public class Asteroide extends Entity {
     protected int worldHeight;
 
     public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int worldWidth,int worldHeight) {
-        super(name, false, id, x, y, velocidadX, velocidadY, 32*(32/((worldWidth)*0.1)), 32*(32/((worldWidth)*0.1)));
+        super(name, destroy, id, x, y, velocidadX, velocidadY, 32*(32/((worldWidth)*0.1)), 32*(32/((worldWidth)*0.1)));
         this.worldWidth=worldWidth;
         this.worldHeight=worldHeight;
     }
@@ -57,14 +58,34 @@ public class Asteroide extends Entity {
     public State next(LinkedList<State> states, LinkedList<StaticState> staticStates,
             HashMap<String, LinkedList<Action>> actions) {
         hasChanged = true; // El asteroide siempre cambia porque siempre esta en movimiento
+        boolean destruido = false;
         double nuevoX = x + velocidad.x;
         double nuevoY = y + velocidad.y;
         // La velocidad es constante 
         if (nuevoX > worldWidth) {
             nuevoX = 0;
         }
-        Asteroide newAsteroide = new Asteroide(name, false, id, nuevoX, nuevoY, velocidad.x, velocidad.y,worldWidth,worldHeight);
+        LinkedList<String> events = getEvents();
+        if (!events.isEmpty()) {
+            for (String event : events) {
+                switch (event) {
+                    case "despawn":
+                        destruido = true;
+                        break;
+                }
+            }
+        }
+        
+        Asteroide newAsteroide = new Asteroide(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y,worldWidth,worldHeight);
         return newAsteroide;
+    }
+    
+        @Override
+    public void setState(State newAsteroide) {
+        super.setState(newAsteroide);
+        worldWidth = ((Asteroide) newAsteroide).worldWidth;
+        worldHeight = ((Asteroide) newAsteroide).worldHeight;
+
     }
 
     @Override
