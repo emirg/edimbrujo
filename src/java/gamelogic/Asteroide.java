@@ -61,7 +61,7 @@ public class Asteroide extends Entity {
         boolean destruido = false;
         double nuevoX = x + velocidad.x;
         double nuevoY = y + velocidad.y;
-        // La velocidad es constante 
+        // La velocidad es constante
         if (nuevoX > worldWidth) {
             nuevoX = 0;
         }
@@ -75,11 +75,11 @@ public class Asteroide extends Entity {
                 }
             }
         }
-        
+
         Asteroide newAsteroide = new Asteroide(name, destruido, id, nuevoX, nuevoY, velocidad.x, velocidad.y,worldWidth,worldHeight);
         return newAsteroide;
     }
-    
+
         @Override
     public void setState(State newAsteroide) {
         super.setState(newAsteroide);

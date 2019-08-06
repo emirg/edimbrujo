@@ -40,7 +40,7 @@ body {
 
 /*Media queries*/
 /*###Desktops, big landscape tablets and laptops(Large, Extra large)####*/
-@media screen and (min-width: 1024px) {
+/*@media screen and (min-width: 1024px){
     #Health_Status {
         position: fixed;
         bottom: 15%;
@@ -132,10 +132,10 @@ body {
         min-height: 250px;
         min-width: 250px;
     }
-}
+}*/
 
-/*###Tablet(medium)###*/
-@media screen and (min-width: 768px) and (max-width: 1023px) {
+/*###Tablet(medium)### and (max-width: 1023px) */
+@media screen and (min-width: 768px){
     #Health_Status {
         position: fixed;
         bottom: 15%;
@@ -160,13 +160,13 @@ body {
 
     #joystick {
         position: fixed;
-        top: 50%;
+        top: 40%;
         right: 60%;
         transform: translateY(-50%);
-        max-height: 250px;
-        max-width: 250px;
-        min-height: 250px;
-        min-width: 250px;
+        max-height: 150px;
+        max-width: 150px;
+        min-height: 150px;
+        min-width: 150px;
     }
 
     #joystickWrapper {
@@ -174,10 +174,10 @@ body {
         border-radius: 100%;
         cursor: pointer;
         user-select: none;
-        max-height: 250px;
-        max-width: 250px;
-        min-height: 250px;
-        min-width: 250px;
+        max-height: 150px;
+        max-width: 150px;
+        min-height: 150px;
+        min-width: 150px;
         margin: auto;
     }
 
@@ -186,23 +186,23 @@ body {
         border-radius: 100%;
         cursor: pointer;
         user-select: none;
-        max-height: 250px;
-        max-width: 250px;
-        min-height: 250px;
-        min-width: 250px;
+        max-height: 150px;
+        max-width: 150px;
+        min-height: 150px;
+        min-width: 150px;
         margin-left: auto;
         margin-right: auto;
     }
 
     #attackButton {
         position: fixed;
-        top: 50%;
+        top: 40%;
         left: 60%;
         transform: translateY(-50%);
-        max-height: 250px;
-        max-width: 250px;
-        min-height: 250px;
-        min-width: 250px;
+        max-height: 150px;
+        max-width: 150px;
+        min-height: 150px;
+        min-width: 150px;
     }
 
     #attackButtonWrapper {
@@ -210,10 +210,10 @@ body {
         border-radius: 100%;
         cursor: pointer;
         user-select: none;
-        max-height: 250px;
-        max-width: 250px;
-        min-height: 250px;
-        min-width: 250px;
+        max-height: 150px;
+        max-width: 150px;
+        min-height: 150px;
+        min-width: 150px;
         margin: auto;
     }
 
@@ -222,10 +222,10 @@ body {
         border-radius: 100%;
         cursor: pointer;
         user-select: none;
-        max-height: 250px;
-        max-width: 250px;
-        min-height: 250px;
-        min-width: 250px;
+        max-height: 150px;
+        max-width: 150px;
+        min-height: 150px;
+        min-width: 150px;
     }
 }
 

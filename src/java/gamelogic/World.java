@@ -80,7 +80,7 @@ public class World extends State {
                         newStates.add(newPlayer);
                         //newPlayer.addEvent("spawn");
                         break;
-                    /*case "leave": // TODO: Falta comprobar que este leave sea del World 
+                    /*case "leave":
                         for (State state : states) {
                             if (state.getName().equals("NavePlayer") && ((NavePlayer) state).id.equals(id)) {
                                 state.addEvent("despawn");

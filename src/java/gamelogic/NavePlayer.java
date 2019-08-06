@@ -29,9 +29,9 @@ public class NavePlayer extends Nave {
     protected int worldWidth;
     protected int worldHeight;
 
-    public NavePlayer(String name, String nombreJugador, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op, boolean bq, int resp, int t, int worldWidth,int worldHeight) {
+    public NavePlayer(String name, String nombreJugador, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, double xDir, double yDir, int h, int hM, int cantProj, int puntaje, boolean leave, boolean dead, String preg, String[] op, boolean bq, int resp, int t, int worldWidth, int worldHeight) {
         super("NavePlayer", destroy, id, x, y, velocidadX, velocidadY, xDir, yDir, cantProj,
-        64*(64/((worldWidth)*0.25)),64*(64/((worldWidth)*0.25)));
+                64 * (64 / ((worldWidth) * 0.25)), 64 * (64 / ((worldWidth) * 0.25)));
         this.health = h;
         this.healthMax = hM;
         this.leave = leave;
@@ -44,9 +44,9 @@ public class NavePlayer extends Nave {
         this.respuesta = resp;
         this.tiempo = t;
         this.nombreJugador = nombreJugador;
-        this.worldWidth=worldWidth;
-        this.worldHeight=worldHeight;
-        this.DISTANCIA_ALIANZA=(worldWidth-worldHeight)/50;
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
+        this.DISTANCIA_ALIANZA = (worldWidth - worldHeight) / 50;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class NavePlayer extends Nave {
                         switch (accion.getName()) {
                             case "fire":
                                 String idAux = id + "" + idBullets;
-                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0,worldWidth,worldHeight);
+                                Proyectil proyectil = new Proyectil("Proyectil", false, idAux, id, x, y, velocidad.x, velocidad.y, direccion.x, direccion.y, angulo, 0, worldWidth, worldHeight);
                                 listProyectil.add(proyectil);
                                 idBullets++;
                         }
@@ -112,7 +112,7 @@ public class NavePlayer extends Nave {
                             }
                         }
                         if (creaDesafio) {
-                            Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id,worldWidth,worldHeight);
+                            Desafio desa = new Desafio("Desafio", false, "idDest", neutra.id, this.id, worldWidth, worldHeight);
                             this.addEvent("desafiar");
                             listProyectil.add(desa); // Por que agregar el desafio a la lista de proyectiles?
                         }
@@ -186,7 +186,7 @@ public class NavePlayer extends Nave {
             if (listAccion != null) {
                 for (Action accion : listAccion) {
                     if (accion != null) {
-                        System.out.println(accion.getName());
+                        // System.out.println(accion.getName());
                         hasChanged = true;
                         if (!dead) {
                             switch (accion.getName()) {
@@ -221,7 +221,7 @@ public class NavePlayer extends Nave {
                             }
 
                         } else {
-                            System.out.println("respawn " + dead);
+                            // System.out.println("respawn " + dead);
                             this.addEvent("respawn");
                         }
                     }
@@ -229,22 +229,21 @@ public class NavePlayer extends Nave {
             }
             nuevoX = nuevoX + nuevaVelX;
             /* correccion limitaciones mapa se va a poder hacer un modulo para que quede mas prolijo*/
-            if(nuevoX<0){
-                nuevoX=0;
+            if (nuevoX < 0) {
+                nuevoX = 0;
             }
-            if(nuevoX>worldWidth){
-                nuevoX=worldWidth;
+            if (nuevoX > worldWidth) {
+                nuevoX = worldWidth;
             }
             nuevoY = nuevoY + nuevaVelY;
-            System.out.println(nuevoY);
-            if(nuevoY<0){
-                nuevoY=0;
+            if (nuevoY < 0) {
+                nuevoY = 0;
             }
-            if(nuevoY>worldHeight){
-                nuevoY=worldHeight;
+            if (nuevoY > worldHeight) {
+                nuevoY = worldHeight;
             }
         }
-        
+
         LinkedList<String> eventos = getEvents();
         if (!eventos.isEmpty()) {
             hasChanged = true;
@@ -254,12 +253,12 @@ public class NavePlayer extends Nave {
                     case "hit":
                         if (!bloqueado) {
                             nuevaVida = nuevaVida - 10;
-                            System.out.println(nuevaVida);
+                            // System.out.println(nuevaVida);
                             if (nuevaVida <= 0) {
                                 nuevaVelX = 0;
                                 nuevaVelY = 0;
                                 muerto = true;
-                                nuevoPuntaje=nuevoPuntaje-5;
+                                nuevoPuntaje = nuevoPuntaje - 5;
                             }
                         }
                         break;
@@ -273,7 +272,7 @@ public class NavePlayer extends Nave {
                         }
                         break;
                     case "collect":
-                        nuevoPuntaje = nuevoPuntaje + 10; 
+                        nuevoPuntaje = nuevoPuntaje + 10;
                         break;
                     case "liberar":
                         estaBloqueado = false;
@@ -316,7 +315,7 @@ public class NavePlayer extends Nave {
         }
         NavePlayer nuevoJugador = new NavePlayer(name, nuevoNombreJugador, destruido, id, nuevoX, nuevoY, nuevaVelX, nuevaVelY,
                 nuevaDirX, nuevaDirY, nuevaVida, healthMax, nuevosProyectiles, nuevoPuntaje, salir, muerto,
-                nuevaPregunta, op, estaBloqueado, nuevaRespuesta, nuevoTiempo,worldWidth,worldHeight);
+                nuevaPregunta, op, estaBloqueado, nuevaRespuesta, nuevoTiempo, worldWidth, worldHeight);
 
         return nuevoJugador;
     }
